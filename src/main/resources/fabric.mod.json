@@ -3,13 +3,13 @@
 	"id": "yet-another-keystrokes-mod",
 	"version": "${version}",
 	"name": "Yet Another Keystrokes Mod",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"description": "This is a simple Keystrokes Mod, that offers plenty of customizability to the user!",
 	"authors": [
-		"Me!"
+		"loonsthemoons"
 	],
 	"contact": {
 		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"sources": "https://github.com/loonsthemoons/YetAnotherKeystrokesMod"
 	},
 	"license": "CC0-1.0",
 	"icon": "assets/yet-another-keystrokes-mod/icon.png",

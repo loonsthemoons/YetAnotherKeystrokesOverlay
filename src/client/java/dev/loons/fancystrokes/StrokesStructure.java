@@ -1,0 +1,31 @@
+package dev.loons.fancystrokes;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class StrokesStructure {
+    private ArrayList<StrokesModel> strokes = new ArrayList<>();
+    //private StrokesStructure instance = new StrokesStructure();
+
+    public StrokesStructure(){
+        // Initializer
+    }
+
+    public ArrayList<StrokesModel> getStrokes() {
+        return strokes;
+    }
+
+    public void addStroke(StrokesModel stroke){
+        this.strokes.add(stroke);
+    }
+
+    public void removeStroke(StrokesModel stroke){
+        this.strokes.remove(stroke);
+    }
+
+//    public StrokesStructure getInstance() {
+//        return instance;
+//    }
+
+
+}

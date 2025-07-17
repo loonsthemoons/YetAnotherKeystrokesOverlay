@@ -1,10 +1,23 @@
 package dev.loons.fancystrokes;
 
 import net.fabricmc.api.ClientModInitializer;
+import net.minecraft.util.math.ColorHelper;
+import net.minecraft.util.math.Vec3d;
 
 public class YetAnotherKeystrokesModClient implements ClientModInitializer {
+
 	@Override
 	public void onInitializeClient() {
-		// This entrypoint is suitable for setting up client-specific logic, such as rendering.
+		StrokesStructure structure = new StrokesStructure();
+		structure.addStroke(new StrokesModel(new Vec3d(60,50,50), ColorHelper.Argb.getArgb(255,255,0,0)));
+		structure.addStroke(new StrokesModel(new Vec3d(30,80,50), ColorHelper.Argb.getArgb(255,255,0,0)));
+		structure.addStroke(new StrokesModel(new Vec3d(60,80,50), ColorHelper.Argb.getArgb(255,255,0,0)));
+		structure.addStroke(new StrokesModel(new Vec3d(90,80,50), ColorHelper.Argb.getArgb(255,255,0,0)));
+
+		// Creates strokesView to build the GUI elements
+		StrokesView strokesView = new StrokesView();
+		// Creates InputController to register WASD input
+		StrokesController strokesController = new StrokesController(strokesView, structure);
+		strokesView.renderOverlay();
 	}
 }
