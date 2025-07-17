@@ -2,17 +2,31 @@ package dev.loons.fancystrokes;
 
 
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.Text;
+import org.lwjgl.glfw.GLFW;
 
 public class StrokesController {
-    StrokesView strokesView = new StrokesView();
-    StrokesStructure structure = new StrokesStructure();
+    StrokesView strokesView;
+    StrokesStructure structure;
+    private KeyBinding keyBinding;
+    private StrokeOptions menuScreen;
+    private boolean menuStatus = false;
 
     public StrokesController(StrokesView strokesView, StrokesStructure structure){
         this.strokesView = strokesView;
         this.structure = structure;
         strokesView.setStructure(structure);
+        menuScreen = new StrokeOptions(Text.literal("FancyStrokes Options"));
+        keyBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                "key.fancyStrokes.Options", // The translation key of the keybinding's name
+                InputUtil.Type.KEYSYM, // The type of the keybinding, KEYSYM for keyboard, MOUSE for mouse.
+                GLFW.GLFW_KEY_R, // The keycode of the key
+                "category.fancyStrokes.Keybinds" // The translation key of the keybinding's category.
+        ));
+
         buildController();
     }
 
@@ -45,7 +59,6 @@ public class StrokesController {
             }
 
             if(minecraftClient.options.attackKey.isPressed()){
-                //minecraftClient.player.sendMessage(Text.literal("Left Click"));
                 structure.getStrokes().get(4).update(0xFF00FF00);
             } else {
                 structure.getStrokes().get(4).update(0xFFFF0000);
@@ -56,7 +69,13 @@ public class StrokesController {
             } else {
                 structure.getStrokes().get(5).update(0xFFFF0000);
             }
-
+            while (keyBinding.wasPressed()) {
+                if (menuStatus){
+                    menuScreen.closeScreen(); // Kind of redundant at this point, keeping it for the sake of completion
+                } else {
+                    menuScreen.openScreen();
+                }
+            }
         });
     }
 

@@ -14,7 +14,7 @@ public class YetAnotherKeystrokesModClient implements ClientModInitializer {
 		structure.addStroke(new StrokesModel(new Vec3d(60,80,0), ColorHelper.Argb.getArgb(255,255,0,0),20,20));
 		structure.addStroke(new StrokesModel(new Vec3d(90,80,0), ColorHelper.Argb.getArgb(255,255,0,0),20,20));
 		structure.addStroke(new StrokesModel(new Vec3d(30,110,0), ColorHelper.Argb.getArgb(255,255,0,0),30,10));
-		structure.addStroke(new StrokesModel(new Vec3d(60,110,0), ColorHelper.Argb.getArgb(255,255,0,0),30,10));
+		structure.addStroke(new StrokesModel(new Vec3d(80,110,0), ColorHelper.Argb.getArgb(255,255,0,0),30,10));
 
 		// Creates strokesView to build the GUI elements
 		StrokesView strokesView = new StrokesView();

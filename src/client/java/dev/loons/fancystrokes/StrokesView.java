@@ -4,7 +4,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 
 
-import java.awt.*;
+
 import java.util.ArrayList;
 
 public class StrokesView {

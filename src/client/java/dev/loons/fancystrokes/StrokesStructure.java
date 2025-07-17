@@ -1,7 +1,6 @@
 package dev.loons.fancystrokes;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class StrokesStructure {
     private ArrayList<StrokesModel> strokes = new ArrayList<>();
@@ -13,6 +12,8 @@ public class StrokesStructure {
     public ArrayList<StrokesModel> getStrokes() {
         return strokes;
     }
+
+    public StrokesModel getSpecificStroke(int x){return strokes.get(x);}
 
     public void addStroke(StrokesModel stroke){
         this.strokes.add(stroke);
