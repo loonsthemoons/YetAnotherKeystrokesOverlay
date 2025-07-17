@@ -8,10 +8,7 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class StrokesView {
-    private StrokesRenderer forwardStroke = new StrokesRenderer();
-    private StrokesRenderer leftStroke = new StrokesRenderer();
-    private StrokesRenderer backStroke = new StrokesRenderer();
-    private StrokesRenderer rightStroke = new StrokesRenderer();
+    private StrokesRenderer keyboardStroke = new StrokesRenderer();
     private StrokesStructure structure;
 
     public StrokesView(){
@@ -23,7 +20,7 @@ public class StrokesView {
         HudRenderCallback.EVENT.register((drawContext, tickDelta) ->{
             ArrayList<StrokesModel> strokesToRender = structure.getStrokes();
             for(StrokesModel strokesModel : strokesToRender){
-                forwardStroke.render(drawContext, strokesModel);
+                keyboardStroke.render(drawContext, strokesModel);
             }
         });
     }

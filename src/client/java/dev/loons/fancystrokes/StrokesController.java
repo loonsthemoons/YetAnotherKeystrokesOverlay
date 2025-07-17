@@ -44,6 +44,19 @@ public class StrokesController {
                 structure.getStrokes().get(3).update(0xFFFF0000);
             }
 
+            if(minecraftClient.options.attackKey.isPressed()){
+                //minecraftClient.player.sendMessage(Text.literal("Left Click"));
+                structure.getStrokes().get(4).update(0xFF00FF00);
+            } else {
+                structure.getStrokes().get(4).update(0xFFFF0000);
+            }
+
+            if(minecraftClient.options.useKey.isPressed()){
+                structure.getStrokes().get(5).update(0xFF00FF00);
+            } else {
+                structure.getStrokes().get(5).update(0xFFFF0000);
+            }
+
         });
     }
 

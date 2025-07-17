@@ -9,10 +9,12 @@ public class YetAnotherKeystrokesModClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		StrokesStructure structure = new StrokesStructure();
-		structure.addStroke(new StrokesModel(new Vec3d(60,50,50), ColorHelper.Argb.getArgb(255,255,0,0)));
-		structure.addStroke(new StrokesModel(new Vec3d(30,80,50), ColorHelper.Argb.getArgb(255,255,0,0)));
-		structure.addStroke(new StrokesModel(new Vec3d(60,80,50), ColorHelper.Argb.getArgb(255,255,0,0)));
-		structure.addStroke(new StrokesModel(new Vec3d(90,80,50), ColorHelper.Argb.getArgb(255,255,0,0)));
+		structure.addStroke(new StrokesModel(new Vec3d(60,50,0), ColorHelper.Argb.getArgb(255,255,0,0),20,20));
+		structure.addStroke(new StrokesModel(new Vec3d(30,80,0), ColorHelper.Argb.getArgb(255,255,0,0),20,20));
+		structure.addStroke(new StrokesModel(new Vec3d(60,80,0), ColorHelper.Argb.getArgb(255,255,0,0),20,20));
+		structure.addStroke(new StrokesModel(new Vec3d(90,80,0), ColorHelper.Argb.getArgb(255,255,0,0),20,20));
+		structure.addStroke(new StrokesModel(new Vec3d(30,110,0), ColorHelper.Argb.getArgb(255,255,0,0),30,10));
+		structure.addStroke(new StrokesModel(new Vec3d(60,110,0), ColorHelper.Argb.getArgb(255,255,0,0),30,10));
 
 		// Creates strokesView to build the GUI elements
 		StrokesView strokesView = new StrokesView();
