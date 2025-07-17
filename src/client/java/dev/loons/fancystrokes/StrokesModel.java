@@ -13,4 +13,8 @@ public class StrokesModel {
 
     public Vec3d getPosition(){return position;}
     public int getColor(){return color;}
+
+    public void update(int color){
+        this.color = color;
+    }
 }

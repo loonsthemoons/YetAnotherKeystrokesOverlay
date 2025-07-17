@@ -21,7 +21,6 @@ public class StrokesView {
         MinecraftClient client = MinecraftClient.getInstance();
 
         HudRenderCallback.EVENT.register((drawContext, tickDelta) ->{
-
             ArrayList<StrokesModel> strokesToRender = structure.getStrokes();
             for(StrokesModel strokesModel : strokesToRender){
                 forwardStroke.render(drawContext, strokesModel);
