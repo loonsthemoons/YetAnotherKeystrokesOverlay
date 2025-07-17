@@ -5,7 +5,6 @@ import java.util.List;
 
 public class StrokesStructure {
     private ArrayList<StrokesModel> strokes = new ArrayList<>();
-    //private StrokesStructure instance = new StrokesStructure();
 
     public StrokesStructure(){
         // Initializer
@@ -22,10 +21,4 @@ public class StrokesStructure {
     public void removeStroke(StrokesModel stroke){
         this.strokes.remove(stroke);
     }
-
-//    public StrokesStructure getInstance() {
-//        return instance;
-//    }
-
-
 }

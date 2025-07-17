@@ -8,8 +8,9 @@ public class StrokesRenderer {
     int height = 20;
 
     public void render(DrawContext context, StrokesModel strokesModel){
-        int color = 0xFFFF0000; // Red
-        int targetColor = 0xFF00FF00; // Green
+        int color = strokesModel.getColor();
+        //int color = 0xFFFF0000; // Red
+        //int targetColor = 0xFF00FF00; // Green
         int x = (int) strokesModel.getPosition().x;
         int y = (int) strokesModel.getPosition().y;
         double currentTime = Util.getMeasuringTimeMs() / 1000.0;

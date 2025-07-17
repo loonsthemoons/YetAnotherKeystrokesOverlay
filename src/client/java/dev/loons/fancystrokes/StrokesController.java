@@ -21,17 +21,29 @@ public class StrokesController {
             assert minecraftClient.player != null;
 
             if(minecraftClient.options.forwardKey.isPressed()){
-                minecraftClient.player.sendMessage(Text.of("Forward"));
+                structure.getStrokes().get(0).update(0xFF00FF00);
+            } else {
+                structure.getStrokes().get(0).update(0xFFFF0000);
             }
+
             if(minecraftClient.options.leftKey.isPressed()){
-                minecraftClient.player.sendMessage(Text.of("Left"));
+                structure.getStrokes().get(1).update(0xFF00FF00);
+            } else {
+                structure.getStrokes().get(1).update(0xFFFF0000);
             }
+
              if(minecraftClient.options.backKey.isPressed()){
-                minecraftClient.player.sendMessage(Text.of("Back"));
-            }
+                 structure.getStrokes().get(2).update(0xFF00FF00);
+             } else {
+                 structure.getStrokes().get(2).update(0xFFFF0000);
+             }
+
             if(minecraftClient.options.rightKey.isPressed()){
-                minecraftClient.player.sendMessage(Text.of("Right"));
+                structure.getStrokes().get(3).update(0xFF00FF00);
+            } else {
+                structure.getStrokes().get(3).update(0xFFFF0000);
             }
+
         });
     }
 
