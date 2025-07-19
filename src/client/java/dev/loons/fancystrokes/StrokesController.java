@@ -5,15 +5,16 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
-import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
+import java.util.ArrayList;
 
 public class StrokesController {
     StrokesView strokesView;
     StrokesStructure structure;
     private KeyBinding keyBinding;
     private StrokeOptions menuScreen;
-    private boolean menuStatus = false;
+    private final int colorRed = 0xFF00FF00;
+    private final int colorGreen = 0xFFFF0000;
 
     public StrokesController(StrokesView strokesView, StrokesStructure structure, StrokeOptions menuScreen){
         this.strokesView = strokesView;
@@ -33,48 +34,23 @@ public class StrokesController {
     private void buildController(){
         ClientTickEvents.END_CLIENT_TICK.register(minecraftClient -> {
             assert minecraftClient.player != null;
-
-            if(minecraftClient.options.forwardKey.isPressed()){
-                structure.getStrokes().get(0).update(0xFF00FF00);
-            } else {
-                structure.getStrokes().get(0).update(0xFFFF0000);
-            }
-
-            if(minecraftClient.options.leftKey.isPressed()){
-                structure.getStrokes().get(1).update(0xFF00FF00);
-            } else {
-                structure.getStrokes().get(1).update(0xFFFF0000);
-            }
-
-             if(minecraftClient.options.backKey.isPressed()){
-                 structure.getStrokes().get(2).update(0xFF00FF00);
-             } else {
-                 structure.getStrokes().get(2).update(0xFFFF0000);
-             }
-
-            if(minecraftClient.options.rightKey.isPressed()){
-                structure.getStrokes().get(3).update(0xFF00FF00);
-            } else {
-                structure.getStrokes().get(3).update(0xFFFF0000);
-            }
-
-            if(minecraftClient.options.attackKey.isPressed()){
-                structure.getStrokes().get(4).update(0xFF00FF00);
-            } else {
-                structure.getStrokes().get(4).update(0xFFFF0000);
-            }
-
-            if(minecraftClient.options.useKey.isPressed()){
-                structure.getStrokes().get(5).update(0xFF00FF00);
-            } else {
-                structure.getStrokes().get(5).update(0xFFFF0000);
-            }
-            while (keyBinding.wasPressed()) {
-                if (menuStatus){
-                    menuScreen.closeScreen(); // Kind of redundant at this point, keeping it for the sake of completion
-                } else {
-                    menuScreen.openScreen();
+            ArrayList<Strokes> strokesToRender = structure.getStrokes();
+            for(Strokes strokes : strokesToRender){
+                switch(strokes.getInputType()){
+                    case FORWARD -> strokes.update(minecraftClient.options.forwardKey.isPressed() ? colorRed : colorGreen);
+                    case LEFT -> strokes.update(minecraftClient.options.leftKey.isPressed() ? colorRed : colorGreen);
+                    case BACK -> strokes.update(minecraftClient.options.backKey.isPressed() ? colorRed : colorGreen);
+                    case RIGHT -> strokes.update(minecraftClient.options.rightKey.isPressed() ? colorRed : colorGreen);
+                    case ATTACK -> strokes.update(minecraftClient.options.attackKey.isPressed() ? colorRed : colorGreen);
+                    case USE -> strokes.update(minecraftClient.options.useKey.isPressed() ? colorRed : colorGreen);
+                    case SNEAK -> strokes.update(minecraftClient.options.sneakKey.isPressed() ? colorRed : colorGreen);
+                    case SPRINT -> strokes.update(minecraftClient.options.sprintKey.isPressed() ? colorRed : colorGreen);
+                    case JUMP -> strokes.update(minecraftClient.options.jumpKey.isPressed() ? colorRed : colorGreen);
                 }
+            }
+            // Make the custom Bind "R" open the FancyStrokes Menu
+            while (keyBinding.wasPressed()) {
+                    menuScreen.openScreen();
             }
         });
     }

@@ -9,7 +9,6 @@ import net.minecraft.client.toast.SystemToast;
 import net.minecraft.text.Text;
 
 public class StrokeOptions extends Screen {
-    private boolean mouseStatus = true;
     private StrokesStructure structure;
     public StrokeOptions(Text title, StrokesStructure structure) {
         super(title);
@@ -37,7 +36,6 @@ public class StrokeOptions extends Screen {
                 );
                 structure.getSpecificStroke(4).setVisible(false);
                 structure.getSpecificStroke(5).setVisible(false);
-                mouseStatus=false;
             } else {
                 assert this.client != null;
                 this.client.getToastManager().add(
@@ -45,7 +43,6 @@ public class StrokeOptions extends Screen {
                 );
                 structure.getSpecificStroke(4).setVisible(true);
                 structure.getSpecificStroke(5).setVisible(true);
-                mouseStatus=true;
             }
 
         }).dimensions(40, 40, 120, 20).build();

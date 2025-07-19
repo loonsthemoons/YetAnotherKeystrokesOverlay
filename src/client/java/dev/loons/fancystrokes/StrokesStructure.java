@@ -2,8 +2,8 @@ package dev.loons.fancystrokes;
 
 import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.Vec3d;
-
 import java.util.ArrayList;
+import static dev.loons.fancystrokes.Strokes.InputType;
 
 public class StrokesStructure {
     private ArrayList<Strokes> strokes = new ArrayList<>();
@@ -13,12 +13,12 @@ public class StrokesStructure {
     }
 
     public void initializeDefaultStrokes(){
-        strokes.add(new Strokes(new Vec3d(60,50,0), ColorHelper.Argb.getArgb(255,255,0,0),20,20));
-        strokes.add(new Strokes(new Vec3d(30,80,0), ColorHelper.Argb.getArgb(255,255,0,0),20,20));
-        strokes.add(new Strokes(new Vec3d(60,80,0), ColorHelper.Argb.getArgb(255,255,0,0),20,20));
-        strokes.add(new Strokes(new Vec3d(90,80,0), ColorHelper.Argb.getArgb(255,255,0,0),20,20));
-        strokes.add(new Strokes(new Vec3d(30,110,0), ColorHelper.Argb.getArgb(255,255,0,0),30,10));
-        strokes.add(new Strokes(new Vec3d(80,110,0), ColorHelper.Argb.getArgb(255,255,0,0),30,10));
+        strokes.add(new Strokes(new Vec3d(60,50,0), ColorHelper.Argb.getArgb(255,255,0,0),20,20, InputType.FORWARD));
+        strokes.add(new Strokes(new Vec3d(30,80,0), ColorHelper.Argb.getArgb(255,255,0,0),20,20, InputType.LEFT));
+        strokes.add(new Strokes(new Vec3d(60,80,0), ColorHelper.Argb.getArgb(255,255,0,0),20,20, InputType.BACK));
+        strokes.add(new Strokes(new Vec3d(90,80,0), ColorHelper.Argb.getArgb(255,255,0,0),20,20, InputType.RIGHT));
+        strokes.add(new Strokes(new Vec3d(30,110,0), ColorHelper.Argb.getArgb(255,255,0,0),30,10, InputType.ATTACK));
+        strokes.add(new Strokes(new Vec3d(80,110,0), ColorHelper.Argb.getArgb(255,255,0,0),30,10, InputType.USE));
     }
 
     public ArrayList<Strokes> getStrokes() {
