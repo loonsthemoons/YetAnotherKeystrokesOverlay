@@ -9,8 +9,8 @@ import org.lwjgl.glfw.GLFW;
 import java.util.ArrayList;
 
 public class StrokesController {
-    StrokesView strokesView;
-    StrokesStructure structure;
+    private StrokesView strokesView;
+    private StrokesStructure structure;
     private KeyBinding keyBinding;
     private StrokeOptions menuScreen;
     private final int colorRed = 0xFF00FF00;
@@ -19,7 +19,6 @@ public class StrokesController {
     public StrokesController(StrokesView strokesView, StrokesStructure structure, StrokeOptions menuScreen){
         this.strokesView = strokesView;
         this.structure = structure;
-        //strokesView.setStructure(structure);
         this.menuScreen = menuScreen;
         keyBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "key.fancyStrokes.Options", // The translation key of the keybinding's name
@@ -27,7 +26,6 @@ public class StrokesController {
                 GLFW.GLFW_KEY_R, // The keycode of the key
                 "category.fancyStrokes.Keybinds" // The translation key of the keybinding's category.
         ));
-
         buildController();
     }
 

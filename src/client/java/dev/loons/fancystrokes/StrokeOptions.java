@@ -7,12 +7,17 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.toast.SystemToast;
 import net.minecraft.text.Text;
+import java.util.ArrayList;
+import static dev.loons.fancystrokes.Strokes.InputType;
 
 public class StrokeOptions extends Screen {
     private StrokesStructure structure;
+    private ArrayList<Strokes> strokesArrayList;
     public StrokeOptions(Text title, StrokesStructure structure) {
         super(title);
         this.structure = structure;
+        this.strokesArrayList = new ArrayList<>();
+        this.strokesArrayList.addAll(structure.getStrokes());
     }
 
     public void openScreen(){
@@ -21,48 +26,51 @@ public class StrokeOptions extends Screen {
         );
     }
 
-    public void closeScreen(){
-        MinecraftClient.getInstance().setScreen(null);
-    }
-
     @Override
     protected void init() {
-        ButtonWidget buttonWidget = ButtonWidget.builder(Text.of("Hello World"), (btn) -> {
-            // When the button is clicked, we can display a toast to the screen.
+        for(Strokes strokes : strokesArrayList){
+            this.addDrawableChild(strokes);
+        }
+
+        ButtonWidget mouseWidget = ButtonWidget.builder(Text.of("Mouse Strokes"), (btn) -> {
+            // Button for removing / adding Mouse-Strokes
             if(structure.getSpecificStroke(4).isVisible() || structure.getSpecificStroke(5).isVisible()){
                 assert this.client != null;
                 this.client.getToastManager().add(
                         SystemToast.create(this.client, SystemToast.Type.NARRATOR_TOGGLE, Text.of("Stroke Status"), Text.of("Mouse strokes disabled"))
                 );
-                structure.getSpecificStroke(4).setVisible(false);
-                structure.getSpecificStroke(5).setVisible(false);
+                structure.getStrokeByInputType(InputType.ATTACK).setVisible(false);
+                structure.getStrokeByInputType(InputType.USE).setVisible(false);
             } else {
                 assert this.client != null;
                 this.client.getToastManager().add(
                         SystemToast.create(this.client, SystemToast.Type.NARRATOR_TOGGLE, Text.of("Stroke Status"), Text.of("Mouse strokes enabled"))
                 );
-                structure.getSpecificStroke(4).setVisible(true);
-                structure.getSpecificStroke(5).setVisible(true);
+                structure.getStrokeByInputType(InputType.ATTACK).setVisible(true);
+                structure.getStrokeByInputType(InputType.USE).setVisible(true);
             }
+        }).dimensions(200, 40, 120, 20).build();
 
-        }).dimensions(40, 40, 120, 20).build();
-        // x, y, width, height
-        // It's recommended to use the fixed height of 20 to prevent rendering issues with the button
-        // textures.
-
-        // Register the button widget.
-        this.addDrawableChild(buttonWidget);
-
+        ButtonWidget closeWidget = ButtonWidget.builder(Text.of("Close"),(btn) -> {
+            this.close();
+                }).dimensions(200,70,120,20).build();
+        this.addDrawableChild(mouseWidget);
+        this.addDrawableChild(closeWidget);
     }
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
+        context.drawText(this.textRenderer, "Fancy-Strokes", 40, 40 - this.textRenderer.fontHeight - 10, 0xFFFFFFFF, true);
+    }
 
-        // Minecraft doesn't have a "label" widget, so we'll have to draw our own text.
-        // We'll subtract the font height from the Y position to make the text appear above the button.
-        // Subtracting an extra 10 pixels will give the text some padding.
-        // textRenderer, text, x, y, color, hasShadow
-        context.drawText(this.textRenderer, "Special Button", 40, 40 - this.textRenderer.fontHeight - 10, 0xFFFFFFFF, true);
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        return super.mouseClicked(mouseX, mouseY, button);
+    }
+
+    @Override
+    public void close() {
+        super.close();
     }
 }

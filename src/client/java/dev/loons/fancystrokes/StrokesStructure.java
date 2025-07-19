@@ -24,8 +24,15 @@ public class StrokesStructure {
     public ArrayList<Strokes> getStrokes() {
         return strokes;
     }
-
     public Strokes getSpecificStroke(int x){return strokes.get(x);}
+    public Strokes getStrokeByInputType(InputType inputType){
+        for(Strokes s : strokes){
+            if(s.getInputType() == inputType){
+                return s;
+            }
+        }
+        return null;
+    }
     public void addStroke(Strokes stroke){
         this.strokes.add(stroke);
     }

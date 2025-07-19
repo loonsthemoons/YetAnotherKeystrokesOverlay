@@ -1,38 +1,71 @@
 package dev.loons.fancystrokes;
-
+import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
+import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.text.Text;
+import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.Vec3d;
 
-public class Strokes {
+public class Strokes extends ClickableWidget {
     private Vec3d position;
     private int color;
-    private int width;
-    private int height;
     private boolean isVisible = true;
     private InputType inputType;
     public enum InputType {
         FORWARD, BACK, LEFT, RIGHT, ATTACK, USE, SNEAK, SPRINT, JUMP
     }
 
+
     public Strokes(Vec3d position, int color, int width, int height, InputType inputType){
+        super((int) position.x, (int) position.y, width, height, Text.empty());
         this.position = position;
         this.color = color;
-        this.width = width;
-        this.height = height;
         this.inputType = inputType;
+
     }
 
     public Vec3d getPosition(){return position;}
     public int getColor(){return color;}
-    public int getWidth(){return width;}
-    public int getHeight(){return height;}
-
-    public void setPosition(Vec3d position){this.position = position;}
+    public InputType getInputType(){return inputType;}
+    public void setPosition(Vec3d position){
+        this.position = position;
+        this.setX((int) position.x);
+        this.setY((int) position.y);
+    }
     public void setColor(int color){this.color = color;}
     public void setWidth(int width){this.width = width;}
-    public void setHeight(int height){this.height = height;}
     public boolean isVisible(){return isVisible;}
     public void setVisible(boolean isVisible){this.isVisible = isVisible;}
-    public InputType getInputType(){return inputType;}
+
+    @Override
+    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+        if(!this.isVisible){
+        } else {
+            int drawX = this.getX();
+            int drawY = this.getY();
+            int drawWidth = this.getWidth();
+            int drawHeight = this.getHeight();
+            int startColor = this.color;
+            int endColor = ColorHelper.Argb.getArgb(ColorHelper.Argb.getAlpha(color),
+                    (int)(ColorHelper.Argb.getRed(color) * 0.7),
+                    (int)(ColorHelper.Argb.getGreen(color) * 0.7),
+                    (int)(ColorHelper.Argb.getBlue(color) * 0.7));
+
+            context.fillGradient(drawX, drawY, drawX + drawWidth, drawY + drawHeight, startColor, endColor);
+
+            if (this.isHovered()) {
+                context.drawBorder(drawX, drawY, drawWidth, drawHeight, 0xFFFFFFFF);
+            }
+            super.render(context, mouseX, mouseY, delta);
+        }
+    }
+
+
+    @Override
+    protected void renderButton(DrawContext context, int mouseX, int mouseY, float delta) {}
+
+    @Override
+    protected void appendClickableNarrations(NarrationMessageBuilder builder) {}
 
     public void update(int color){
         this.color = color;

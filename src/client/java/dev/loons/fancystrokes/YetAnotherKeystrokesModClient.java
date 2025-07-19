@@ -2,8 +2,6 @@ package dev.loons.fancystrokes;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.text.Text;
-import net.minecraft.util.math.ColorHelper;
-import net.minecraft.util.math.Vec3d;
 
 public class YetAnotherKeystrokesModClient implements ClientModInitializer {
 
