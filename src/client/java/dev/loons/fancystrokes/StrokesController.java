@@ -15,11 +15,11 @@ public class StrokesController {
     private StrokeOptions menuScreen;
     private boolean menuStatus = false;
 
-    public StrokesController(StrokesView strokesView, StrokesStructure structure){
+    public StrokesController(StrokesView strokesView, StrokesStructure structure, StrokeOptions menuScreen){
         this.strokesView = strokesView;
         this.structure = structure;
-        strokesView.setStructure(structure);
-        menuScreen = new StrokeOptions(Text.literal("FancyStrokes Options"));
+        //strokesView.setStructure(structure);
+        this.menuScreen = menuScreen;
         keyBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "key.fancyStrokes.Options", // The translation key of the keybinding's name
                 InputUtil.Type.KEYSYM, // The type of the keybinding, KEYSYM for keyboard, MOUSE for mouse.

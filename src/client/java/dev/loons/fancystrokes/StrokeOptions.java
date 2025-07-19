@@ -10,13 +10,15 @@ import net.minecraft.text.Text;
 
 public class StrokeOptions extends Screen {
     private boolean mouseStatus = true;
-    public StrokeOptions(Text title) {
+    private StrokesStructure structure;
+    public StrokeOptions(Text title, StrokesStructure structure) {
         super(title);
+        this.structure = structure;
     }
 
     public void openScreen(){
         MinecraftClient.getInstance().setScreen(
-                new StrokeOptions(Text.empty())
+                new StrokeOptions(Text.empty(),structure)
         );
     }
 
@@ -28,18 +30,22 @@ public class StrokeOptions extends Screen {
     protected void init() {
         ButtonWidget buttonWidget = ButtonWidget.builder(Text.of("Hello World"), (btn) -> {
             // When the button is clicked, we can display a toast to the screen.
-            if(mouseStatus){
-
+            if(structure.getSpecificStroke(4).isVisible() || structure.getSpecificStroke(5).isVisible()){
+                assert this.client != null;
                 this.client.getToastManager().add(
                         SystemToast.create(this.client, SystemToast.Type.NARRATOR_TOGGLE, Text.of("Stroke Status"), Text.of("Mouse strokes disabled"))
                 );
-                mouseStatus=!mouseStatus;
+                structure.getSpecificStroke(4).setVisible(false);
+                structure.getSpecificStroke(5).setVisible(false);
+                mouseStatus=false;
             } else {
-
+                assert this.client != null;
                 this.client.getToastManager().add(
                         SystemToast.create(this.client, SystemToast.Type.NARRATOR_TOGGLE, Text.of("Stroke Status"), Text.of("Mouse strokes enabled"))
                 );
-                mouseStatus=!mouseStatus;
+                structure.getSpecificStroke(4).setVisible(true);
+                structure.getSpecificStroke(5).setVisible(true);
+                mouseStatus=true;
             }
 
         }).dimensions(40, 40, 120, 20).build();

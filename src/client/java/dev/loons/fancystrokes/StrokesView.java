@@ -11,16 +11,19 @@ public class StrokesView {
     private StrokesRenderer keyboardStroke = new StrokesRenderer();
     private StrokesStructure structure;
 
-    public StrokesView(){
+    public StrokesView(StrokesStructure structure){
+        this.structure = structure;
     }
 
     public void renderOverlay(){
         MinecraftClient client = MinecraftClient.getInstance();
 
         HudRenderCallback.EVENT.register((drawContext, tickDelta) ->{
-            ArrayList<StrokesModel> strokesToRender = structure.getStrokes();
-            for(StrokesModel strokesModel : strokesToRender){
-                keyboardStroke.render(drawContext, strokesModel);
+            ArrayList<Strokes> strokesToRender = structure.getStrokes();
+            for(Strokes strokes : strokesToRender){
+                if(strokes.isVisible()){
+                    keyboardStroke.render(drawContext, strokes);
+                }
             }
         });
     }

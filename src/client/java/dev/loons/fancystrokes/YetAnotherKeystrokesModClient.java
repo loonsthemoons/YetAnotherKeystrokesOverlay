@@ -1,6 +1,7 @@
 package dev.loons.fancystrokes;
 
 import net.fabricmc.api.ClientModInitializer;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.Vec3d;
 
@@ -9,17 +10,15 @@ public class YetAnotherKeystrokesModClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		StrokesStructure structure = new StrokesStructure();
-		structure.addStroke(new StrokesModel(new Vec3d(60,50,0), ColorHelper.Argb.getArgb(255,255,0,0),20,20));
-		structure.addStroke(new StrokesModel(new Vec3d(30,80,0), ColorHelper.Argb.getArgb(255,255,0,0),20,20));
-		structure.addStroke(new StrokesModel(new Vec3d(60,80,0), ColorHelper.Argb.getArgb(255,255,0,0),20,20));
-		structure.addStroke(new StrokesModel(new Vec3d(90,80,0), ColorHelper.Argb.getArgb(255,255,0,0),20,20));
-		structure.addStroke(new StrokesModel(new Vec3d(30,110,0), ColorHelper.Argb.getArgb(255,255,0,0),30,10));
-		structure.addStroke(new StrokesModel(new Vec3d(80,110,0), ColorHelper.Argb.getArgb(255,255,0,0),30,10));
+		structure.initializeDefaultStrokes();
+
+		// Creates the menu screen for FancyStrokes
+		StrokeOptions menuScreen = new StrokeOptions(Text.literal("FancyStrokes Options"), structure);
 
 		// Creates strokesView to build the GUI elements
-		StrokesView strokesView = new StrokesView();
+		StrokesView strokesView = new StrokesView(structure);
 		// Creates InputController to register WASD input
-		StrokesController strokesController = new StrokesController(strokesView, structure);
+		StrokesController strokesController = new StrokesController(strokesView, structure, menuScreen);
 		strokesView.renderOverlay();
 	}
 }

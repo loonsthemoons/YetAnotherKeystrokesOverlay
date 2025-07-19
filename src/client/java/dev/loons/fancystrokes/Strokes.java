@@ -2,13 +2,14 @@ package dev.loons.fancystrokes;
 
 import net.minecraft.util.math.Vec3d;
 
-public class StrokesModel {
+public class Strokes {
     private Vec3d position;
     private int color;
     private int width;
     private int height;
+    private boolean isVisible = true;
 
-    public StrokesModel(Vec3d position, int color, int width, int height){
+    public Strokes(Vec3d position, int color, int width, int height){
         this.position = position;
         this.color = color;
         this.width = width;
@@ -24,6 +25,8 @@ public class StrokesModel {
     public void setColor(int color){this.color = color;}
     public void setWidth(int width){this.width = width;}
     public void setHeight(int height){this.height = height;}
+    public boolean isVisible(){return isVisible;}
+    public void setVisible(boolean isVisible){this.isVisible = isVisible;}
 
     public void update(int color){
         this.color = color;
