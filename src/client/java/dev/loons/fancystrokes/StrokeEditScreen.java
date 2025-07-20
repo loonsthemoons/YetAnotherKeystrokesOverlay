@@ -260,6 +260,7 @@ public class StrokeEditScreen extends Screen {
                 strokes.setOutlineColor(targetStroke.getOutlineColor());
                 strokes.setPressedOutlineColor(targetStroke.getPressedOutlineColor());
                 strokes.setRoundness(targetStroke.getRoundness());
+                strokes.setShowKeybindText(targetStroke.isShowKeybindText());
             }
             YetAnotherKeystrokesModClient.saveStrokesToConfig();
 
@@ -297,15 +298,15 @@ public class StrokeEditScreen extends Screen {
         currentY += fieldHeight + 5;
 
         // Roundness Slider
-        roundnessSlider = new SliderWidget(elementStartX, currentY, sliderWidth, fieldHeight, Text.literal("Roundness"), targetStroke.getRoundness() / 15) {
+        roundnessSlider = new SliderWidget(elementStartX, currentY, sliderWidth, fieldHeight, Text.literal("Roundness"), targetStroke.getRoundness() / 15.0D) {
             @Override
             protected void updateMessage() {
-                this.setMessage(Text.literal("Roundness: " + (int) (this.value * 15)));
+                this.setMessage(Text.literal("Roundness: " + (int) (this.value * 15.0D)));
             }
 
             @Override
             protected void applyValue() {
-                targetStroke.setRoundness((int) (this.value * 15));
+                targetStroke.setRoundness((int) (this.value * 15.0D));
             }
         };
         this.addDrawableChild(roundnessSlider);
