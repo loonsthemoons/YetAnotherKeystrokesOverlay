@@ -102,12 +102,26 @@ public class StrokeOptions extends Screen {
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         boolean superClicked = super.mouseClicked(mouseX, mouseY, button);
-        for(Strokes strokes : strokesArrayList){
-            if(strokes.isVisible() && strokes.isHovered()){
-                this.currentStroke = strokes;
-                this.mouseOffsetX = mouseX - strokes.getX();
-                this.mouseOffsetY = mouseY - strokes.getY();
-                return true;
+
+        if(button==0){
+            for(Strokes strokes : strokesArrayList){
+                if(strokes.isVisible() && strokes.isHovered()){
+                    this.currentStroke = strokes;
+                    this.mouseOffsetX = mouseX - strokes.getX();
+                    this.mouseOffsetY = mouseY - strokes.getY();
+                    MinecraftClient.getInstance().player.sendMessage(Text.of("Dragging"));
+                    return true;
+                }
+            }
+        }
+
+        if(!superClicked && button ==1){
+            for (Strokes strokes : strokesArrayList){
+                if(strokes.isVisible() && strokes.isHovered()){
+                    MinecraftClient.getInstance().player.sendMessage(Text.of("Open Menu"));
+                    MinecraftClient.getInstance().setScreen(new StrokeEditScreen(Text.empty(),strokes, this));
+                    return true;
+                }
             }
         }
         return superClicked;

@@ -10,6 +10,7 @@ public class Strokes extends ClickableWidget {
     private int color;
     private boolean isVisible = true;
     private InputType inputType;
+
     public enum InputType {
         FORWARD, BACK, LEFT, RIGHT, ATTACK, USE, SNEAK, SPRINT, JUMP, NULL
     }
@@ -32,6 +33,7 @@ public class Strokes extends ClickableWidget {
     }
     public void setColor(int color){this.color = color;}
     public void setWidth(int width){this.width = width;}
+    public void setInputType(InputType type) {this.inputType = type;}
     public boolean isVisible(){return isVisible;}
     public void setVisible(boolean isVisible){this.isVisible = isVisible;}
     public boolean isHovered(int mouseX, int mouseY){return this.active && this.visible && mouseX >= this.getX() && mouseX < this.getX() + this.getWidth() && mouseY >= this.getY() && mouseY < this.getY() + this.getHeight();}
