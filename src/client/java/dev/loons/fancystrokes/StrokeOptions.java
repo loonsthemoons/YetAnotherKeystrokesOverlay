@@ -92,10 +92,7 @@ public class StrokeOptions extends Screen {
             int rectX2 = (int) Math.max(this.selectPositionX, mouseX);
             int rectY2 = (int) Math.max(this.selectPositionY, mouseY);
 
-            // Transparente Füllung (optional, aber hilfreich)
             context.fill(rectX1, rectY1, rectX2, rectY2, 0x4000FF00); // Beispiel: grüner, transparenter Füllbereich (AARRGGBB)
-
-            // Rand des Rechtecks
             context.drawBorder(rectX1, rectY1, rectX2 - rectX1, rectY2 - rectY1, 0xFF00FF00); // Beispiel: grüner Rand
         }
     }

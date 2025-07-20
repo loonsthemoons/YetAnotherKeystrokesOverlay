@@ -1,7 +1,6 @@
 package dev.loons.fancystrokes;
 
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.text.Text;
 import java.util.ArrayList;
 
@@ -17,15 +16,15 @@ public class YetAnotherKeystrokesModClient implements ClientModInitializer {
 
 		if (CONFIG.getSavedStrokes().isEmpty()) {
 			System.out.println("No saved strokes found, initializing default strokes.");
-			STROKES_STRUCTURE.initializeDefaultStrokes(); // Füllt die EINE STROKES_STRUCTURE mit Defaults
-			saveStrokesToConfig(); // Speichert diese Defaults sofort
+			STROKES_STRUCTURE.initializeDefaultStrokes();
+			saveStrokesToConfig();
 		} else {
 			System.out.println("Loading strokes from config file.");
 			for (dev.loons.fancystrokes.config.StrokeData data : CONFIG.getSavedStrokes()) {
 				Strokes stroke = data.toStroke();
 				stroke.setShowKeybindText(data.showKeybindText);
 				stroke.setOutlineStatus(data.outlineStatus);
-				STROKES_STRUCTURE.addStroke(stroke); // Füllt die EINE STROKES_STRUCTURE mit geladenen Strokes
+				STROKES_STRUCTURE.addStroke(stroke);
 			}
 		}
 		ACTIVE_STROKES.clear();

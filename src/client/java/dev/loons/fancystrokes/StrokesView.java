@@ -5,7 +5,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import java.util.ArrayList;
 
 public class StrokesView {
-    private StrokesStructure structure;
+    private final StrokesStructure structure;
 
     public StrokesView(StrokesStructure structure){
         this.structure = structure;

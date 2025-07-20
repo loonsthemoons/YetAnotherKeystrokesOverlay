@@ -15,7 +15,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-// KEIN "extends ConfigWrapper" mehr!
 public class FancyStrokesConfig {
 
     public boolean enableFancyStrokes = true;
@@ -23,7 +22,7 @@ public class FancyStrokesConfig {
 
     public List<StrokeData> savedStrokes = new ArrayList<>();
 
-    private static final Path CONFIG_PATH = FabricLoader.getInstance().getConfigDir().resolve("fancy_strokes.json");
+    private static final Path CONFIG_PATH = FabricLoader.getInstance().getConfigDir().resolve("Yet-Another-Keystrokes-Mod.json");
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     private static FancyStrokesConfig instance;
@@ -31,21 +30,16 @@ public class FancyStrokesConfig {
     public static FancyStrokesConfig getInstance() {
         if (instance == null) {
             instance = new FancyStrokesConfig();
-            instance.load(); // Lade die Config beim ersten Zugriff
+            instance.load();
         }
         return instance;
     }
 
-    // ACHTUNG: Der Konstruktor muss jetzt parameterlos sein, damit Gson ihn verwenden kann.
-    // Das ist das "zero-args constructor", den der Fehler verlangt.
-    private FancyStrokesConfig() {
-        // Hier ist kein super()-Aufruf mehr nötig, da wir nicht mehr von ConfigWrapper erben.
-    }
-
+    private FancyStrokesConfig() {}
 
     public void load() {
         if (!CONFIG_PATH.toFile().exists()) {
-            System.out.println("No config file found, using defaults for FancyStrokes.");
+            System.out.println("No config file found, using defaults for Yet-Another-Keystroke-Mod.");
             return;
         }
 
@@ -70,7 +64,7 @@ public class FancyStrokesConfig {
             }
 
         } catch (IOException e) {
-            System.err.println("Failed to load FancyStrokes config: " + e.getMessage());
+            System.err.println("Failed to load Yet-Another-Keystroke-Mod config: " + e.getMessage());
         }
     }
 
@@ -89,7 +83,7 @@ public class FancyStrokesConfig {
         try (FileWriter writer = new FileWriter(CONFIG_PATH.toFile())) {
             GSON.toJson(configJson, writer);
         } catch (IOException e) {
-            System.err.println("Failed to save FancyStrokes config: " + e.getMessage());
+            System.err.println("Failed to save Yet-Another-Keystroke-Mod config: " + e.getMessage());
         }
     }
 

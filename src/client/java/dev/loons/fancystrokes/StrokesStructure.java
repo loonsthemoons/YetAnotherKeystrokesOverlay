@@ -7,13 +7,13 @@ import static dev.loons.fancystrokes.Strokes.InputType;
 
 public class StrokesStructure {
     private ArrayList<Strokes> strokes = new ArrayList<>();
-    private int defaultColor = ColorHelper.Argb.getArgb(255, 255, 0, 0); // Red
-    private int defaultPressedColor = ColorHelper.Argb.getArgb(255, 0, 255, 0); // Green
-    private int defaultOutlineColor = ColorHelper.Argb.getArgb(255, 255, 255, 255); // White
-    private int defaultPressedOutlineColor = ColorHelper.Argb.getArgb(255, 255, 255, 0); // Gelb (für Hover/Selected + Pressed)
-    private int defaultRoundness = 0;
-    private int defaultWidth = 20;
-    private int defaultHeight = 20;
+    private final int defaultColor = ColorHelper.Argb.getArgb(255, 255, 0, 0); // Red
+    private final int defaultPressedColor = ColorHelper.Argb.getArgb(255, 0, 255, 0); // Green
+    private final int defaultOutlineColor = ColorHelper.Argb.getArgb(255, 255, 255, 255); // White
+    private final int defaultPressedOutlineColor = ColorHelper.Argb.getArgb(255, 255, 255, 0); // Gelb (für Hover/Selected + Pressed)
+    private final int defaultRoundness = 0;
+    private final int defaultWidth = 20;
+    private final int defaultHeight = 20;
 
     public StrokesStructure(){
         // Initializer
@@ -70,8 +70,8 @@ public class StrokesStructure {
                 defaultPressedColor,
                 defaultOutlineColor,
                 defaultPressedOutlineColor,
-                30, // Breite geändert
-                10, // Höhe geändert
+                30,
+                10,
                 InputType.ATTACK,
                 defaultRoundness
         ));
@@ -81,8 +81,8 @@ public class StrokesStructure {
                 defaultPressedColor,
                 defaultOutlineColor,
                 defaultPressedOutlineColor,
-                30, // Breite geändert
-                10, // Höhe geändert
+                30,
+                10,
                 InputType.USE,
                 defaultRoundness
         ));
@@ -90,7 +90,7 @@ public class StrokesStructure {
 
     public void createStroke(InputType inputType){
         strokes.add(new Strokes(
-                new Vec3d(200,200,0), // Feste Position für den neuen Stroke
+                new Vec3d(200,200,0),
                 defaultColor,
                 defaultPressedColor,
                 defaultOutlineColor,

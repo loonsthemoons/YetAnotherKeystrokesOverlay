@@ -13,9 +13,6 @@ public class StrokesController {
     private StrokesStructure structure;
     private KeyBinding keyBinding;
     private StrokeOptions menuScreen;
-    private int color = 0xFF00FF00;
-    private int colorPressed = 0xFFFF0000;
-    private boolean isPressed = false;
 
     public StrokesController(StrokesView strokesView, StrokesStructure structure, StrokeOptions menuScreen){
         this.strokesView = strokesView;
