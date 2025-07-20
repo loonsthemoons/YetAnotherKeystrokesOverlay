@@ -1,5 +1,4 @@
 package dev.loons.fancystrokes;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.widget.ClickableWidget;
@@ -13,6 +12,7 @@ public class Strokes extends ClickableWidget {
     private int outlineColor;
     private int pressedOutlineColor;
     private int roundness;
+    private boolean outlineStatus = false;
     private boolean isVisible = true;
     private InputType inputType;
     private boolean isSelected = false;
@@ -26,13 +26,13 @@ public class Strokes extends ClickableWidget {
         super((int) position.x, (int) position.y, width, height, Text.empty());
         this.position = position;
         this.color = color;
-        this.pressedColor = pressedColor; // Verwende den übergebenen Wert
-        this.outlineColor = outlineColor; // Verwende den übergebenen Wert
-        this.pressedOutlineColor = pressedOutlineColor; // Verwende den übergebenen Wert
+        this.pressedColor = pressedColor;
+        this.outlineColor = outlineColor;
+        this.pressedOutlineColor = pressedOutlineColor;
         this.width = width;
         this.height = height;
         this.inputType = inputType;
-        this.roundness = roundness; // Verwende den übergebenen Wert
+        this.roundness = roundness;
     }
 
     public Vec3d getPosition(){return position;}
@@ -59,6 +59,8 @@ public class Strokes extends ClickableWidget {
     public boolean isHovered(int mouseX, int mouseY){return this.active && this.visible && mouseX >= this.getX() && mouseX < this.getX() + this.getWidth() && mouseY >= this.getY() && mouseY < this.getY() + this.getHeight();}
     public boolean isSelected() {return isSelected;}
     public void setSelected(boolean selected) {isSelected = selected;}
+    public boolean getOutlineStatus() {return outlineStatus;}
+    public void setOutlineStatus(boolean outlineStatus) {this.outlineStatus = outlineStatus;}
 
         @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
@@ -68,18 +70,23 @@ public class Strokes extends ClickableWidget {
             int drawY = this.getY();
             int drawWidth = this.getWidth();
             int drawHeight = this.getHeight();
-            int color = this.color;
-            if(isPressed){
-                context.fill(drawX, drawY, drawX + drawWidth, drawY + drawHeight, pressedColor);
-            } else {
-                context.fill(drawX, drawY, drawX + drawWidth, drawY + drawHeight, color);
+            int effectiveRoundness = Math.min(roundness, Math.min(drawWidth / 2, drawHeight / 2));
+            int fillColorToUse = isPressed ? this.pressedColor : this.color;
+            int outlineColorToUse = isPressed ? this.pressedOutlineColor : this.outlineColor;
+
+            context.fill(drawX, drawY, drawX + drawWidth, drawY + drawHeight, fillColorToUse);
+
+            if(outlineStatus){
+                context.drawBorder(drawX, drawY, drawWidth, drawHeight, outlineColorToUse);
             }
+
             if(this.isHovered(mouseX, mouseY)){
                 context.drawBorder(drawX, drawY, drawWidth, drawHeight, 0xFFFFFFFF);
             }
             if(this.isSelected){
                 context.drawBorder(drawX, drawY, drawWidth, drawHeight, 0xFFFFFFFF);
             }
+
             super.render(context, mouseX, mouseY, delta);
         }
     }

@@ -1,4 +1,4 @@
-package dev.loons.fancystrokes; // Or wherever you want to put it, e.g., dev.loons.fancystrokes.gui.widget
+package dev.loons.fancystrokes;
 
 import net.minecraft.client.gui.widget.SliderWidget;
 import net.minecraft.text.Text;

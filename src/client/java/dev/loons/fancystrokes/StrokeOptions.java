@@ -150,7 +150,7 @@ public class StrokeOptions extends Screen {
         if(!superClicked && button ==1){
             for (Strokes strokes : strokesArrayList){
                 if(strokes.isVisible() && strokes.isHovered()){
-                    MinecraftClient.getInstance().setScreen(new StrokeEditScreen(Text.empty(),strokes, this));
+                    MinecraftClient.getInstance().setScreen(new StrokeEditScreen(Text.empty(),strokes, this, structure));
                     return true;
                 }
             }
