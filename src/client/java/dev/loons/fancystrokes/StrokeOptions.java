@@ -242,6 +242,20 @@ public class StrokeOptions extends Screen {
 
     @Override
     public void close() {
+        clearSelection();
+        YetAnotherKeystrokesModClient.saveStrokesToConfig();
         super.close();
+    }
+
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (super.keyPressed(keyCode, scanCode, modifiers)) {
+            return true;
+        }
+        if (keyCode == 256) { // 256 is ESCAPE
+            this.close();
+            return true;
+        }
+        return false;
     }
 }
