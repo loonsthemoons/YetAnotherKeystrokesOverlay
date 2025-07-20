@@ -297,15 +297,15 @@ public class StrokeEditScreen extends Screen {
         currentY += fieldHeight + 5;
 
         // Roundness Slider
-        roundnessSlider = new SliderWidget(elementStartX, currentY, sliderWidth, fieldHeight, Text.literal("Roundness"), targetStroke.getRoundness() / 100.0D) {
+        roundnessSlider = new SliderWidget(elementStartX, currentY, sliderWidth, fieldHeight, Text.literal("Roundness"), targetStroke.getRoundness() / 15) {
             @Override
             protected void updateMessage() {
-                this.setMessage(Text.literal("Roundness: " + (int) (this.value * 100)));
+                this.setMessage(Text.literal("Roundness: " + (int) (this.value * 15)));
             }
 
             @Override
             protected void applyValue() {
-                targetStroke.setRoundness((int) (this.value * 100));
+                targetStroke.setRoundness((int) (this.value * 15));
             }
         };
         this.addDrawableChild(roundnessSlider);
