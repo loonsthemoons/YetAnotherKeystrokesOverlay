@@ -110,7 +110,10 @@ public class Strokes extends ClickableWidget {
                 String textToShow = getKeyTextForInputType();
                 if (!textToShow.isEmpty()) {
                     TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
-                    context.drawCenteredTextWithShadow(textRenderer, Text.literal(textToShow), drawX + 1 + drawWidth / 2, drawY + 1 + (drawHeight - textRenderer.fontHeight) / 2, this.textColor);
+                    double offsetY = (double) (drawHeight - textRenderer.fontHeight) / 2;
+                    int centerX = (int) Math.round(drawX + (float) drawWidth / 2);
+                    int centerY = drawY + (int) Math.round(offsetY);
+                    context.drawCenteredTextWithShadow(textRenderer, Text.literal(textToShow), centerX, centerY, this.textColor);
                 }
             }
 
