@@ -21,6 +21,10 @@ public class StrokesStructure {
         strokes.add(new Strokes(new Vec3d(80,110,0), ColorHelper.Argb.getArgb(255,255,0,0),30,10, InputType.USE));
     }
 
+    public void createStroke(InputType inputType){
+        strokes.add(new Strokes(new Vec3d(200,200,0), ColorHelper.Argb.getArgb(255,255,0,0),20,20, inputType));
+    }
+
     public ArrayList<Strokes> getStrokes() {
         return strokes;
     }
@@ -38,6 +42,9 @@ public class StrokesStructure {
     }
     public void removeStroke(Strokes stroke){
         this.strokes.remove(stroke);
+    }
+    public Strokes getLast(){
+        return strokes.get(strokes.size()-1);
     }
 
 }

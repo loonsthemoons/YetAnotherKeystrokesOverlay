@@ -3,7 +3,6 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.text.Text;
-import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.Vec3d;
 
 public class Strokes extends ClickableWidget {
@@ -12,9 +11,8 @@ public class Strokes extends ClickableWidget {
     private boolean isVisible = true;
     private InputType inputType;
     public enum InputType {
-        FORWARD, BACK, LEFT, RIGHT, ATTACK, USE, SNEAK, SPRINT, JUMP
+        FORWARD, BACK, LEFT, RIGHT, ATTACK, USE, SNEAK, SPRINT, JUMP, NULL
     }
-
 
     public Strokes(Vec3d position, int color, int width, int height, InputType inputType){
         super((int) position.x, (int) position.y, width, height, Text.empty());
@@ -36,8 +34,9 @@ public class Strokes extends ClickableWidget {
     public void setWidth(int width){this.width = width;}
     public boolean isVisible(){return isVisible;}
     public void setVisible(boolean isVisible){this.isVisible = isVisible;}
+    public boolean isHovered(int mouseX, int mouseY){return this.active && this.visible && mouseX >= this.getX() && mouseX < this.getX() + this.getWidth() && mouseY >= this.getY() && mouseY < this.getY() + this.getHeight();}
 
-    @Override
+        @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         if(!this.isVisible){
         } else {
@@ -45,27 +44,26 @@ public class Strokes extends ClickableWidget {
             int drawY = this.getY();
             int drawWidth = this.getWidth();
             int drawHeight = this.getHeight();
-            int startColor = this.color;
-            int endColor = ColorHelper.Argb.getArgb(ColorHelper.Argb.getAlpha(color),
-                    (int)(ColorHelper.Argb.getRed(color) * 0.7),
-                    (int)(ColorHelper.Argb.getGreen(color) * 0.7),
-                    (int)(ColorHelper.Argb.getBlue(color) * 0.7));
+            int color = this.color;
 
-            context.fillGradient(drawX, drawY, drawX + drawWidth, drawY + drawHeight, startColor, endColor);
-
-            if (this.isHovered()) {
+            context.fill(drawX, drawY, drawX + drawWidth, drawY + drawHeight, color);
+            if(this.isHovered(mouseX, mouseY)){
                 context.drawBorder(drawX, drawY, drawWidth, drawHeight, 0xFFFFFFFF);
             }
             super.render(context, mouseX, mouseY, delta);
         }
     }
 
-
     @Override
     protected void renderButton(DrawContext context, int mouseX, int mouseY, float delta) {}
 
     @Override
     protected void appendClickableNarrations(NarrationMessageBuilder builder) {}
+
+    @Override
+    public boolean isHovered() {
+        return super.isHovered();
+    }
 
     public void update(int color){
         this.color = color;

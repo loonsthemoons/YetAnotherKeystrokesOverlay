@@ -7,17 +7,42 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.toast.SystemToast;
 import net.minecraft.text.Text;
+import net.minecraft.util.math.Vec3d;
+
 import java.util.ArrayList;
 import static dev.loons.fancystrokes.Strokes.InputType;
 
 public class StrokeOptions extends Screen {
     private StrokesStructure structure;
     private ArrayList<Strokes> strokesArrayList;
+    private double mouseOffsetX;
+    private double mouseOffsetY;
+    private Strokes currentStroke = null;
+    private static final int snapThreshhold = 5;
+
     public StrokeOptions(Text title, StrokesStructure structure) {
         super(title);
         this.structure = structure;
         this.strokesArrayList = new ArrayList<>();
         this.strokesArrayList.addAll(structure.getStrokes());
+    }
+
+    private int snapHorizontal(int currentPos, int currentSize, int otherPos, int otherSize) {
+        if (Math.abs(currentPos - otherPos) < snapThreshhold) return otherPos;
+        if (Math.abs(currentPos - (otherPos + otherSize)) < snapThreshhold) return otherPos + otherSize;
+        if (Math.abs((currentPos + currentSize) - otherPos) < snapThreshhold) return otherPos - currentSize;
+        if (Math.abs((currentPos + currentSize) - (otherPos + otherSize)) < snapThreshhold) return otherPos + otherSize - currentSize;
+        if (Math.abs((currentPos + currentSize / 2) - (otherPos + otherSize / 2)) < snapThreshhold) return (otherPos + otherSize / 2) - currentSize / 2;
+        return currentPos;
+    }
+
+    private int snapVertical(int currentPos, int currentSize, int otherPos, int otherSize) {
+        if (Math.abs(currentPos - otherPos) < snapThreshhold) return otherPos;
+        if (Math.abs(currentPos - (otherPos + otherSize)) < snapThreshhold) return otherPos + otherSize;
+        if (Math.abs((currentPos + currentSize) - otherPos) < snapThreshhold) return otherPos - currentSize;
+        if (Math.abs((currentPos + currentSize) - (otherPos + otherSize)) < snapThreshhold) return otherPos + otherSize - currentSize;
+        if (Math.abs((currentPos + currentSize / 2) - (otherPos + otherSize / 2)) < snapThreshhold) return (otherPos + otherSize / 2) - currentSize / 2;
+        return currentPos;
     }
 
     public void openScreen(){
@@ -49,13 +74,23 @@ public class StrokeOptions extends Screen {
                 structure.getStrokeByInputType(InputType.ATTACK).setVisible(true);
                 structure.getStrokeByInputType(InputType.USE).setVisible(true);
             }
-        }).dimensions(200, 40, 120, 20).build();
+        }).dimensions(600, 40, 120, 20).build();
 
+        // Widget for closing the menu
         ButtonWidget closeWidget = ButtonWidget.builder(Text.of("Close"),(btn) -> {
             this.close();
-                }).dimensions(200,70,120,20).build();
+                }).dimensions(600,70,120,20).build();
+
+        // Widget for creating a new Stroke
+        ButtonWidget createWidget = ButtonWidget.builder(Text.of("Create Stroke"),(btn -> {
+            structure.createStroke(InputType.NULL);
+            strokesArrayList.add(structure.getLast());
+            this.addDrawableChild(structure.getLast());
+        })).dimensions(600,100,120,20).build();
+
         this.addDrawableChild(mouseWidget);
         this.addDrawableChild(closeWidget);
+        this.addDrawableChild(createWidget);
     }
 
     @Override
@@ -66,7 +101,48 @@ public class StrokeOptions extends Screen {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        return super.mouseClicked(mouseX, mouseY, button);
+        boolean superClicked = super.mouseClicked(mouseX, mouseY, button);
+        for(Strokes strokes : strokesArrayList){
+            if(strokes.isVisible() && strokes.isHovered()){
+                this.currentStroke = strokes;
+                this.mouseOffsetX = mouseX - strokes.getX();
+                this.mouseOffsetY = mouseY - strokes.getY();
+                return true;
+            }
+        }
+        return superClicked;
+    }
+
+    @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
+        if (this.currentStroke != null && button == 0) {
+            int newX = (int) (mouseX - this.mouseOffsetX);
+            int newY = (int) (mouseY - this.mouseOffsetY);
+
+            for (Strokes otherStroke : strokesArrayList) {
+                if (otherStroke == this.currentStroke || !otherStroke.isVisible()) {
+                    continue;
+                }
+                newX = snapHorizontal(newX, this.currentStroke.getWidth(), otherStroke.getX(), otherStroke.getWidth());
+                newY = snapVertical(newY, this.currentStroke.getHeight(), otherStroke.getY(), otherStroke.getHeight());
+            }
+
+            newX = Math.max(0, Math.min(newX, this.width - this.currentStroke.getWidth()));
+            newY = Math.max(0, Math.min(newY, this.height - this.currentStroke.getHeight()));
+
+            this.currentStroke.setPosition(new Vec3d(newX, newY, 0));
+            return true;
+        }
+        return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
+    }
+
+    @Override
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        if(currentStroke!=null){
+            currentStroke=null;
+            return true;
+        }
+        return super.mouseReleased(mouseX, mouseY, button);
     }
 
     @Override
