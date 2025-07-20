@@ -5,19 +5,27 @@ import net.minecraft.util.math.Vec3d;
 import java.util.ArrayList;
 import static dev.loons.fancystrokes.Strokes.InputType;
 
+/**
+ * Manages the collection of {@link Strokes} objects, providing methods to initialize
+ * default strokes, add/remove strokes, and retrieve specific strokes.
+ */
+
 public class StrokesStructure {
     private ArrayList<Strokes> strokes = new ArrayList<>();
-    private final int defaultColor = ColorHelper.Argb.getArgb(255, 255, 0, 0); // Red
-    private final int defaultPressedColor = ColorHelper.Argb.getArgb(255, 0, 255, 0); // Green
-    private final int defaultOutlineColor = ColorHelper.Argb.getArgb(255, 255, 255, 255); // White
-    private final int defaultPressedOutlineColor = ColorHelper.Argb.getArgb(255, 255, 255, 0); // Gelb (für Hover/Selected + Pressed)
+    private final int defaultColor = ColorHelper.Argb.getArgb(255, 255, 0, 0);                  // Red
+    private final int defaultPressedColor = ColorHelper.Argb.getArgb(255, 0, 255, 0);           // Green
+    private final int defaultOutlineColor = ColorHelper.Argb.getArgb(255, 255, 255, 255);       // White
+    private final int defaultPressedOutlineColor = ColorHelper.Argb.getArgb(255, 255, 255, 0);  // Yellow
     private final int defaultRoundness = 0;
     private final int defaultWidth = 20;
     private final int defaultHeight = 20;
 
-    public StrokesStructure(){
-        // Initializer
-    }
+    public StrokesStructure(){}
+
+    /**
+     * Initializes a set of default keystrokes for WASD, RMB & LMB
+     * These strokes are added to the internal list.
+     */
 
     public void initializeDefaultStrokes(){
         strokes.add(new Strokes(
@@ -88,6 +96,12 @@ public class StrokesStructure {
         ));
     }
 
+    /**
+     * Creates and adds a new stroke with default appearance properties
+     * except for a specified input type.
+     *
+     * @param inputType The {@link InputType} for the new stroke.
+     */
     public void createStroke(InputType inputType){
         strokes.add(new Strokes(
                 new Vec3d(200,200,0),

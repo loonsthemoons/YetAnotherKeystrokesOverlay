@@ -9,35 +9,40 @@ import net.minecraft.client.toast.SystemToast;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.ColorHelper;
 
+/**
+ * A screen for editing the properties of a single {@link Strokes} object.
+ * This screen provides sliders for color adjustments, toggles for outlines and text,
+ * a slider for roundness, and buttons for global settings or resetting configurations.
+ */
 public class StrokeEditScreen extends Screen {
     private final Strokes targetStroke;
     private final Screen parentScreen;
     private final StrokesStructure structure;
 
-    private int fillColorPanelX, fillColorPanelY, fillColorPanelWidth, fillColorPanelHeight; // Ehemals unpressedColorPanel, jetzt für beide Füllfarben
+    private int fillColorPanelX, fillColorPanelY, fillColorPanelWidth, fillColorPanelHeight;
     private int outlinePanelX, outlinePanelY, outlinePanelWidth, outlinePanelHeight;
     private int generalPanelX, generalPanelY, generalPanelWidth, generalPanelHeight;
 
-    // Allgemeine Widget-Parameter
+    // General widget parameters
     private int sliderWidth = 150;
     private int fieldHeight = 20;
 
-    // RGB Sliders für Unpressed Color
+    // RGB Sliders for Unpressed Color
     private RgbSlider unpressedRedSlider;
     private RgbSlider unpressedGreenSlider;
     private RgbSlider unpressedBlueSlider;
 
-    // RGB Sliders für Pressed Color
+    // RGB Sliders for Pressed Color
     private RgbSlider pressedRedSlider;
     private RgbSlider pressedGreenSlider;
     private RgbSlider pressedBlueSlider;
 
-    // RGB Sliders für Outline-Farbe
+    // RGB Sliders for Outline Color
     private RgbSlider outlineRedSlider;
     private RgbSlider outlineGreenSlider;
     private RgbSlider outlineBlueSlider;
 
-    // RGB Sliders für Pressed-Outline-Farbe
+    // RGB Sliders for Pressed-Outline Color
     private RgbSlider pressedOutlineRedSlider;
     private RgbSlider pressedOutlineGreenSlider;
     private RgbSlider pressedOutlineBlueSlider;
@@ -54,6 +59,14 @@ public class StrokeEditScreen extends Screen {
     private ButtonWidget doneButton;
 
 
+    /**
+     * Constructs a new StrokeEditScreen.
+     *
+     * @param title The title of the screen.
+     * @param strokeToEdit The {@link Strokes} object to be edited.
+     * @param parent The parent screen to return to when this screen is closed.
+     * @param structure The {@link StrokesStructure} managing all strokes.
+     */
     public StrokeEditScreen(Text title, Strokes strokeToEdit, Screen parent, StrokesStructure structure) {
         super(title);
         this.targetStroke = strokeToEdit;
@@ -62,29 +75,33 @@ public class StrokeEditScreen extends Screen {
         this.structure = structure;
     }
 
+    /**
+     * Initializes the screen elements. This method is called when the screen is opened.
+     * It calculates panel dimensions, positions, and adds all necessary widgets (sliders, buttons) to the screen.
+     */
     @Override
     protected void init() {
         super.init();
 
-        // --- Panel-Dimensionen und Positionen berechnen ---
+        // Calculate panel dimensions and positions
         int panelCount = 3;
-        int panelSpacing = 20; // Abstand zwischen den Boxen
+        int panelSpacing = 20;
         int panelHeight = 2 * (fieldHeight + 5) * 3 + 20 + 20 + 30;
-        int titleOffset = 20; // Platz für den Titel über der Box
+        int titleOffset = 20;
 
         int totalWidthNeeded = (sliderWidth + 50) * panelCount + (panelSpacing * (panelCount - 1));
         int startX = (this.width - totalWidthNeeded) / 2;
-        int panelStartYOffset = this.height / 2 - (panelHeight + titleOffset) / 2; // Y-Startpunkt für die Panels inkl. Titel
+        int panelStartYOffset = this.height / 2 - (panelHeight + titleOffset) / 2;
 
 
-        // Fill Color Panel (enthält Unpressed und Pressed Color Slider)
+        // Fill Color Panel
         fillColorPanelX = startX;
-        fillColorPanelY = panelStartYOffset + titleOffset; // Panel beginnt unter dem Titel
+        fillColorPanelY = panelStartYOffset + titleOffset;
         fillColorPanelWidth = sliderWidth + 50;
         fillColorPanelHeight = panelHeight;
         addFillColorSettings(fillColorPanelX, fillColorPanelY, fillColorPanelWidth, fillColorPanelHeight);
 
-        // Outline-Farben-Panel
+        // Outline Color Panel
         outlinePanelX = fillColorPanelX + fillColorPanelWidth + panelSpacing;
         outlinePanelY = panelStartYOffset + titleOffset;
         outlinePanelWidth = sliderWidth + 50;
@@ -99,19 +116,27 @@ public class StrokeEditScreen extends Screen {
         addGeneralSettings(generalPanelX, generalPanelY, generalPanelWidth, generalPanelHeight);
 
 
-        // Done Button (unten mittig, wie zuvor)
+        // Done Button
         doneButton = ButtonWidget.builder(Text.literal("Done"), (button) -> {
             this.close();
         }).dimensions(this.width / 2 - 75, this.height - 30, 150, 20).build();
         this.addDrawableChild(doneButton);
     }
 
-    // --- Hilfsmethoden zum Hinzufügen der Widgets für jedes Panel ---
+    /**
+     * Helper method to add widgets for the Fill Color Panel.
+     * This includes sliders for unpressed and pressed fill colors (RGB components).
+     *
+     * @param panelX The X-coordinate of the panel.
+     * @param panelY The Y-coordinate of the panel.
+     * @param panelW The width of the panel.
+     * @param panelH The height of the panel.
+     */
     private void addFillColorSettings(int panelX, int panelY, int panelW, int panelH) {
-        int currentY = panelY + 5; // Start Y innerhalb des Panels (nach dem Titel-Abstand)
-        int sliderStartX = panelX + (panelW - sliderWidth) / 2; // Slider zentriert im Panel
+        int currentY = panelY + 5;
+        int sliderStartX = panelX + (panelW - sliderWidth) / 2;
 
-        // Titel für Unpressed Color innerhalb der Box
+        // Title for Unpressed Color within the box
         this.addDrawableChild(new TextLabelWidget(sliderStartX, currentY, sliderWidth, Text.literal("Unpressed Color")));
         currentY += fieldHeight + 5;
 
@@ -141,9 +166,9 @@ public class StrokeEditScreen extends Screen {
             }
         };
         this.addDrawableChild(unpressedBlueSlider);
-        currentY += fieldHeight + 15; // Abstand zwischen Unpressed und Pressed Color Sliders
+        currentY += fieldHeight + 15;
 
-        // Titel für Pressed Color innerhalb der Box
+        // Title for Pressed Color within the box
         this.addDrawableChild(new TextLabelWidget(sliderStartX, currentY, sliderWidth, Text.literal("Pressed Color")));
         currentY += fieldHeight + 5;
 
@@ -176,11 +201,20 @@ public class StrokeEditScreen extends Screen {
     }
 
 
+    /**
+     * Helper method to add widgets for the Outline Color Panel.
+     * This includes sliders for unpressed and pressed outline colors (RGB components).
+     *
+     * @param panelX The X-coordinate of the panel.
+     * @param panelY The Y-coordinate of the panel.
+     * @param panelW The width of the panel.
+     * @param panelH The height of the panel.
+     */
     private void addOutlineColorSettings(int panelX, int panelY, int panelW, int panelH) {
         int currentY = panelY + 5;
         int sliderStartX = panelX + (panelW - sliderWidth) / 2;
 
-        // Titel für Unpressed Outline Color innerhalb der Box
+        // Title for Unpressed Outline Color within the box
         this.addDrawableChild(new TextLabelWidget(sliderStartX, currentY, sliderWidth, Text.literal("Unpressed Outline Color")));
         currentY += fieldHeight + 5;
 
@@ -210,9 +244,9 @@ public class StrokeEditScreen extends Screen {
         };
         this.addDrawableChild(outlineBlueSlider);
 
-        currentY += fieldHeight + 15; // Abstand zwischen Unpressed und Pressed Outline Color Sliders
+        currentY += fieldHeight + 15;
 
-        // Titel für Pressed Outline Color innerhalb der Box
+        // Title for Pressed Outline Color within the box
         this.addDrawableChild(new TextLabelWidget(sliderStartX, currentY, sliderWidth, Text.literal("Pressed Outline Color")));
         currentY += fieldHeight + 5;
 
@@ -243,9 +277,19 @@ public class StrokeEditScreen extends Screen {
         this.addDrawableChild(pressedOutlineBlueSlider);
     }
 
+    /**
+     * Helper method to add widgets for the General Settings Panel.
+     * This includes buttons for applying settings globally, resetting configurations,
+     * cycling input type, toggling outlines and text, and a slider for roundness.
+     *
+     * @param panelX The X-coordinate of the panel.
+     * @param panelY The Y-coordinate of the panel.
+     * @param panelW The width of the panel.
+     * @param panelH The height of the panel.
+     */
     private void addGeneralSettings(int panelX, int panelY, int panelW, int panelH) {
         int currentY = panelY + 5;
-        int elementStartX = panelX + (panelW - sliderWidth) / 2; // Elemente zentriert im Panel
+        int elementStartX = panelX + (panelW - sliderWidth) / 2;
 
         // Apply Global Button
         applyGlobalButton = ButtonWidget.builder(Text.of("Apply settings globally"), (button) -> {
@@ -277,6 +321,7 @@ public class StrokeEditScreen extends Screen {
             structure.initializeDefaultStrokes();
             YetAnotherKeystrokesModClient.ACTIVE_STROKES.clear();
             YetAnotherKeystrokesModClient.ACTIVE_STROKES.addAll(structure.getStrokes());
+            this.init(); // Re-initialize the screen to reflect default strokes
 
         }).dimensions(elementStartX, currentY, sliderWidth, fieldHeight).build();
         this.addDrawableChild(resetButton);
@@ -322,7 +367,9 @@ public class StrokeEditScreen extends Screen {
     }
 
 
-    // --- Hilfsmethoden zum Aktualisieren der Farben ---
+    /**
+     * Updates the target stroke's unpressed fill color based on the current values of the RGB sliders.
+     */
     private void refreshUnpressedColorFromSliders() {
         int r = (int) (unpressedRedSlider.getCurrentValue() * 255);
         int g = (int) (unpressedGreenSlider.getCurrentValue() * 255);
@@ -333,6 +380,9 @@ public class StrokeEditScreen extends Screen {
         targetStroke.setColor(newColor);
     }
 
+    /**
+     * Updates the target stroke's pressed fill color based on the current values of the RGB sliders.
+     */
     private void refreshPressedColorFromSliders() {
         int r = (int) (pressedRedSlider.getCurrentValue() * 255);
         int g = (int) (pressedGreenSlider.getCurrentValue() * 255);
@@ -343,6 +393,9 @@ public class StrokeEditScreen extends Screen {
         targetStroke.setPressedColor(newColor);
     }
 
+    /**
+     * Updates the target stroke's unpressed outline color based on the current values of the RGB sliders.
+     */
     private void refreshOutlineColorFromSliders() {
         int r = (int) (outlineRedSlider.getCurrentValue() * 255);
         int g = (int) (outlineGreenSlider.getCurrentValue() * 255);
@@ -353,6 +406,9 @@ public class StrokeEditScreen extends Screen {
         targetStroke.setOutlineColor(newColor);
     }
 
+    /**
+     * Updates the target stroke's pressed outline color based on the current values of the RGB sliders.
+     */
     private void refreshPressedOutlineColorFromSliders() {
         int r = (int) (pressedOutlineRedSlider.getCurrentValue() * 255);
         int g = (int) (pressedOutlineGreenSlider.getCurrentValue() * 255);
@@ -363,7 +419,11 @@ public class StrokeEditScreen extends Screen {
         targetStroke.setPressedOutlineColor(newColor);
     }
 
-
+    /**
+     * Cycles through the available {@link Strokes.InputType} values for the target stroke.
+     *
+     * @param direction The direction to cycle (1 for forward, -1 for backward).
+     */
     private void cycleInputType(int direction) {
         Strokes.InputType[] types = Strokes.InputType.values();
         int currentIndex = targetStroke.getInputType().ordinal();
@@ -379,34 +439,50 @@ public class StrokeEditScreen extends Screen {
         inputTypeCycleButton.setMessage(Text.literal("Input Type: " + newType.name()));
     }
 
+    /**
+     * Renders the StrokeEditScreen, including panel backgrounds, titles, and all contained widgets.
+     *
+     * @param context The drawing context.
+     * @param mouseX The X-coordinate of the mouse.
+     * @param mouseY The Y-coordinate of the mouse.
+     * @param delta The partial tick delta.
+     */
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         this.renderBackground(context);
 
-        // --- Render die Panel-Hintergründe und Titel ---
-        renderPanelWithTitle(context, fillColorPanelX, fillColorPanelY, fillColorPanelWidth, fillColorPanelHeight, Text.literal("Fill Color")); // NEU: Fill Color für beide Füllfarben
+        renderPanelWithTitle(context, fillColorPanelX, fillColorPanelY, fillColorPanelWidth, fillColorPanelHeight, Text.literal("Fill Color"));
         renderPanelWithTitle(context, outlinePanelX, outlinePanelY, outlinePanelWidth, outlinePanelHeight, Text.literal("Outlines"));
         renderPanelWithTitle(context, generalPanelX, generalPanelY, generalPanelWidth, generalPanelHeight, Text.literal("General Settings"));
-        // ------------------------------------------------
 
-        super.render(context, mouseX, mouseY, delta); // Rendert alle Widgets (inkl. Slider)
+        super.render(context, mouseX, mouseY, delta);
 
-        // Titel des Screens zeichnen
         context.drawText(this.textRenderer, this.title, this.width / 2 - this.textRenderer.getWidth(this.title) / 2, 20, 0xFFFFFFFF, true);
         context.drawText(this.textRenderer, "Editing: " + targetStroke.getMessage().getString(), this.width / 2 - this.textRenderer.getWidth("Editing: " + targetStroke.getMessage().getString()) / 2, 40, 0xFFFFFF00, true);
     }
 
+    /**
+     * Renders a panel background with a title above it.
+     *
+     * @param context The drawing context.
+     * @param x The X-coordinate of the panel.
+     * @param y The Y-coordinate of the panel.
+     * @param width The width of the panel.
+     * @param height The height of the panel.
+     * @param title The title text for the panel.
+     */
     private void renderPanelWithTitle(DrawContext context, int x, int y, int width, int height, Text title) {
-        // Titel über der Box rendern
         int titleY = y - 15; // 15 Pixel über der Box
         context.drawText(this.textRenderer, title, x + width / 2 - this.textRenderer.getWidth(title) / 2, titleY, 0xFFFFFFFF, true);
 
-        // Box rendern
-        context.fill(x, y, x + width, y + height, 0xA0000000); // Dunkler Hintergrund
-        context.drawBorder(x, y, width, height, 0xFFFFFFFF); // Weißer Rand
+        context.fill(x, y, x + width, y + height, 0xA0000000);
+        context.drawBorder(x, y, width, height, 0xFFFFFFFF);
     }
 
-
+    /**
+     * Closes the current screen. Before closing, it deselects the target stroke,
+     * saves the updated stroke configurations, and returns to the parent screen.
+     */
     @Override
     public void close() {
         this.targetStroke.setSelected(false);
@@ -414,15 +490,24 @@ public class StrokeEditScreen extends Screen {
         MinecraftClient.getInstance().setScreen(this.parentScreen);
     }
 
+    /**
+     * Handles mouse click events on the screen.
+     * This specifically handles left and right-clicks on the {@code inputTypeCycleButton}.
+     *
+     * @param mouseX The X-coordinate of the mouse click.
+     * @param mouseY The Y-coordinate of the mouse click.
+     * @param button The mouse button that was clicked (0 for left, 1 for right).
+     * @return True if the event was handled, false otherwise.
+     */
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         // Handle clicks on inputTypeCycleButton
         if (inputTypeCycleButton.isMouseOver(mouseX, mouseY)) {
-            if (button == 0) { // Linksklick
-                cycleInputType(1); // Vorwärts
+            if (button == 0) { // Left click
+                cycleInputType(1); // Cycle forward
                 return true;
-            } else if (button == 1) { // Rechtsklick
-                cycleInputType(-1); // Rückwärts
+            } else if (button == 1) { // Right click
+                cycleInputType(-1); // Cycle backward
                 return true;
             }
         }

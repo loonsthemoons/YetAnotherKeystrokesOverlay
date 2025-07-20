@@ -5,6 +5,11 @@ import com.google.gson.JsonObject;
 import dev.loons.fancystrokes.Strokes;
 import net.minecraft.util.math.Vec3d;
 
+/**
+ * A data class representing the configurable properties of a single {@link Strokes} object.
+ * This class is used for serializing and deserializing stroke data to and from a configuration file,
+ * allowing the mod to save and load user-defined stroke appearances and positions.
+ */
 public class StrokeData {
     public Strokes.InputType inputType;
     public double posX, posY, posZ;
@@ -18,7 +23,18 @@ public class StrokeData {
     public boolean showKeybindText;
     public boolean outlineStatus;
 
+    /**
+     * Default constructor for creating an empty StrokeData object.
+     * Useful for deserialization purposes.
+     */
     public StrokeData() {}
+
+    /**
+     * Constructs a StrokeData object from an existing {@link Strokes} instance.
+     * This captures all relevant properties of the stroke for serialization.
+     *
+     * @param stroke The {@link Strokes} object from which to extract data.
+     */
     public StrokeData(Strokes stroke) {
         this.inputType = stroke.getInputType();
         this.posX = stroke.getPosition().x;
@@ -35,6 +51,12 @@ public class StrokeData {
         this.outlineStatus = stroke.getOutlineStatus();
     }
 
+    /**
+     * Converts this StrokeData object back into a {@link Strokes} instance.
+     * This method reconstructs a new {@link Strokes} object with the stored properties.
+     *
+     * @return A new {@link Strokes} object initialized with this data.
+     */
     public Strokes toStroke() {
         Strokes newStroke = new Strokes(
                 new Vec3d(posX, posY, posZ),
@@ -52,6 +74,12 @@ public class StrokeData {
         return newStroke;
     }
 
+    /**
+     * Serializes the StrokeData object into a {@link JsonElement} (specifically, a {@link JsonObject}).
+     * This method is used to prepare the stroke's data for saving to a JSON configuration file.
+     *
+     * @return A {@link JsonElement} containing the serialized stroke data.
+     */
     public JsonElement getSerializedForm() {
         JsonObject json = new JsonObject();
         json.addProperty("inputType", this.inputType.name());
@@ -70,6 +98,17 @@ public class StrokeData {
         return json;
     }
 
+    /**
+     * Loads the properties of this StrokeData object from a given {@link JsonElement}.
+     * This method is used to deserialize stroke data from a JSON configuration file.
+     *
+     * @param jsonElement The {@link JsonElement} (expected to be a {@link JsonObject})
+     * containing the serialized stroke data.
+     * @throws IllegalArgumentException if the {@code inputType} string does not match any
+     * {@link Strokes.InputType} enum constant.
+     * @throws ClassCastException if the JSON elements are not of the expected type (e.g., getting an int as a String).
+     * @throws NullPointerException if a required JSON property is missing.
+     */
     public void load(JsonElement jsonElement) {
         JsonObject json = jsonElement.getAsJsonObject();
         this.inputType = Strokes.InputType.valueOf(json.get("inputType").getAsString());

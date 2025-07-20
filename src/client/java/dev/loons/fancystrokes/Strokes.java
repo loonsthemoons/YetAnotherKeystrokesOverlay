@@ -7,6 +7,12 @@ import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.Vec3d;
 
+/**
+ * Represents a customizable keystroke display widget.
+ * This class extends {@link ClickableWidget} to allow for interactive elements
+ * and handles rendering of the keystroke with various customizable properties
+ * like color, size, position, and text.
+ */
 public class Strokes extends ClickableWidget {
     private Vec3d position;
     private int color;
@@ -22,10 +28,26 @@ public class Strokes extends ClickableWidget {
     private boolean showKeybindText = true;
     private int textColor = 0xFFFFFFFF;
 
+    /**
+     * Defines the types of input actions that a stroke can represent.
+     */
     public enum InputType {
         FORWARD, BACK, LEFT, RIGHT, ATTACK, USE, SNEAK, SPRINT, JUMP, NULL
     }
 
+    /**
+     * Constructs a new Strokes object.
+     *
+     * @param position The 3D vector representing the top-left corner position of the stroke.
+     * @param color The default background color of the stroke.
+     * @param pressedColor The background color of the stroke when it is pressed.
+     * @param outlineColor The default outline color of the stroke.
+     * @param pressedOutlineColor The outline color of the stroke when it is pressed.
+     * @param width The width of the stroke.
+     * @param height The height of the stroke.
+     * @param inputType The {@link InputType} associated with this stroke.
+     * @param roundness The roundness of the corners for the stroke's rectangle. (from 0 to 15)
+     */
     public Strokes(Vec3d position, int color, int pressedColor, int outlineColor, int pressedOutlineColor, int width, int height, InputType inputType, int roundness){
         super((int) position.x, (int) position.y, width, height, Text.empty());
         this.position = position;
@@ -85,7 +107,17 @@ public class Strokes extends ClickableWidget {
         }
     }
 
-        @Override
+    /**
+     * Renders the stroke on the screen.
+     * This method draws the rounded rectangle, its outline (if enabled),
+     * a hover/selected outline, and the keybind text.
+     *
+     * @param context The drawing context.
+     * @param mouseX The X-coordinate of the mouse.
+     * @param mouseY The Y-coordinate of the mouse.
+     * @param delta The partial tick delta.
+     */
+    @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         if(!this.isVisible){
         } else {
@@ -93,7 +125,6 @@ public class Strokes extends ClickableWidget {
             int drawY = this.getY();
             int drawWidth = this.getWidth();
             int drawHeight = this.getHeight();
-            int effectiveRoundness = Math.min(roundness, Math.min(drawWidth / 2, drawHeight / 2));
             int fillColorToUse = isPressed ? this.pressedColor : this.color;
             int outlineColorToUse = isPressed ? this.pressedOutlineColor : this.outlineColor;
 
@@ -132,6 +163,10 @@ public class Strokes extends ClickableWidget {
         return super.isHovered();
     }
 
+    /**
+     * Updates the pressed state of the stroke.
+     * @param isPressed True if the associated input is currently pressed, false otherwise.
+     */
     public void update(boolean isPressed){
         this.isPressed = isPressed;
     }

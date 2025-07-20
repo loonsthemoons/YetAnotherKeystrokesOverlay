@@ -15,18 +15,24 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Manages the configuration for the FancyStrokes mod
+ */
 public class FancyStrokesConfig {
-
     public boolean enableFancyStrokes = true;
     public int globalRoundness = 8;
-
     public List<StrokeData> savedStrokes = new ArrayList<>();
 
     private static final Path CONFIG_PATH = FabricLoader.getInstance().getConfigDir().resolve("Yet-Another-Keystrokes-Mod.json");
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-
     private static FancyStrokesConfig instance;
 
+    /**
+     * Returns the singleton instance of FancyStrokesConfig.
+     * If no instance exists, a new one is created and loaded.
+     *
+     * @return The singleton instance of FancyStrokesConfig.
+     */
     public static FancyStrokesConfig getInstance() {
         if (instance == null) {
             instance = new FancyStrokesConfig();
@@ -35,8 +41,15 @@ public class FancyStrokesConfig {
         return instance;
     }
 
+    /**
+     * Private constructor to enforce the singleton pattern.
+     */
     private FancyStrokesConfig() {}
 
+    /**
+     * Loads the configuration from the JSON file. If the file does not exist,
+     * default values are used.
+     */
     public void load() {
         if (!CONFIG_PATH.toFile().exists()) {
             System.out.println("No config file found, using defaults for Yet-Another-Keystroke-Mod.");

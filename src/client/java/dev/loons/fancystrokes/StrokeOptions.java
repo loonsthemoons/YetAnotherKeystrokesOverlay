@@ -10,6 +10,10 @@ import net.minecraft.util.math.Vec3d;
 import java.util.ArrayList;
 import static dev.loons.fancystrokes.Strokes.InputType;
 
+/**
+ * A screen for configuring the position and properties of individual keystroke displays.
+ * Users can drag and drop strokes, select multiple strokes, and access individual stroke settings.
+ */
 public class StrokeOptions extends Screen {
     private StrokesStructure structure;
     private ArrayList<Strokes> strokesArrayList;
@@ -22,6 +26,12 @@ public class StrokeOptions extends Screen {
     private double selectPositionY;
     private ArrayList<Strokes> selectedStrokes = new ArrayList<>();
 
+    /**
+     * Constructs a new StrokeOptions screen.
+     *
+     * @param title The title of the screen.
+     * @param structure The {@link StrokesStructure} containing the strokes to be managed.
+     */
     public StrokeOptions(Text title, StrokesStructure structure) {
         super(title);
         this.structure = structure;
@@ -29,6 +39,16 @@ public class StrokeOptions extends Screen {
         this.strokesArrayList.addAll(structure.getStrokes());
     }
 
+    /**
+     * Snaps the current position horizontally to an alignment point with another stroke.
+     * This method checks for snapping to left edge, right edge, and center.
+     *
+     * @param currentPos The current X position of the stroke.
+     * @param currentSize The width of the current stroke.
+     * @param otherPos The X position of the other stroke to snap to.
+     * @param otherSize The width of the other stroke.
+     * @return The snapped X position, or the original currentPos if no snap occurs.
+     */
     private int snapHorizontal(int currentPos, int currentSize, int otherPos, int otherSize) {
         if (Math.abs(currentPos - otherPos) < snapThreshhold) return otherPos;
         if (Math.abs(currentPos - (otherPos + otherSize)) < snapThreshhold) return otherPos + otherSize;
@@ -38,6 +58,16 @@ public class StrokeOptions extends Screen {
         return currentPos;
     }
 
+    /**
+     * Snaps the current position vertically to an alignment point with another stroke.
+     * This method checks for snapping to top edge, bottom edge, and center.
+     *
+     * @param currentPos The current Y position of the stroke.
+     * @param currentSize The height of the current stroke.
+     * @param otherPos The Y position of the other stroke to snap to.
+     * @param otherSize The height of the other stroke.
+     * @return The snapped Y position, or the original currentPos if no snap occurs.
+     */
     private int snapVertical(int currentPos, int currentSize, int otherPos, int otherSize) {
         if (Math.abs(currentPos - otherPos) < snapThreshhold) return otherPos;
         if (Math.abs(currentPos - (otherPos + otherSize)) < snapThreshhold) return otherPos + otherSize;
@@ -47,6 +77,14 @@ public class StrokeOptions extends Screen {
         return currentPos;
     }
 
+    /**
+     * Selects strokes within a given rectangular area.
+     *
+     * @param posX1 The X-coordinate of the first corner of the selection area.
+     * @param posY1 The Y-coordinate of the first corner of the selection area.
+     * @param posX2 The X-coordinate of the second corner of the selection area.
+     * @param posY2 The Y-coordinate of the second corner of the selection area.
+     */
     private void selectAreaStroke(double posX1, double posY1, double posX2, double posY2){
         int selectionLeft = (int) Math.min(posX1, posX2);
         int selectionTop = (int) Math.min(posY1, posY2);
@@ -64,12 +102,19 @@ public class StrokeOptions extends Screen {
         }
     }
 
+    /**
+     * Opens a new instance of the StrokeOptions screen.
+     */
     public void openScreen(){
         MinecraftClient.getInstance().setScreen(
                 new StrokeOptions(Text.empty(),structure)
         );
     }
 
+    /**
+     * Initializes the screen elements. This method is called when the screen is opened.
+     * It clears existing children and adds all strokes from the structure as drawable children.
+     */
     @Override
     protected void init() {
         super.init();
@@ -81,6 +126,14 @@ public class StrokeOptions extends Screen {
         }
     }
 
+    /**
+     * Renders the StrokeOptions screen, including the background, title, and selection rectangle (if active).
+     *
+     * @param context The drawing context.
+     * @param mouseX The X-coordinate of the mouse.
+     * @param mouseY The Y-coordinate of the mouse.
+     * @param delta The partial tick delta.
+     */
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
@@ -92,11 +145,16 @@ public class StrokeOptions extends Screen {
             int rectX2 = (int) Math.max(this.selectPositionX, mouseX);
             int rectY2 = (int) Math.max(this.selectPositionY, mouseY);
 
-            context.fill(rectX1, rectY1, rectX2, rectY2, 0x4000FF00); // Beispiel: grüner, transparenter Füllbereich (AARRGGBB)
-            context.drawBorder(rectX1, rectY1, rectX2 - rectX1, rectY2 - rectY1, 0xFF00FF00); // Beispiel: grüner Rand
+            context.fill(rectX1, rectY1, rectX2, rectY2, 0x4000FF00);
+            context.drawBorder(rectX1, rectY1, rectX2 - rectX1, rectY2 - rectY1, 0xFF00FF00);
         }
     }
 
+    /**
+     * Finds the first stroke that the mouse is currently hovering over.
+     *
+     * @return The {@link Strokes} object being hovered, or null if no stroke is hovered.
+     */
     private Strokes findStrokeByHover(){
         for(Strokes strokes : strokesArrayList){
             if(strokes.isVisible() && strokes.isHovered()){
@@ -106,6 +164,9 @@ public class StrokeOptions extends Screen {
         return null;
     }
 
+    /**
+     * Clears the current selection of strokes and resets the selection state.
+     */
     private void clearSelection(){
         for (Strokes strokes :  selectedStrokes){
             strokes.setSelected(false);
@@ -114,6 +175,16 @@ public class StrokeOptions extends Screen {
         selectedStrokes.clear();
     }
 
+    /**
+     * Handles mouse click events on the screen.
+     * This method manages single stroke dragging, multi-stroke dragging, selection area creation,
+     * opening the stroke edit screen, and creating/deleting strokes.
+     *
+     * @param mouseX The X-coordinate of the mouse click.
+     * @param mouseY The Y-coordinate of the mouse click.
+     * @param button The mouse button that was clicked (0 for left, 1 for right, 2 for middle).
+     * @return True if the event was handled, false otherwise.
+     */
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         boolean superClicked = super.mouseClicked(mouseX, mouseY, button);
@@ -175,6 +246,17 @@ public class StrokeOptions extends Screen {
         return superClicked;
     }
 
+    /**
+     * Handles mouse drag events. This method is used for moving single strokes,
+     * moving groups of selected strokes, and drawing the selection area.
+     *
+     * @param mouseX The current X-coordinate of the mouse.
+     * @param mouseY The current Y-coordinate of the mouse.
+     * @param button The mouse button being dragged.
+     * @param deltaX The change in X-coordinate since the last drag event.
+     * @param deltaY The change in Y-coordinate since the last drag event.
+     * @return True if the event was handled, false otherwise.
+     */
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
         if (this.currentStroke != null && button == 0 && !isSelecting && selectedStrokes.isEmpty()) {
@@ -224,6 +306,15 @@ public class StrokeOptions extends Screen {
         return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
     }
 
+    /**
+     * Handles mouse release events. This method is used to finalize dragging
+     * operations or complete a selection area.
+     *
+     * @param mouseX The X-coordinate of the mouse release.
+     * @param mouseY The Y-coordinate of the mouse release.
+     * @param button The mouse button that was released.
+     * @return True if the event was handled, false otherwise.
+     */
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
         if(currentStroke!=null){
@@ -237,6 +328,10 @@ public class StrokeOptions extends Screen {
         return super.mouseReleased(mouseX, mouseY, button);
     }
 
+    /**
+     * Closes the current screen. Before closing, it clears any active selection
+     * and saves the updated stroke configurations to the mod's config file.
+     */
     @Override
     public void close() {
         clearSelection();
@@ -244,6 +339,15 @@ public class StrokeOptions extends Screen {
         super.close();
     }
 
+    /**
+     * Handles keyboard key press events. Specifically, it listens for the ESCAPE key
+     * to close the screen.
+     *
+     * @param keyCode The key code of the pressed key.
+     * @param scanCode The scan code of the pressed key.
+     * @param modifiers Any modifiers (e.g., Shift, Ctrl, Alt) held down.
+     * @return True if the event was handled, false otherwise.
+     */
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if (super.keyPressed(keyCode, scanCode, modifiers)) {

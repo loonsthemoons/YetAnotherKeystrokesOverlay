@@ -4,11 +4,21 @@ import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.text.Text;
 import java.util.ArrayList;
 
+/**
+ * The main client-side initializer for the FancyStrokes mod.
+ * This class handles the initialization of configurations, stroke management,
+ * and UI components upon the client's mod's startup.
+ */
 public class YetAnotherKeystrokesModClient implements ClientModInitializer {
 	public static FancyStrokesConfig CONFIG;
 	public static final ArrayList<Strokes> ACTIVE_STROKES = new ArrayList<>();
 	public static StrokesStructure STROKES_STRUCTURE;
 
+	/**
+	 * Called when the client-side mod is initialized.
+	 * This method loads existing strokes or initializes default ones,
+	 * and sets up the mod's UI and controllers.
+	 */
 	@Override
 	public void onInitializeClient() {
 		STROKES_STRUCTURE = new StrokesStructure();
@@ -38,11 +48,17 @@ public class YetAnotherKeystrokesModClient implements ClientModInitializer {
 		strokesView.renderOverlay();
 	}
 
+	/**
+	 * Initializes or resets the keystroke structure to its default settings.
+	 */
 	public void initializeDefaultStrokes() {
 		STROKES_STRUCTURE.clearAll();
 		STROKES_STRUCTURE.initializeDefaultStrokes();
 	}
 
+	/**
+	 * Saves the current keystroke configuration to the mod's configuration file.
+	 */
 	public static void saveStrokesToConfig() {
 		ArrayList<dev.loons.fancystrokes.config.StrokeData> dataToSave = new ArrayList<>();
 		for (Strokes stroke : STROKES_STRUCTURE.getStrokes()) {
