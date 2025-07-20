@@ -48,6 +48,7 @@ public class StrokeEditScreen extends Screen {
     private ButtonWidget inputTypeCycleButton;
     private SliderWidget roundnessSlider;
     private ButtonWidget outlinesButton;
+    private ButtonWidget textButton;
 
     // Done Button
     private ButtonWidget doneButton;
@@ -288,18 +289,17 @@ public class StrokeEditScreen extends Screen {
         this.addDrawableChild(roundnessSlider);
         currentY += fieldHeight + 5;
 
-        // Outlines Button
-        outlinesButton = ButtonWidget.builder(Text.literal("Outlines: " + targetStroke.getOutlineStatus()), (button) -> {
-            targetStroke.setOutlineStatus(!targetStroke.getOutlineStatus());
-            outlinesButton.setMessage(Text.literal("Outlines: " + targetStroke.getOutlineStatus()));
+        // Text Button
+        textButton = ButtonWidget.builder(Text.literal("Text: " + targetStroke.isShowKeybindText()), (button) -> {
+            targetStroke.setShowKeybindText(!targetStroke.isShowKeybindText());
+            textButton.setMessage(Text.literal("Outlines: " + targetStroke.isShowKeybindText()));
         }).dimensions(elementStartX, currentY, sliderWidth, fieldHeight).build();
-        this.addDrawableChild(outlinesButton);
+        this.addDrawableChild(textButton);
         currentY += fieldHeight + 5;
     }
 
 
     // --- Hilfsmethoden zum Aktualisieren der Farben ---
-
     private void refreshUnpressedColorFromSliders() {
         int r = (int) (unpressedRedSlider.getCurrentValue() * 255);
         int g = (int) (unpressedGreenSlider.getCurrentValue() * 255);

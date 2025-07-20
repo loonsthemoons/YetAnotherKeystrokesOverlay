@@ -1,4 +1,6 @@
 package dev.loons.fancystrokes;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.widget.ClickableWidget;
@@ -17,6 +19,8 @@ public class Strokes extends ClickableWidget {
     private InputType inputType;
     private boolean isSelected = false;
     private boolean isPressed = false;
+    private boolean showKeybindText = true;
+    private int textColor = 0xFFFFFFFF;
 
     public enum InputType {
         FORWARD, BACK, LEFT, RIGHT, ATTACK, USE, SNEAK, SPRINT, JUMP, NULL
@@ -61,6 +65,25 @@ public class Strokes extends ClickableWidget {
     public void setSelected(boolean selected) {isSelected = selected;}
     public boolean getOutlineStatus() {return outlineStatus;}
     public void setOutlineStatus(boolean outlineStatus) {this.outlineStatus = outlineStatus;}
+    public boolean isShowKeybindText() { return showKeybindText; }
+    public void setShowKeybindText(boolean showKeybindText) { this.showKeybindText = showKeybindText; }
+    public int getTextColor() { return textColor; }
+    public void setTextColor(int textColor) { this.textColor = textColor; }
+
+    private String getKeyTextForInputType() {
+        switch (this.inputType) {
+            case FORWARD: return "W";
+            case BACK:    return "S";
+            case LEFT:    return "A";
+            case RIGHT:   return "D";
+            case JUMP:    return "␣";
+            case ATTACK:  return "LMB";
+            case USE:     return "RMB";
+            case SNEAK:   return "Shift";
+            case SPRINT:  return "Ctrl";
+            default:      return "";
+        }
+    }
 
         @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
@@ -74,17 +97,21 @@ public class Strokes extends ClickableWidget {
             int fillColorToUse = isPressed ? this.pressedColor : this.color;
             int outlineColorToUse = isPressed ? this.pressedOutlineColor : this.outlineColor;
 
-            context.fill(drawX, drawY, drawX + drawWidth, drawY + drawHeight, fillColorToUse);
-
-            if(outlineStatus){
-                context.drawBorder(drawX, drawY, drawWidth, drawHeight, outlineColorToUse);
+            FancyStrokesRenderer.drawRoundedRect(context, drawX, drawY, drawWidth, drawHeight, this.roundness, fillColorToUse);
+            if (outlineStatus) {
+                FancyStrokesRenderer.drawRoundedOutline(context, drawX, drawY, drawWidth, drawHeight, this.roundness, outlineColorToUse);
             }
 
-            if(this.isHovered(mouseX, mouseY)){
-                context.drawBorder(drawX, drawY, drawWidth, drawHeight, 0xFFFFFFFF);
+            if (this.isHovered(mouseX, mouseY) || this.isSelected) {
+                FancyStrokesRenderer.drawRoundedOutline(context, drawX - 1, drawY - 1, drawWidth + 2, drawHeight + 2, this.roundness + 1, 0xFFFFFFFF);
             }
-            if(this.isSelected){
-                context.drawBorder(drawX, drawY, drawWidth, drawHeight, 0xFFFFFFFF);
+
+            if (this.showKeybindText) {
+                String textToShow = getKeyTextForInputType();
+                if (!textToShow.isEmpty()) {
+                    TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
+                    context.drawCenteredTextWithShadow(textRenderer, Text.literal(textToShow), drawX + 1 + drawWidth / 2, drawY + 1 + (drawHeight - textRenderer.fontHeight) / 2, this.textColor);
+                }
             }
 
             super.render(context, mouseX, mouseY, delta);
