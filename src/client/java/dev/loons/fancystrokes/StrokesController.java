@@ -15,6 +15,7 @@ public class StrokesController {
     private StrokeOptions menuScreen;
     private int color = 0xFF00FF00;
     private int colorPressed = 0xFFFF0000;
+    private boolean isPressed = false;
 
     public StrokesController(StrokesView strokesView, StrokesStructure structure, StrokeOptions menuScreen){
         this.strokesView = strokesView;
@@ -34,18 +35,16 @@ public class StrokesController {
             assert minecraftClient.player != null;
             ArrayList<Strokes> strokesToRender = structure.getStrokes();
             for(Strokes strokes : strokesToRender){
-                //color = strokes.getColor();
-                //colorPressed = strokes.getPressedColor();
                 switch(strokes.getInputType()){
-                    case FORWARD -> strokes.update(minecraftClient.options.forwardKey.isPressed() ? color : colorPressed);
-                    case LEFT -> strokes.update(minecraftClient.options.leftKey.isPressed() ? color : colorPressed);
-                    case BACK -> strokes.update(minecraftClient.options.backKey.isPressed() ? color : colorPressed);
-                    case RIGHT -> strokes.update(minecraftClient.options.rightKey.isPressed() ? color : colorPressed);
-                    case ATTACK -> strokes.update(minecraftClient.options.attackKey.isPressed() ? color : colorPressed);
-                    case USE -> strokes.update(minecraftClient.options.useKey.isPressed() ? color : colorPressed);
-                    case SNEAK -> strokes.update(minecraftClient.options.sneakKey.isPressed() ? color : colorPressed);
-                    case SPRINT -> strokes.update(minecraftClient.options.sprintKey.isPressed() ? color : colorPressed);
-                    case JUMP -> strokes.update(minecraftClient.options.jumpKey.isPressed() ? color : colorPressed);
+                    case FORWARD -> strokes.update(minecraftClient.options.forwardKey.isPressed());
+                    case LEFT -> strokes.update(minecraftClient.options.leftKey.isPressed());
+                    case BACK -> strokes.update(minecraftClient.options.backKey.isPressed());
+                    case RIGHT -> strokes.update(minecraftClient.options.rightKey.isPressed());
+                    case ATTACK -> strokes.update(minecraftClient.options.attackKey.isPressed());
+                    case USE -> strokes.update(minecraftClient.options.useKey.isPressed());
+                    case SNEAK -> strokes.update(minecraftClient.options.sneakKey.isPressed());
+                    case SPRINT -> strokes.update(minecraftClient.options.sprintKey.isPressed());
+                    case JUMP -> strokes.update(minecraftClient.options.jumpKey.isPressed());
                 }
             }
             // Make the custom Bind "R" open the FancyStrokes Menu
