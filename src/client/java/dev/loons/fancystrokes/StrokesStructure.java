@@ -11,7 +11,7 @@ public class StrokesStructure {
     private int defaultPressedColor = ColorHelper.Argb.getArgb(255, 0, 255, 0); // Green
     private int defaultOutlineColor = ColorHelper.Argb.getArgb(255, 255, 255, 255); // White
     private int defaultPressedOutlineColor = ColorHelper.Argb.getArgb(255, 255, 255, 0); // Gelb (für Hover/Selected + Pressed)
-    private int defaultRoundness = 0; // Keine Rundung standardmäßig
+    private int defaultRoundness = 0;
     private int defaultWidth = 20;
     private int defaultHeight = 20;
 
@@ -86,7 +86,6 @@ public class StrokesStructure {
                 InputType.USE,
                 defaultRoundness
         ));
-        // Fügen Sie hier weitere Strokes hinzu, falls nötig
     }
 
     public void createStroke(InputType inputType){
@@ -125,4 +124,7 @@ public class StrokesStructure {
         return strokes.get(strokes.size()-1);
     }
 
+    public void clearAll(){
+        this.strokes.clear();
+    }
 }

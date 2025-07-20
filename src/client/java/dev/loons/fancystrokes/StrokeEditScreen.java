@@ -14,7 +14,6 @@ public class StrokeEditScreen extends Screen {
     private final Screen parentScreen;
     private final StrokesStructure structure;
 
-    // --- NEUE FELDER FÜR DIE DREI PANELS ---
     private int fillColorPanelX, fillColorPanelY, fillColorPanelWidth, fillColorPanelHeight; // Ehemals unpressedColorPanel, jetzt für beide Füllfarben
     private int outlinePanelX, outlinePanelY, outlinePanelWidth, outlinePanelHeight;
     private int generalPanelX, generalPanelY, generalPanelWidth, generalPanelHeight;
@@ -45,6 +44,7 @@ public class StrokeEditScreen extends Screen {
 
     // General Settings Widgets
     private ButtonWidget applyGlobalButton;
+    private ButtonWidget resetButton;
     private ButtonWidget inputTypeCycleButton;
     private SliderWidget roundnessSlider;
     private ButtonWidget outlinesButton;
@@ -67,12 +67,11 @@ public class StrokeEditScreen extends Screen {
         super.init();
 
         // --- Panel-Dimensionen und Positionen berechnen ---
-        int panelCount = 3; // Jetzt wieder 3 Panels
+        int panelCount = 3;
         int panelSpacing = 20; // Abstand zwischen den Boxen
-        int panelHeight = 2 * (fieldHeight + 5) * 3 + 20 + 20 + 30; // 2 Sets von 3 Sliderrn + Abstände + Padding
+        int panelHeight = 2 * (fieldHeight + 5) * 3 + 20 + 20 + 30;
         int titleOffset = 20; // Platz für den Titel über der Box
 
-        // Gesamte benötigte Breite und Start-X für die Zentrierung
         int totalWidthNeeded = (sliderWidth + 50) * panelCount + (panelSpacing * (panelCount - 1));
         int startX = (this.width - totalWidthNeeded) / 2;
         int panelStartYOffset = this.height / 2 - (panelHeight + titleOffset) / 2; // Y-Startpunkt für die Panels inkl. Titel
@@ -262,9 +261,24 @@ public class StrokeEditScreen extends Screen {
                 strokes.setPressedOutlineColor(targetStroke.getPressedOutlineColor());
                 strokes.setRoundness(targetStroke.getRoundness());
             }
+            YetAnotherKeystrokesModClient.saveStrokesToConfig();
 
         }).dimensions(elementStartX, currentY, sliderWidth, fieldHeight).build();
         this.addDrawableChild(applyGlobalButton);
+        currentY += fieldHeight + 5;
+
+        // Reset Button
+        resetButton = ButtonWidget.builder(Text.of("Reset config"), (button) -> {
+            this.client.getToastManager().add(
+                    SystemToast.create(this.client, SystemToast.Type.NARRATOR_TOGGLE, Text.of("Config reset!"), Text.of("Default config loaded."))
+            );
+            structure.clearAll();
+            structure.initializeDefaultStrokes();
+            YetAnotherKeystrokesModClient.ACTIVE_STROKES.clear();
+            YetAnotherKeystrokesModClient.ACTIVE_STROKES.addAll(structure.getStrokes());
+
+        }).dimensions(elementStartX, currentY, sliderWidth, fieldHeight).build();
+        this.addDrawableChild(resetButton);
         currentY += fieldHeight + 5;
 
         // InputType Cycle Button
@@ -272,6 +286,14 @@ public class StrokeEditScreen extends Screen {
             cycleInputType(1);
         }).dimensions(elementStartX, currentY, sliderWidth, fieldHeight).build();
         this.addDrawableChild(inputTypeCycleButton);
+        currentY += fieldHeight + 5;
+
+        // Outlines Button
+        outlinesButton = ButtonWidget.builder(Text.literal("Outlines: " + targetStroke.getOutlineStatus()), (button) -> {
+            targetStroke.setOutlineStatus(!targetStroke.getOutlineStatus());
+            outlinesButton.setMessage(Text.literal("Outlines: " + targetStroke.getOutlineStatus()));
+        }).dimensions(elementStartX, currentY, sliderWidth, fieldHeight).build();
+        this.addDrawableChild(outlinesButton);
         currentY += fieldHeight + 5;
 
         // Roundness Slider
@@ -292,7 +314,7 @@ public class StrokeEditScreen extends Screen {
         // Text Button
         textButton = ButtonWidget.builder(Text.literal("Text: " + targetStroke.isShowKeybindText()), (button) -> {
             targetStroke.setShowKeybindText(!targetStroke.isShowKeybindText());
-            textButton.setMessage(Text.literal("Outlines: " + targetStroke.isShowKeybindText()));
+            textButton.setMessage(Text.literal("Text: " + targetStroke.isShowKeybindText()));
         }).dimensions(elementStartX, currentY, sliderWidth, fieldHeight).build();
         this.addDrawableChild(textButton);
         currentY += fieldHeight + 5;
@@ -387,6 +409,7 @@ public class StrokeEditScreen extends Screen {
     @Override
     public void close() {
         this.targetStroke.setSelected(false);
+        YetAnotherKeystrokesModClient.saveStrokesToConfig();
         MinecraftClient.getInstance().setScreen(this.parentScreen);
     }
 

@@ -73,6 +73,9 @@ public class StrokeOptions extends Screen {
     @Override
     protected void init() {
         super.init();
+        this.strokesArrayList.clear();
+        this.strokesArrayList.addAll(structure.getStrokes());
+        this.clearChildren();
         for(Strokes strokes : strokesArrayList){
             this.addDrawableChild(strokes);
         }
