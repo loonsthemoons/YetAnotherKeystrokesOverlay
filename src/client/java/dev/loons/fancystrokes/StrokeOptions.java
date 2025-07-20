@@ -4,8 +4,6 @@ package dev.loons.fancystrokes;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.toast.SystemToast;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.Vec3d;
 
@@ -19,6 +17,10 @@ public class StrokeOptions extends Screen {
     private double mouseOffsetY;
     private Strokes currentStroke = null;
     private static final int snapThreshhold = 5;
+    private boolean isSelecting = false;
+    private double selectPositionX;
+    private double selectPositionY;
+    private ArrayList<Strokes> selectedStrokes = new ArrayList<>();
 
     public StrokeOptions(Text title, StrokesStructure structure) {
         super(title);
@@ -45,6 +47,23 @@ public class StrokeOptions extends Screen {
         return currentPos;
     }
 
+    private void selectAreaStroke(double posX1, double posY1, double posX2, double posY2){
+        int selectionLeft = (int) Math.min(posX1, posX2);
+        int selectionTop = (int) Math.min(posY1, posY2);
+        int selectionRight = (int) Math.max(posX1, posX2);
+        int selectionBottom = (int) Math.max(posY1, posY2);
+        for(Strokes strokes : strokesArrayList){
+            if(
+                    strokes.getX() < selectionRight &&
+                    strokes.getX() + strokes.getWidth() > selectionLeft &&
+                    strokes.getY() < selectionBottom &&
+                    strokes.getY() + strokes.getHeight() > selectionTop){
+                strokes.setSelected(true);
+                selectedStrokes.add(strokes);
+            }
+        }
+    }
+
     public void openScreen(){
         MinecraftClient.getInstance().setScreen(
                 new StrokeOptions(Text.empty(),structure)
@@ -53,83 +72,113 @@ public class StrokeOptions extends Screen {
 
     @Override
     protected void init() {
+        super.init();
         for(Strokes strokes : strokesArrayList){
             this.addDrawableChild(strokes);
         }
-
-        ButtonWidget mouseWidget = ButtonWidget.builder(Text.of("Mouse Strokes"), (btn) -> {
-            // Button for removing / adding Mouse-Strokes
-            if(structure.getSpecificStroke(4).isVisible() || structure.getSpecificStroke(5).isVisible()){
-                assert this.client != null;
-                this.client.getToastManager().add(
-                        SystemToast.create(this.client, SystemToast.Type.NARRATOR_TOGGLE, Text.of("Stroke Status"), Text.of("Mouse strokes disabled"))
-                );
-                structure.getStrokeByInputType(InputType.ATTACK).setVisible(false);
-                structure.getStrokeByInputType(InputType.USE).setVisible(false);
-            } else {
-                assert this.client != null;
-                this.client.getToastManager().add(
-                        SystemToast.create(this.client, SystemToast.Type.NARRATOR_TOGGLE, Text.of("Stroke Status"), Text.of("Mouse strokes enabled"))
-                );
-                structure.getStrokeByInputType(InputType.ATTACK).setVisible(true);
-                structure.getStrokeByInputType(InputType.USE).setVisible(true);
-            }
-        }).dimensions(600, 40, 120, 20).build();
-
-        // Widget for closing the menu
-        ButtonWidget closeWidget = ButtonWidget.builder(Text.of("Close"),(btn) -> {
-            this.close();
-                }).dimensions(600,70,120,20).build();
-
-        // Widget for creating a new Stroke
-        ButtonWidget createWidget = ButtonWidget.builder(Text.of("Create Stroke"),(btn -> {
-            structure.createStroke(InputType.NULL);
-            strokesArrayList.add(structure.getLast());
-            this.addDrawableChild(structure.getLast());
-        })).dimensions(600,100,120,20).build();
-
-        this.addDrawableChild(mouseWidget);
-        this.addDrawableChild(closeWidget);
-        this.addDrawableChild(createWidget);
     }
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
         context.drawText(this.textRenderer, "Fancy-Strokes", 40, 40 - this.textRenderer.fontHeight - 10, 0xFFFFFFFF, true);
+
+        if(isSelecting){
+            int rectX1 = (int) Math.min(this.selectPositionX, mouseX);
+            int rectY1 = (int) Math.min(this.selectPositionY, mouseY);
+            int rectX2 = (int) Math.max(this.selectPositionX, mouseX);
+            int rectY2 = (int) Math.max(this.selectPositionY, mouseY);
+
+            // Transparente Füllung (optional, aber hilfreich)
+            context.fill(rectX1, rectY1, rectX2, rectY2, 0x4000FF00); // Beispiel: grüner, transparenter Füllbereich (AARRGGBB)
+
+            // Rand des Rechtecks
+            context.drawBorder(rectX1, rectY1, rectX2 - rectX1, rectY2 - rectY1, 0xFF00FF00); // Beispiel: grüner Rand
+        }
+    }
+
+    private Strokes findStrokeByHover(){
+        for(Strokes strokes : strokesArrayList){
+            if(strokes.isVisible() && strokes.isHovered()){
+                return strokes;
+            }
+        }
+        return null;
+    }
+
+    private void clearSelection(){
+        for (Strokes strokes :  selectedStrokes){
+            strokes.setSelected(false);
+        }
+        isSelecting=false;
+        selectedStrokes.clear();
     }
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         boolean superClicked = super.mouseClicked(mouseX, mouseY, button);
 
+        // Left Mouse click (Dragging)
         if(button==0){
-            for(Strokes strokes : strokesArrayList){
+            Strokes clickedStroke = findStrokeByHover();
+            if(clickedStroke != null){
+                // Case 1, clicked on Stroke in selected area
+                if(selectedStrokes.contains(clickedStroke)){
+                    this.currentStroke = clickedStroke;
+                    this.mouseOffsetX = mouseX - clickedStroke.getX();
+                    this.mouseOffsetY = mouseY - clickedStroke.getY();
+                    return true;
+                } else {
+                    // Case 2, clicked on a single stroke
+                    clearSelection();
+                    this.currentStroke = clickedStroke;
+                    this.mouseOffsetX = mouseX - clickedStroke.getX();
+                    this.mouseOffsetY = mouseY - clickedStroke.getY();
+                    return true;
+                }
+            } else {
+                // Case 3, did not click on a stroke
+                clearSelection();
+                isSelecting = true;
+                selectPositionX = mouseX;
+                selectPositionY = mouseY;
+                return true;
+            }
+        }
+
+        // Right Mouse click (Opens Menu for a stroke)
+        if(!superClicked && button ==1){
+            for (Strokes strokes : strokesArrayList){
                 if(strokes.isVisible() && strokes.isHovered()){
-                    this.currentStroke = strokes;
-                    this.mouseOffsetX = mouseX - strokes.getX();
-                    this.mouseOffsetY = mouseY - strokes.getY();
-                    MinecraftClient.getInstance().player.sendMessage(Text.of("Dragging"));
+                    MinecraftClient.getInstance().setScreen(new StrokeEditScreen(Text.empty(),strokes, this));
                     return true;
                 }
             }
         }
 
-        if(!superClicked && button ==1){
+        // Middle Mouse click (Creates or Deletes Stroke)
+        if(!superClicked && button ==2){
             for (Strokes strokes : strokesArrayList){
                 if(strokes.isVisible() && strokes.isHovered()){
-                    MinecraftClient.getInstance().player.sendMessage(Text.of("Open Menu"));
-                    MinecraftClient.getInstance().setScreen(new StrokeEditScreen(Text.empty(),strokes, this));
+                    structure.removeStroke(strokes);
+                    strokesArrayList.remove(strokes);
+                    this.remove(strokes);
                     return true;
                 }
             }
+            structure.createStroke(InputType.NULL);
+            structure.getLast().setPosition((int)mouseX, (int)mouseY);
+            strokesArrayList.add(structure.getLast());
+            this.addDrawableChild(structure.getLast());
+            return true;
         }
         return superClicked;
     }
 
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
-        if (this.currentStroke != null && button == 0) {
+        if (this.currentStroke != null && button == 0 && !isSelecting && selectedStrokes.isEmpty()) {
+            // Case 1, moving a single stroke
             int newX = (int) (mouseX - this.mouseOffsetX);
             int newY = (int) (mouseY - this.mouseOffsetY);
 
@@ -146,6 +195,31 @@ public class StrokeOptions extends Screen {
 
             this.currentStroke.setPosition(new Vec3d(newX, newY, 0));
             return true;
+        } else if (button == 0 && this.currentStroke != null && !selectedStrokes.isEmpty() && selectedStrokes.contains(currentStroke)){
+            // Case 2, moving a group
+            int newX = (int) (mouseX - this.mouseOffsetX);
+            int newY = (int) (mouseY - this.mouseOffsetY);
+            newX = Math.max(0, Math.min(newX, this.width - this.currentStroke.getWidth()));
+            newY = Math.max(0, Math.min(newY, this.height - this.currentStroke.getHeight()));
+            double deltaMoveX = newX - this.currentStroke.getX();
+            double deltaMoveY = newY - this.currentStroke.getY();
+            for(Strokes strokes : selectedStrokes){
+                if (strokes == this.currentStroke) {
+                    strokes.setPosition(new Vec3d(newX, newY, 0));
+                } else {
+                    int newStrokeX = (int) (strokes.getX() + deltaMoveX);
+                    int newStrokeY = (int) (strokes.getY() + deltaMoveY);
+
+                    newStrokeX = Math.max(0, Math.min(newStrokeX, this.width - strokes.getWidth()));
+                    newStrokeY = Math.max(0, Math.min(newStrokeY, this.height - strokes.getHeight()));
+
+                    strokes.setPosition(new Vec3d(newStrokeX, newStrokeY, 0));
+                }
+            }
+            return true;
+        } else if(button == 0 && this.isSelecting){
+            // Case 2, selecting an area
+            return true;
         }
         return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
     }
@@ -154,6 +228,10 @@ public class StrokeOptions extends Screen {
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
         if(currentStroke!=null){
             currentStroke=null;
+            return true;
+        } else if (this.isSelecting && button==0){
+            isSelecting =false;
+            selectAreaStroke(this.selectPositionX, this.selectPositionY, mouseX, mouseY);
             return true;
         }
         return super.mouseReleased(mouseX, mouseY, button);

@@ -97,7 +97,8 @@ public class StrokeEditScreen extends Screen {
 
         this.addDrawableChild(ButtonWidget.builder(Text.of("Visible"), (button) -> {
                 //
-        }).dimensions(this.panelStartX + (this.panelWidth - 150) / 2, 250, 150, 20).build());
+        }).dimensions(this.panelStartX + (this.panelWidth - 150) / 2, currentElementY, 150, 20).build());
+        currentElementY += 25;
 
         this.addDrawableChild(ButtonWidget.builder(Text.literal("Done"), (button) -> {
             // Optional: Hier könnten Änderungen am Stroke dauerhaft gespeichert werden,
@@ -125,13 +126,14 @@ public class StrokeEditScreen extends Screen {
 
 
         int rgbLabelsStartX = this.panelStartX + (this.panelWidth - (fieldWidth * 3 + 20)) / 2;
+        rgbLabelsStartX += 32;
         int rgbLabelsY = this.panelStartY + 20 + 5; // Y-Position der Textfelder + Offset für Label
 
-        context.drawText(this.textRenderer, Text.literal("R:").asOrderedText(), rgbLabelsStartX + labelOffset, rgbLabelsY, 0xFFFFFFFF, true);
+        context.drawText(this.textRenderer, Text.literal("R").asOrderedText(), rgbLabelsStartX + labelOffset, rgbLabelsY, 0xFFFFFFFF, true);
         rgbLabelsStartX += fieldWidth + 10;
-        context.drawText(this.textRenderer, Text.literal("G:").asOrderedText(), rgbLabelsStartX + labelOffset, rgbLabelsY, 0xFFFFFFFF, true);
+        context.drawText(this.textRenderer, Text.literal("G").asOrderedText(), rgbLabelsStartX + labelOffset, rgbLabelsY, 0xFFFFFFFF, true);
         rgbLabelsStartX += fieldWidth + 10;
-        context.drawText(this.textRenderer, Text.literal("B:").asOrderedText(), rgbLabelsStartX + labelOffset, rgbLabelsY, 0xFFFFFFFF, true);
+        context.drawText(this.textRenderer, Text.literal("B").asOrderedText(), rgbLabelsStartX + labelOffset, rgbLabelsY, 0xFFFFFFFF, true);
 
         // Titel des Screens zeichnen
         context.drawText(this.textRenderer, this.title, this.width / 2 - this.textRenderer.getWidth(this.title) / 2, 20, 0xFFFFFFFF, true);
