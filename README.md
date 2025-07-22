@@ -23,3 +23,10 @@ Dependencies:
 - Minecraft 1.20.1
 - Fabric Loader >=0.15.11
 - owo-lib 0.11.2 1.20
+
+Some example setups:
+<img width="550" height="432" alt="image" src="https://github.com/user-attachments/assets/976f1535-83e5-4fac-95f4-b7760686d585" />
+<img width="328" height="323" alt="image" src="https://github.com/user-attachments/assets/07a2bd3a-e4d8-4723-8df1-87bcb5dd9984" />
+
+Settings Menu (outdated)
+<img width="1920" height="1008" alt="image" src="https://github.com/user-attachments/assets/a9e4b520-dcfd-4523-86a3-d4c6ea1ac3a2" />
