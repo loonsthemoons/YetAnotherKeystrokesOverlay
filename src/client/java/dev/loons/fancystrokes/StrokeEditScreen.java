@@ -1,6 +1,7 @@
 package dev.loons.fancystrokes;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -480,11 +481,17 @@ public class StrokeEditScreen extends Screen {
         renderPanelWithTitle(context, outlinePanelX, outlinePanelY, outlinePanelWidth, outlinePanelHeight, Text.literal("Outlines"));
         renderPanelWithTitle(context, generalPanelX, generalPanelY, generalPanelWidth, generalPanelHeight, Text.literal("General Settings"));
 
-        context.fill((outlinePanelX+outlinePanelWidth/2)-40, outlinePanelY-60, (outlinePanelX+outlinePanelWidth/2)-20, outlinePanelY-40, targetStroke.getColor());
-        context.drawBorder((outlinePanelX+outlinePanelWidth/2)-40, outlinePanelY-60, 20, 20, targetStroke.getOutlineColor());
+        // Render preview strokes
+        int drawX = (outlinePanelX+outlinePanelWidth/2);
+        int drawY = outlinePanelY-60;
+        int drawWidth = 20;
+        int drawHeight = 20;
 
-        context.fill((outlinePanelX+outlinePanelWidth/2)+20, outlinePanelY-60, (outlinePanelX+outlinePanelWidth/2)+40, outlinePanelY-40, targetStroke.getPressedColor());
-        context.drawBorder((outlinePanelX+outlinePanelWidth/2)+20, outlinePanelY-60, 20, 20, targetStroke.getPressedOutlineColor());
+        FancyStrokesRenderer.drawRoundedRect(context, drawX-40, drawY, drawWidth, drawHeight, targetStroke.getRoundness(), targetStroke.getColor());
+        FancyStrokesRenderer.drawRoundedOutline(context, drawX-40, drawY, drawWidth, drawHeight, targetStroke.getRoundness(), targetStroke.getOutlineColor());
+
+        FancyStrokesRenderer.drawRoundedRect(context, drawX+20, drawY, drawWidth, drawHeight, targetStroke.getRoundness(), targetStroke.getPressedColor());
+        FancyStrokesRenderer.drawRoundedOutline(context, drawX+20, drawY, drawWidth, drawHeight, targetStroke.getRoundness(), targetStroke.getPressedOutlineColor());
 
         super.render(context, mouseX, mouseY, delta);
 

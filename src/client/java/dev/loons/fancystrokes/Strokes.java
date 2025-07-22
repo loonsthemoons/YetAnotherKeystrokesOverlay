@@ -28,6 +28,7 @@ public class Strokes extends ClickableWidget {
     private boolean showKeybindText = true;
     private int textColor = 0xFFFFFFFF;
     private String keystrokeText;
+    private boolean letteringOption=false;
 
     /**
      * Defines the types of input actions that a stroke can represent.
@@ -64,18 +65,37 @@ public class Strokes extends ClickableWidget {
 
 
     public String getKeyTextForInputType() {
-        return switch (this.inputType) {
-            case FORWARD -> "W";
-            case BACK -> "S";
-            case LEFT -> "A";
-            case RIGHT -> "D";
-            case JUMP -> "---";
-            case ATTACK -> "LMB";
-            case USE -> "RMB";
-            case SNEAK -> "Shift";
-            case SPRINT -> "Ctrl";
-            default -> "";
-        };
+        if(!letteringOption){
+            return switch (this.inputType) {
+                case FORWARD -> "W";
+                case BACK -> "S";
+                case LEFT -> "A";
+                case RIGHT -> "D";
+                case JUMP -> "---";
+                case ATTACK -> "LMB";
+                case USE -> "RMB";
+                case SNEAK -> "Shift";
+                case SPRINT -> "Ctrl";
+                default -> "";
+            };
+        } else {
+            return switch (this.inputType) {
+                case FORWARD -> "↑";
+                case BACK -> "↓";
+                case LEFT -> "←";
+                case RIGHT -> "→";
+                case JUMP -> "───";
+                case ATTACK -> "<|";
+                case USE -> "|>";
+                case SNEAK -> "▂▂";
+                case SPRINT -> "▶▶";
+                default -> "";
+            };
+        }
+    }
+
+    public void setLetteringOption(boolean letteringOption){
+        this.letteringOption=letteringOption;
     }
 
     /**

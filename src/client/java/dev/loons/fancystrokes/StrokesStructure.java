@@ -24,6 +24,7 @@ public class StrokesStructure {
     private boolean keystrokesStatus=true;
     private String profileName;
     private boolean isActiveProfile=false;
+    private boolean letteringOption=false;
 
     public StrokesStructure(){}
 
@@ -162,6 +163,13 @@ public class StrokesStructure {
     public void setActive(){isActiveProfile=true;}
     public void setInactive(){isActiveProfile=false;}
     public boolean getActive(){return isActiveProfile;}
+    public boolean getLetteringOption(){return letteringOption;}
+    public void letteringOption(){
+        letteringOption= !letteringOption;
+        for(Strokes s : strokes){
+            s.setLetteringOption(letteringOption);
+        }
+    }
 
     @Override
     public String toString() {

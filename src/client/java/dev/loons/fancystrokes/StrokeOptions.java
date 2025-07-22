@@ -291,6 +291,7 @@ public class StrokeOptions extends Screen {
             structure.createStroke(InputType.NULL);
             structure.getLast().setPosition((int)mouseX, (int)mouseY);
             strokesArrayList.add(structure.getLast());
+            structure.getLast().setLetteringOption(structure.getLetteringOption());
             this.addDrawableChild(structure.getLast());
             return true;
         }

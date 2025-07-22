@@ -51,6 +51,7 @@ public class StrokesController {
         ));
         structure.setControlKey(keyBinding);
         buildController();
+
     }
 
     /**
@@ -88,7 +89,7 @@ public class StrokesController {
         });
 
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
-            dispatcher.register(ClientCommandManager.literal("profiles").executes(context -> {
+            dispatcher.register(ClientCommandManager.literal("keystrokes").executes(context -> {
                 context.getSource().sendFeedback(Text.literal("currently active profile: " + strokesView.findActiveStructure(profiles)));
                 return 1;
             }).then(ClientCommandManager.literal("list")
@@ -99,6 +100,13 @@ public class StrokesController {
                             .then(ClientCommandManager.argument("profileName", StringArgumentType.word())
                             .executes(context ->{
                 String profileName = StringArgumentType.getString(context, "profileName");
+
+                for(StrokesStructure s : profiles){
+                    if(s.getProfileName().equalsIgnoreCase(profileName)){
+                        context.getSource().sendFeedback(Text.literal("failed to create profile"));
+                        return 1;
+                    }
+                }
                 StrokesStructure strokesStructure = new StrokesStructure();
                 strokesStructure.setProfileName(profileName);
                 strokesStructure.initializeDefaultStrokes();
@@ -142,7 +150,40 @@ public class StrokesController {
                                     context.getSource().sendFeedback(Text.literal("failed to set profile"));
                                 }
                                 return 1;
-                            })))
+                            }))).then(ClientCommandManager.literal("help").executes(context ->{
+                                context.getSource().sendFeedback(Text.literal("Help command options: \n list \n create \n remove \n set \n lettering \n settings"));
+                                return 1;
+                    }).then(ClientCommandManager.literal("list").executes(context ->{
+                                context.getSource().sendFeedback(Text.literal("/keystrokes list \n shows list of all profiles"));
+                                return 1;
+                                    })
+                            ).then(ClientCommandManager.literal("create").executes(context -> {
+                                context.getSource().sendFeedback(Text.literal("/keystrokes create <yourProfileName> \n creates a new profile \n can't be a duplicate name"));
+                                return 1;
+                                    })
+                            ).then(ClientCommandManager.literal("remove").executes(context -> {
+                                        context.getSource().sendFeedback(Text.literal("/keystrokes remove <profileToRemove> \n removes an existing profile \n can't remove last profile"));
+                                        return 1;
+                                    })
+                            ).then(ClientCommandManager.literal("set").executes(context -> {
+                                        context.getSource().sendFeedback(Text.literal("/keystrokes set <profileName> \n sets a profile as active"));
+                                        return 1;
+                                    })
+                            ).then(ClientCommandManager.literal("lettering").executes(context -> {
+                                        context.getSource().sendFeedback(Text.literal("/keystrokes lettering \n changes the default Keystroke lettering to an alternate one \n is not being saved in saved profiles"));
+                                        return 1;
+                                    })
+                            ).then(ClientCommandManager.literal("settings").executes(context -> {
+                                        context.getSource().sendFeedback(Text.literal("Yet Another Keystrokes Mod Settings \n Default keybind to open keystrokes menu is R\n pressing the button a Keystroke opens its menu \n Left mouse click moves keystrokes or creates a selection area \n Middle mouse button creates or deletes a keystroke \n Right click resizes a keystroke"));
+                                        return 1;
+                                    })
+                            )
+
+                    ).then(ClientCommandManager.literal("lettering").executes(context -> {
+                        strokesView.findActiveStructure(profiles).letteringOption();
+                        context.getSource().sendFeedback(Text.literal("Default lettering switched"));
+                        return 1;
+                    }))
 
             ); // end of Profiles Command
         }); // end of event handler
