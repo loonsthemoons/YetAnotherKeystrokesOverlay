@@ -61,7 +61,6 @@ public class StrokeEditScreen extends Screen {
     // Done Button
     private ButtonWidget doneButton;
 
-
     /**
      * Constructs a new StrokeEditScreen.
      *
