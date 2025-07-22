@@ -5,6 +5,7 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.SliderWidget;
+import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.toast.SystemToast;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.ColorHelper;
@@ -24,7 +25,7 @@ public class StrokeEditScreen extends Screen {
     private int generalPanelX, generalPanelY, generalPanelWidth, generalPanelHeight;
 
     // General widget parameters
-    private int sliderWidth = 150;
+    private int fieldWidth = 150;
     private int fieldHeight = 20;
 
     // RGB Sliders for Unpressed Color
@@ -55,6 +56,7 @@ public class StrokeEditScreen extends Screen {
     private ButtonWidget outlinesButton;
     private ButtonWidget textButton;
     private RgbSlider transparencySlider;
+    private TextFieldWidget displayTextInput;
 
     // Done Button
     private ButtonWidget doneButton;
@@ -90,7 +92,7 @@ public class StrokeEditScreen extends Screen {
         int panelHeight = 2 * (fieldHeight + 5) * 3 + 20 + 20 + 30;
         int titleOffset = 20;
 
-        int totalWidthNeeded = (sliderWidth + 50) * panelCount + (panelSpacing * (panelCount - 1));
+        int totalWidthNeeded = (fieldWidth + 50) * panelCount + (panelSpacing * (panelCount - 1));
         int startX = (this.width - totalWidthNeeded) / 2;
         int panelStartYOffset = this.height / 2 - (panelHeight + titleOffset) / 2;
 
@@ -98,21 +100,21 @@ public class StrokeEditScreen extends Screen {
         // Fill Color Panel
         fillColorPanelX = startX;
         fillColorPanelY = panelStartYOffset + titleOffset;
-        fillColorPanelWidth = sliderWidth + 50;
+        fillColorPanelWidth = fieldWidth + 50;
         fillColorPanelHeight = panelHeight;
         addFillColorSettings(fillColorPanelX, fillColorPanelY, fillColorPanelWidth, fillColorPanelHeight);
 
         // Outline Color Panel
         outlinePanelX = fillColorPanelX + fillColorPanelWidth + panelSpacing;
         outlinePanelY = panelStartYOffset + titleOffset;
-        outlinePanelWidth = sliderWidth + 50;
+        outlinePanelWidth = fieldWidth + 50;
         outlinePanelHeight = panelHeight;
         addOutlineColorSettings(outlinePanelX, outlinePanelY, outlinePanelWidth, outlinePanelHeight);
 
         // General Settings Panel
         generalPanelX = outlinePanelX + outlinePanelWidth + panelSpacing;
         generalPanelY = panelStartYOffset + titleOffset;
-        generalPanelWidth = sliderWidth + 50;
+        generalPanelWidth = fieldWidth + 50;
         generalPanelHeight = panelHeight;
         addGeneralSettings(generalPanelX, generalPanelY, generalPanelWidth, generalPanelHeight);
 
@@ -135,14 +137,14 @@ public class StrokeEditScreen extends Screen {
      */
     private void addFillColorSettings(int panelX, int panelY, int panelW, int panelH) {
         int currentY = panelY + 5;
-        int sliderStartX = panelX + (panelW - sliderWidth) / 2;
+        int sliderStartX = panelX + (panelW - fieldWidth) / 2;
 
         // Title for Unpressed Color within the box
-        this.addDrawableChild(new TextLabelWidget(sliderStartX, currentY, sliderWidth, Text.literal("Unpressed Color")));
+        this.addDrawableChild(new TextLabelWidget(sliderStartX, currentY, fieldWidth, Text.literal("Unpressed Color")));
         currentY += fieldHeight + 5;
 
         // Unpressed Color Sliders
-        unpressedRedSlider = new RgbSlider(sliderStartX, currentY, sliderWidth, fieldHeight, "R", ColorHelper.Argb.getRed(targetStroke.getColor()) / 255.0D) {
+        unpressedRedSlider = new RgbSlider(sliderStartX, currentY, fieldWidth, fieldHeight, "R", ColorHelper.Argb.getRed(targetStroke.getColor()) / 255.0D) {
             @Override
             protected void applyValue() {
                 refreshUnpressedColorFromSliders();
@@ -151,7 +153,7 @@ public class StrokeEditScreen extends Screen {
         this.addDrawableChild(unpressedRedSlider);
         currentY += fieldHeight + 5;
 
-        unpressedGreenSlider = new RgbSlider(sliderStartX, currentY, sliderWidth, fieldHeight, "G", ColorHelper.Argb.getGreen(targetStroke.getColor()) / 255.0D) {
+        unpressedGreenSlider = new RgbSlider(sliderStartX, currentY, fieldWidth, fieldHeight, "G", ColorHelper.Argb.getGreen(targetStroke.getColor()) / 255.0D) {
             @Override
             protected void applyValue() {
                 refreshUnpressedColorFromSliders();
@@ -160,7 +162,7 @@ public class StrokeEditScreen extends Screen {
         this.addDrawableChild(unpressedGreenSlider);
         currentY += fieldHeight + 5;
 
-        unpressedBlueSlider = new RgbSlider(sliderStartX, currentY, sliderWidth, fieldHeight, "B", ColorHelper.Argb.getBlue(targetStroke.getColor()) / 255.0D) {
+        unpressedBlueSlider = new RgbSlider(sliderStartX, currentY, fieldWidth, fieldHeight, "B", ColorHelper.Argb.getBlue(targetStroke.getColor()) / 255.0D) {
             @Override
             protected void applyValue() {
                 refreshUnpressedColorFromSliders();
@@ -170,11 +172,11 @@ public class StrokeEditScreen extends Screen {
         currentY += fieldHeight + 15;
 
         // Title for Pressed Color within the box
-        this.addDrawableChild(new TextLabelWidget(sliderStartX, currentY, sliderWidth, Text.literal("Pressed Color")));
+        this.addDrawableChild(new TextLabelWidget(sliderStartX, currentY, fieldWidth, Text.literal("Pressed Color")));
         currentY += fieldHeight + 5;
 
         // Pressed Color Sliders
-        pressedRedSlider = new RgbSlider(sliderStartX, currentY, sliderWidth, fieldHeight, "R", ColorHelper.Argb.getRed(targetStroke.getPressedColor()) / 255.0D) {
+        pressedRedSlider = new RgbSlider(sliderStartX, currentY, fieldWidth, fieldHeight, "R", ColorHelper.Argb.getRed(targetStroke.getPressedColor()) / 255.0D) {
             @Override
             protected void applyValue() {
                 refreshPressedColorFromSliders();
@@ -183,7 +185,7 @@ public class StrokeEditScreen extends Screen {
         this.addDrawableChild(pressedRedSlider);
         currentY += fieldHeight + 5;
 
-        pressedGreenSlider = new RgbSlider(sliderStartX, currentY, sliderWidth, fieldHeight, "G", ColorHelper.Argb.getGreen(targetStroke.getPressedColor()) / 255.0D) {
+        pressedGreenSlider = new RgbSlider(sliderStartX, currentY, fieldWidth, fieldHeight, "G", ColorHelper.Argb.getGreen(targetStroke.getPressedColor()) / 255.0D) {
             @Override
             protected void applyValue() {
                 refreshPressedColorFromSliders();
@@ -192,7 +194,7 @@ public class StrokeEditScreen extends Screen {
         this.addDrawableChild(pressedGreenSlider);
         currentY += fieldHeight + 5;
 
-        pressedBlueSlider = new RgbSlider(sliderStartX, currentY, sliderWidth, fieldHeight, "B", ColorHelper.Argb.getBlue(targetStroke.getPressedColor()) / 255.0D) {
+        pressedBlueSlider = new RgbSlider(sliderStartX, currentY, fieldWidth, fieldHeight, "B", ColorHelper.Argb.getBlue(targetStroke.getPressedColor()) / 255.0D) {
             @Override
             protected void applyValue() {
                 refreshPressedColorFromSliders();
@@ -213,13 +215,13 @@ public class StrokeEditScreen extends Screen {
      */
     private void addOutlineColorSettings(int panelX, int panelY, int panelW, int panelH) {
         int currentY = panelY + 5;
-        int sliderStartX = panelX + (panelW - sliderWidth) / 2;
+        int sliderStartX = panelX + (panelW - fieldWidth) / 2;
 
         // Title for Unpressed Outline Color within the box
-        this.addDrawableChild(new TextLabelWidget(sliderStartX, currentY, sliderWidth, Text.literal("Unpressed Outline Color")));
+        this.addDrawableChild(new TextLabelWidget(sliderStartX, currentY, fieldWidth, Text.literal("Unpressed Outline Color")));
         currentY += fieldHeight + 5;
 
-        outlineRedSlider = new RgbSlider(sliderStartX, currentY, sliderWidth, fieldHeight, "R", ColorHelper.Argb.getRed(targetStroke.getOutlineColor()) / 255.0D) {
+        outlineRedSlider = new RgbSlider(sliderStartX, currentY, fieldWidth, fieldHeight, "R", ColorHelper.Argb.getRed(targetStroke.getOutlineColor()) / 255.0D) {
             @Override
             protected void applyValue() {
                 refreshOutlineColorFromSliders();
@@ -228,7 +230,7 @@ public class StrokeEditScreen extends Screen {
         this.addDrawableChild(outlineRedSlider);
         currentY += fieldHeight + 5;
 
-        outlineGreenSlider = new RgbSlider(sliderStartX, currentY, sliderWidth, fieldHeight, "G", ColorHelper.Argb.getGreen(targetStroke.getOutlineColor()) / 255.0D) {
+        outlineGreenSlider = new RgbSlider(sliderStartX, currentY, fieldWidth, fieldHeight, "G", ColorHelper.Argb.getGreen(targetStroke.getOutlineColor()) / 255.0D) {
             @Override
             protected void applyValue() {
                 refreshOutlineColorFromSliders();
@@ -237,7 +239,7 @@ public class StrokeEditScreen extends Screen {
         this.addDrawableChild(outlineGreenSlider);
         currentY += fieldHeight + 5;
 
-        outlineBlueSlider = new RgbSlider(sliderStartX, currentY, sliderWidth, fieldHeight, "B", ColorHelper.Argb.getBlue(targetStroke.getOutlineColor()) / 255.0D) {
+        outlineBlueSlider = new RgbSlider(sliderStartX, currentY, fieldWidth, fieldHeight, "B", ColorHelper.Argb.getBlue(targetStroke.getOutlineColor()) / 255.0D) {
             @Override
             protected void applyValue() {
                 refreshOutlineColorFromSliders();
@@ -248,10 +250,10 @@ public class StrokeEditScreen extends Screen {
         currentY += fieldHeight + 15;
 
         // Title for Pressed Outline Color within the box
-        this.addDrawableChild(new TextLabelWidget(sliderStartX, currentY, sliderWidth, Text.literal("Pressed Outline Color")));
+        this.addDrawableChild(new TextLabelWidget(sliderStartX, currentY, fieldWidth, Text.literal("Pressed Outline Color")));
         currentY += fieldHeight + 5;
 
-        pressedOutlineRedSlider = new RgbSlider(sliderStartX, currentY, sliderWidth, fieldHeight, "R", ColorHelper.Argb.getRed(targetStroke.getPressedOutlineColor()) / 255.0D) {
+        pressedOutlineRedSlider = new RgbSlider(sliderStartX, currentY, fieldWidth, fieldHeight, "R", ColorHelper.Argb.getRed(targetStroke.getPressedOutlineColor()) / 255.0D) {
             @Override
             protected void applyValue() {
                 refreshPressedOutlineColorFromSliders();
@@ -260,7 +262,7 @@ public class StrokeEditScreen extends Screen {
         this.addDrawableChild(pressedOutlineRedSlider);
         currentY += fieldHeight + 5;
 
-        pressedOutlineGreenSlider = new RgbSlider(sliderStartX, currentY, sliderWidth, fieldHeight, "G", ColorHelper.Argb.getGreen(targetStroke.getPressedOutlineColor()) / 255.0D) {
+        pressedOutlineGreenSlider = new RgbSlider(sliderStartX, currentY, fieldWidth, fieldHeight, "G", ColorHelper.Argb.getGreen(targetStroke.getPressedOutlineColor()) / 255.0D) {
             @Override
             protected void applyValue() {
                 refreshPressedOutlineColorFromSliders();
@@ -269,7 +271,7 @@ public class StrokeEditScreen extends Screen {
         this.addDrawableChild(pressedOutlineGreenSlider);
         currentY += fieldHeight + 5;
 
-        pressedOutlineBlueSlider = new RgbSlider(sliderStartX, currentY, sliderWidth, fieldHeight, "B", ColorHelper.Argb.getBlue(targetStroke.getPressedOutlineColor()) / 255.0D) {
+        pressedOutlineBlueSlider = new RgbSlider(sliderStartX, currentY, fieldWidth, fieldHeight, "B", ColorHelper.Argb.getBlue(targetStroke.getPressedOutlineColor()) / 255.0D) {
             @Override
             protected void applyValue() {
                 refreshPressedOutlineColorFromSliders();
@@ -290,7 +292,7 @@ public class StrokeEditScreen extends Screen {
      */
     private void addGeneralSettings(int panelX, int panelY, int panelW, int panelH) {
         int currentY = panelY + 5;
-        int elementStartX = panelX + (panelW - sliderWidth) / 2;
+        int elementStartX = panelX + (panelW - fieldWidth) / 2;
 
         // Apply Global Button
         applyGlobalButton = ButtonWidget.builder(Text.of("Apply settings globally"), (button) -> {
@@ -309,7 +311,7 @@ public class StrokeEditScreen extends Screen {
             }
             YetAnotherKeystrokesModClient.saveStrokesToConfig();
 
-        }).dimensions(elementStartX, currentY, sliderWidth, fieldHeight).build();
+        }).dimensions(elementStartX, currentY, fieldWidth, fieldHeight).build();
         this.addDrawableChild(applyGlobalButton);
         currentY += fieldHeight + 5;
 
@@ -324,14 +326,14 @@ public class StrokeEditScreen extends Screen {
             YetAnotherKeystrokesModClient.ACTIVE_STROKES.addAll(structure.getStrokes());
             this.init(); // Re-initialize the screen to reflect default strokes
 
-        }).dimensions(elementStartX, currentY, sliderWidth, fieldHeight).build();
+        }).dimensions(elementStartX, currentY, fieldWidth, fieldHeight).build();
         this.addDrawableChild(resetButton);
         currentY += fieldHeight + 5;
 
         // InputType Cycle Button
         inputTypeCycleButton = ButtonWidget.builder(Text.literal("Input Type: " + targetStroke.getInputType().name()), (button) -> {
             cycleInputType(1);
-        }).dimensions(elementStartX, currentY, sliderWidth, fieldHeight).build();
+        }).dimensions(elementStartX, currentY, fieldWidth, fieldHeight).build();
         this.addDrawableChild(inputTypeCycleButton);
         currentY += fieldHeight + 5;
 
@@ -339,12 +341,12 @@ public class StrokeEditScreen extends Screen {
         outlinesButton = ButtonWidget.builder(Text.literal("Outlines: " + targetStroke.getOutlineStatus()), (button) -> {
             targetStroke.setOutlineStatus(!targetStroke.getOutlineStatus());
             outlinesButton.setMessage(Text.literal("Outlines: " + targetStroke.getOutlineStatus()));
-        }).dimensions(elementStartX, currentY, sliderWidth, fieldHeight).build();
+        }).dimensions(elementStartX, currentY, fieldWidth, fieldHeight).build();
         this.addDrawableChild(outlinesButton);
         currentY += fieldHeight + 5;
 
         // Roundness Slider
-        roundnessSlider = new SliderWidget(elementStartX, currentY, sliderWidth, fieldHeight, Text.literal("Roundness"), targetStroke.getRoundness() / 15.0D) {
+        roundnessSlider = new SliderWidget(elementStartX, currentY, fieldWidth, fieldHeight, Text.literal("Roundness"), targetStroke.getRoundness() / 15.0D) {
             @Override
             protected void updateMessage() {
                 this.setMessage(Text.literal("Roundness: " + (int) (this.value * 15.0D)));
@@ -362,13 +364,13 @@ public class StrokeEditScreen extends Screen {
         textButton = ButtonWidget.builder(Text.literal("Text: " + targetStroke.isShowKeybindText()), (button) -> {
             targetStroke.setShowKeybindText(!targetStroke.isShowKeybindText());
             textButton.setMessage(Text.literal("Text: " + targetStroke.isShowKeybindText()));
-        }).dimensions(elementStartX, currentY, sliderWidth, fieldHeight).build();
+        }).dimensions(elementStartX, currentY, fieldWidth, fieldHeight).build();
         this.addDrawableChild(textButton);
         currentY += fieldHeight + 5;
 
         // Transparency Slider Fill
-        int sliderStartX = panelX + (panelW - sliderWidth) / 2;
-        transparencySlider = new RgbSlider(sliderStartX, currentY, sliderWidth, fieldHeight, "Alpha", ColorHelper.Argb.getAlpha(targetStroke.getColor()) / 255.0D) {
+        int sliderStartX = panelX + (panelW - fieldWidth) / 2;
+        transparencySlider = new RgbSlider(sliderStartX, currentY, fieldWidth, fieldHeight, "Alpha", ColorHelper.Argb.getAlpha(targetStroke.getColor()) / 255.0D) {
             @Override
             protected void applyValue() {
                 int newAlpha = (int) (this.value * 255);
@@ -385,6 +387,12 @@ public class StrokeEditScreen extends Screen {
                 targetStroke.setPressedColor(ColorHelper.Argb.getArgb(newAlpha, pressedR, pressedG, pressedB));            }
         };
         this.addDrawableChild(transparencySlider);
+        currentY += fieldHeight + 5;
+
+        displayTextInput = new TextFieldWidget(textRenderer, elementStartX, currentY, fieldWidth, fieldHeight, Text.literal("Stroke Button"));
+        displayTextInput.setText(targetStroke.getKeystrokeText());
+        displayTextInput.setChangedListener(targetStroke::setKeystrokeText);
+        this.addDrawableChild(displayTextInput);
         currentY += fieldHeight + 5;
     }
 

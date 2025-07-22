@@ -27,6 +27,7 @@ public class Strokes extends ClickableWidget {
     private boolean isPressed = false;
     private boolean showKeybindText = true;
     private int textColor = 0xFFFFFFFF;
+    private String keystrokeText;
 
     /**
      * Defines the types of input actions that a stroke can represent.
@@ -61,51 +62,20 @@ public class Strokes extends ClickableWidget {
         this.roundness = roundness;
     }
 
-    public Vec3d getPosition(){return position;}
-    public int getColor(){return color;}
-    public InputType getInputType(){return inputType;}
-    public void setPosition(Vec3d position){
-        this.position = position;
-        this.setX((int) position.x);
-        this.setY((int) position.y);
-    }
-    public void setColor(int color){this.color = color;}
-    public int getPressedColor() {return pressedColor;}
-    public void setPressedColor(int pressedColor) {this.pressedColor = pressedColor;}
-    public int getOutlineColor() {return outlineColor;}
-    public void setOutlineColor(int outlineColor) {this.outlineColor = outlineColor;}
-    public int getPressedOutlineColor() {return pressedOutlineColor;}
-    public void setPressedOutlineColor(int pressedOutlineColor) {this.pressedOutlineColor = pressedOutlineColor;}
-    public int getRoundness() {return roundness;}
-    public void setRoundness(int roundness) {this.roundness = roundness;}
-    public void setWidth(int width){this.width = width;}
-    public void setHeight(int height){this.height = height;}
-    public void setInputType(InputType type) {this.inputType = type;}
-    public boolean isVisible(){return isVisible;}
-    public void setVisible(boolean isVisible){this.isVisible = isVisible;}
-    public boolean isHovered(int mouseX, int mouseY){return this.active && this.visible && mouseX >= this.getX() && mouseX < this.getX() + this.getWidth() && mouseY >= this.getY() && mouseY < this.getY() + this.getHeight();}
-    public boolean isSelected() {return isSelected;}
-    public void setSelected(boolean selected) {isSelected = selected;}
-    public boolean getOutlineStatus() {return outlineStatus;}
-    public void setOutlineStatus(boolean outlineStatus) {this.outlineStatus = outlineStatus;}
-    public boolean isShowKeybindText() { return showKeybindText; }
-    public void setShowKeybindText(boolean showKeybindText) { this.showKeybindText = showKeybindText; }
-    public int getTextColor() { return textColor; }
-    public void setTextColor(int textColor) { this.textColor = textColor; }
 
-    private String getKeyTextForInputType() {
-        switch (this.inputType) {
-            case FORWARD: return "W";
-            case BACK:    return "S";
-            case LEFT:    return "A";
-            case RIGHT:   return "D";
-            case JUMP:    return "--";
-            case ATTACK:  return "LMB";
-            case USE:     return "RMB";
-            case SNEAK:   return "Shift";
-            case SPRINT:  return "Ctrl";
-            default:      return "";
-        }
+    public String getKeyTextForInputType() {
+        return switch (this.inputType) {
+            case FORWARD -> "W";
+            case BACK -> "S";
+            case LEFT -> "A";
+            case RIGHT -> "D";
+            case JUMP -> "---";
+            case ATTACK -> "LMB";
+            case USE -> "RMB";
+            case SNEAK -> "Shift";
+            case SPRINT -> "Ctrl";
+            default -> "";
+        };
     }
 
     /**
@@ -139,7 +109,13 @@ public class Strokes extends ClickableWidget {
             }
 
             if (this.showKeybindText) {
-                String textToShow = getKeyTextForInputType();
+                String textToShow = keystrokeText;
+
+                if(keystrokeText==null){
+                    textToShow = getKeyTextForInputType();
+                } else if(textToShow.isBlank()){
+                    textToShow = getKeyTextForInputType();
+                }
                 if (!textToShow.isEmpty()) {
                     TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
                     double offsetY = (double) (drawHeight - textRenderer.fontHeight) / 2;
@@ -171,4 +147,38 @@ public class Strokes extends ClickableWidget {
     public void update(boolean isPressed){
         this.isPressed = isPressed;
     }
+
+    // Getter and Setters
+    public Vec3d getPosition(){return position;}
+    public int getColor(){return color;}
+    public InputType getInputType(){return inputType;}
+    public void setPosition(Vec3d position){
+        this.position = position;
+        this.setX((int) position.x);
+        this.setY((int) position.y);}
+    public void setColor(int color){this.color = color;}
+    public int getPressedColor() {return pressedColor;}
+    public void setPressedColor(int pressedColor) {this.pressedColor = pressedColor;}
+    public int getOutlineColor() {return outlineColor;}
+    public void setOutlineColor(int outlineColor) {this.outlineColor = outlineColor;}
+    public int getPressedOutlineColor() {return pressedOutlineColor;}
+    public void setPressedOutlineColor(int pressedOutlineColor) {this.pressedOutlineColor = pressedOutlineColor;}
+    public int getRoundness() {return roundness;}
+    public void setRoundness(int roundness) {this.roundness = roundness;}
+    public void setWidth(int width){this.width = width;}
+    public void setHeight(int height){this.height = height;}
+    public void setInputType(InputType type) {this.inputType = type;}
+    public boolean isVisible(){return isVisible;}
+    public void setVisible(boolean isVisible){this.isVisible = isVisible;}
+    public boolean isHovered(int mouseX, int mouseY){return this.active && this.visible && mouseX >= this.getX() && mouseX < this.getX() + this.getWidth() && mouseY >= this.getY() && mouseY < this.getY() + this.getHeight();}
+    public boolean isSelected() {return isSelected;}
+    public void setSelected(boolean selected) {isSelected = selected;}
+    public boolean getOutlineStatus() {return outlineStatus;}
+    public void setOutlineStatus(boolean outlineStatus) {this.outlineStatus = outlineStatus;}
+    public boolean isShowKeybindText() { return showKeybindText; }
+    public void setShowKeybindText(boolean showKeybindText) { this.showKeybindText = showKeybindText; }
+    public int getTextColor() { return textColor; }
+    public void setTextColor(int textColor) { this.textColor = textColor; }
+    public String getKeystrokeText() {return keystrokeText;}
+    public void setKeystrokeText(String keystrokeText) {this.keystrokeText = keystrokeText;}
 }
