@@ -483,6 +483,12 @@ public class StrokeEditScreen extends Screen {
         renderPanelWithTitle(context, outlinePanelX, outlinePanelY, outlinePanelWidth, outlinePanelHeight, Text.literal("Outlines"));
         renderPanelWithTitle(context, generalPanelX, generalPanelY, generalPanelWidth, generalPanelHeight, Text.literal("General Settings"));
 
+        context.fill((outlinePanelX+outlinePanelWidth/2)-40, outlinePanelY-60, (outlinePanelX+outlinePanelWidth/2)-20, outlinePanelY-40, targetStroke.getColor());
+        context.drawBorder((outlinePanelX+outlinePanelWidth/2)-40, outlinePanelY-60, 20, 20, targetStroke.getOutlineColor());
+
+        context.fill((outlinePanelX+outlinePanelWidth/2)+20, outlinePanelY-60, (outlinePanelX+outlinePanelWidth/2)+40, outlinePanelY-40, targetStroke.getPressedColor());
+        context.drawBorder((outlinePanelX+outlinePanelWidth/2)+20, outlinePanelY-60, 20, 20, targetStroke.getPressedOutlineColor());
+
         super.render(context, mouseX, mouseY, delta);
 
         context.drawText(this.textRenderer, this.title, this.width / 2 - this.textRenderer.getWidth(this.title) / 2, 20, 0xFFFFFFFF, true);
