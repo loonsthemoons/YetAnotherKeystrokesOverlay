@@ -16,6 +16,7 @@ public class StrokesController {
     private StrokesView strokesView;
     private StrokesStructure structure;
     private KeyBinding keyBinding;
+    private KeyBinding disableKeystrokes;
     private StrokeOptions menuScreen;
 
     /**
@@ -30,10 +31,16 @@ public class StrokesController {
         this.structure = structure;
         this.menuScreen = menuScreen;
         keyBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "key.fancyStrokes.Options", // The translation key of the keybinding's name
+                "Open Keystrokes Settings", // The translation key of the keybinding's name
                 InputUtil.Type.KEYSYM,                  // The type of the keybinding, KEYSYM for keyboard, MOUSE for mouse.
                 GLFW.GLFW_KEY_R,                        // The keycode of the key
-                "category.fancyStrokes.Keybinds"        // The translation key of the keybinding's category.
+                "Yet Another Keystrokes Mod"            // The translation key of the keybinding's category.
+        ));
+        disableKeystrokes = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                "Disable Keystrokes",       // The translation key of the keybinding's name
+                InputUtil.Type.KEYSYM,                  // The type of the keybinding, KEYSYM for keyboard, MOUSE for mouse.
+                GLFW.GLFW_KEY_K,                        // The keycode of the key
+                "Yet Another Keystrokes Mod"            // The translation key of the keybinding's category.
         ));
         structure.setControlKey(keyBinding);
         buildController();
@@ -62,7 +69,12 @@ public class StrokesController {
                 }
             }
             while (keyBinding.wasPressed()) {
-                    menuScreen.openScreen();
+                if(structure.getKeystrokesStatus())
+                {menuScreen.openScreen();}
+            }
+
+            while (disableKeystrokes.wasPressed()){
+                structure.disableKeystrokes();
             }
         });
     }

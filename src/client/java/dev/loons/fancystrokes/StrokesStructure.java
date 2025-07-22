@@ -21,6 +21,7 @@ public class StrokesStructure {
     private final int defaultWidth = 20;
     private final int defaultHeight = 20;
     private KeyBinding controlKey;
+    private boolean keystrokesStatus=true;
 
     public StrokesStructure(){}
 
@@ -118,6 +119,13 @@ public class StrokesStructure {
         ));
     }
 
+    public void disableKeystrokes(){
+        for(Strokes s : strokes){
+            s.setVisible(!keystrokesStatus);
+        }
+        keystrokesStatus=!keystrokesStatus;
+    }
+
     public ArrayList<Strokes> getStrokes() {
         return strokes;
     }
@@ -146,4 +154,5 @@ public class StrokesStructure {
 
     public void setControlKey(KeyBinding controlKey){this.controlKey=controlKey;}
     public KeyBinding getControlKey(){return controlKey;}
+    public boolean getKeystrokesStatus(){return keystrokesStatus;}
 }
