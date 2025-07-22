@@ -54,6 +54,7 @@ public class StrokeEditScreen extends Screen {
     private SliderWidget roundnessSlider;
     private ButtonWidget outlinesButton;
     private ButtonWidget textButton;
+    private RgbSlider transparencySlider;
 
     // Done Button
     private ButtonWidget doneButton;
@@ -364,6 +365,27 @@ public class StrokeEditScreen extends Screen {
         }).dimensions(elementStartX, currentY, sliderWidth, fieldHeight).build();
         this.addDrawableChild(textButton);
         currentY += fieldHeight + 5;
+
+        // Transparency Slider Fill
+        int sliderStartX = panelX + (panelW - sliderWidth) / 2;
+        transparencySlider = new RgbSlider(sliderStartX, currentY, sliderWidth, fieldHeight, "Alpha", ColorHelper.Argb.getAlpha(targetStroke.getColor()) / 255.0D) {
+            @Override
+            protected void applyValue() {
+                int newAlpha = (int) (this.value * 255);
+                // Update Unpressed Fill Color Alpha
+                int unpressedR = ColorHelper.Argb.getRed(targetStroke.getColor());
+                int unpressedG = ColorHelper.Argb.getGreen(targetStroke.getColor());
+                int unpressedB = ColorHelper.Argb.getBlue(targetStroke.getColor());
+                targetStroke.setColor(ColorHelper.Argb.getArgb(newAlpha, unpressedR, unpressedG, unpressedB));
+
+                // Update Pressed Fill Color Alpha
+                int pressedR = ColorHelper.Argb.getRed(targetStroke.getPressedColor());
+                int pressedG = ColorHelper.Argb.getGreen(targetStroke.getPressedColor());
+                int pressedB = ColorHelper.Argb.getBlue(targetStroke.getPressedColor());
+                targetStroke.setPressedColor(ColorHelper.Argb.getArgb(newAlpha, pressedR, pressedG, pressedB));            }
+        };
+        this.addDrawableChild(transparencySlider);
+        currentY += fieldHeight + 5;
     }
 
 
@@ -374,9 +396,8 @@ public class StrokeEditScreen extends Screen {
         int r = (int) (unpressedRedSlider.getCurrentValue() * 255);
         int g = (int) (unpressedGreenSlider.getCurrentValue() * 255);
         int b = (int) (unpressedBlueSlider.getCurrentValue() * 255);
-
-        int currentColor = targetStroke.getColor();
-        int newColor = ColorHelper.Argb.getArgb(ColorHelper.Argb.getAlpha(currentColor), r, g, b);
+        int a = ColorHelper.Argb.getAlpha(targetStroke.getColor());
+        int newColor = ColorHelper.Argb.getArgb(a, r, g, b);
         targetStroke.setColor(newColor);
     }
 
@@ -387,9 +408,8 @@ public class StrokeEditScreen extends Screen {
         int r = (int) (pressedRedSlider.getCurrentValue() * 255);
         int g = (int) (pressedGreenSlider.getCurrentValue() * 255);
         int b = (int) (pressedBlueSlider.getCurrentValue() * 255);
-
-        int currentColor = targetStroke.getPressedColor();
-        int newColor = ColorHelper.Argb.getArgb(ColorHelper.Argb.getAlpha(currentColor), r, g, b);
+        int a = ColorHelper.Argb.getAlpha(targetStroke.getColor());
+        int newColor = ColorHelper.Argb.getArgb(a, r, g, b);
         targetStroke.setPressedColor(newColor);
     }
 

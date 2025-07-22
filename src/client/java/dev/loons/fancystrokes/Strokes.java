@@ -79,6 +79,7 @@ public class Strokes extends ClickableWidget {
     public int getRoundness() {return roundness;}
     public void setRoundness(int roundness) {this.roundness = roundness;}
     public void setWidth(int width){this.width = width;}
+    public void setHeight(int height){this.height = height;}
     public void setInputType(InputType type) {this.inputType = type;}
     public boolean isVisible(){return isVisible;}
     public void setVisible(boolean isVisible){this.isVisible = isVisible;}
@@ -98,7 +99,7 @@ public class Strokes extends ClickableWidget {
             case BACK:    return "S";
             case LEFT:    return "A";
             case RIGHT:   return "D";
-            case JUMP:    return "␣";
+            case JUMP:    return "--";
             case ATTACK:  return "LMB";
             case USE:     return "RMB";
             case SNEAK:   return "Shift";

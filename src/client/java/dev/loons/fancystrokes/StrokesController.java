@@ -35,6 +35,7 @@ public class StrokesController {
                 GLFW.GLFW_KEY_R,                        // The keycode of the key
                 "category.fancyStrokes.Keybinds"        // The translation key of the keybinding's category.
         ));
+        structure.setControlKey(keyBinding);
         buildController();
     }
 

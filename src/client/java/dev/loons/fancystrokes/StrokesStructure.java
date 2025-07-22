@@ -1,5 +1,6 @@
 package dev.loons.fancystrokes;
 
+import net.minecraft.client.option.KeyBinding;
 import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.Vec3d;
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ public class StrokesStructure {
     private final int defaultRoundness = 0;
     private final int defaultWidth = 20;
     private final int defaultHeight = 20;
+    private KeyBinding controlKey;
 
     public StrokesStructure(){}
 
@@ -141,4 +143,7 @@ public class StrokesStructure {
     public void clearAll(){
         this.strokes.clear();
     }
+
+    public void setControlKey(KeyBinding controlKey){this.controlKey=controlKey;}
+    public KeyBinding getControlKey(){return controlKey;}
 }

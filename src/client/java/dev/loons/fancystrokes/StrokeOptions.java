@@ -4,10 +4,14 @@ package dev.loons.fancystrokes;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.util.math.Vector2f;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.Vec3d;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+
 import static dev.loons.fancystrokes.Strokes.InputType;
 
 /**
@@ -24,7 +28,12 @@ public class StrokeOptions extends Screen {
     private boolean isSelecting = false;
     private double selectPositionX;
     private double selectPositionY;
+    private boolean isResizing = false;
+    private int initialWidth;
+    private int initialHeight;
+    private java.util.Map<Strokes, Vector2f> initialGroupSizes;
     private ArrayList<Strokes> selectedStrokes = new ArrayList<>();
+    private KeyBinding controlKey;
 
     /**
      * Constructs a new StrokeOptions screen.
@@ -37,6 +46,7 @@ public class StrokeOptions extends Screen {
         this.structure = structure;
         this.strokesArrayList = new ArrayList<>();
         this.strokesArrayList.addAll(structure.getStrokes());
+        this.controlKey = structure.getControlKey();
     }
 
     /**
@@ -193,18 +203,15 @@ public class StrokeOptions extends Screen {
         if(button==0){
             Strokes clickedStroke = findStrokeByHover();
             if(clickedStroke != null){
-                // Case 1, clicked on Stroke in selected area
+                this.currentStroke = clickedStroke;
+                this.mouseOffsetX = mouseX - clickedStroke.getX();
+                this.mouseOffsetY = mouseY - clickedStroke.getY();
                 if(selectedStrokes.contains(clickedStroke)){
-                    this.currentStroke = clickedStroke;
-                    this.mouseOffsetX = mouseX - clickedStroke.getX();
-                    this.mouseOffsetY = mouseY - clickedStroke.getY();
+                    // Case 1, clicked on Stroke in selected area
                     return true;
                 } else {
                     // Case 2, clicked on a single stroke
                     clearSelection();
-                    this.currentStroke = clickedStroke;
-                    this.mouseOffsetX = mouseX - clickedStroke.getX();
-                    this.mouseOffsetY = mouseY - clickedStroke.getY();
                     return true;
                 }
             } else {
@@ -217,23 +224,54 @@ public class StrokeOptions extends Screen {
             }
         }
 
-        // Right Mouse click (Opens Menu for a stroke)
-        if(!superClicked && button ==1){
-            for (Strokes strokes : strokesArrayList){
-                if(strokes.isVisible() && strokes.isHovered()){
-                    MinecraftClient.getInstance().setScreen(new StrokeEditScreen(Text.empty(),strokes, this, structure));
+        // Right Mouse click (Resizing a stroke)
+        if(button ==1){
+            Strokes clickedStroke = findStrokeByHover();
+            if(clickedStroke != null){
+                isResizing=true;
+                this.currentStroke = clickedStroke;
+                this.mouseOffsetX = mouseX;
+                this.mouseOffsetY = mouseY;
+                this.initialWidth = clickedStroke.getWidth();
+                this.initialHeight = clickedStroke.getHeight();
+
+                if(selectedStrokes.contains(clickedStroke)){
+                    // Case 1, clicked on Stroke in selected area
+                    initialGroupSizes = new HashMap<>();
+                    Vector2f vector2f;
+                    for(Strokes strokes : selectedStrokes){
+                        vector2f = new Vector2f(strokes.getWidth(), strokes.getHeight());
+                        initialGroupSizes.put(strokes, vector2f);
+                    }
+                    return true;
+                } else {
+                    // Case 2, clicked on a single stroke
                     return true;
                 }
+            } else {
+                isSelecting =false;
+                selectAreaStroke(this.selectPositionX, this.selectPositionY, mouseX, mouseY);
+                clearSelection();
+                return true;
             }
         }
 
         // Middle Mouse click (Creates or Deletes Stroke)
         if(!superClicked && button ==2){
             for (Strokes strokes : strokesArrayList){
-                if(strokes.isVisible() && strokes.isHovered()){
+                if(strokes.isVisible() && strokes.isHovered() && selectedStrokes.isEmpty()){
                     structure.removeStroke(strokes);
                     strokesArrayList.remove(strokes);
                     this.remove(strokes);
+                    return true;
+                } else if (strokes.isVisible() && strokes.isHovered() && selectedStrokes.contains(strokes)){
+                    structure.removeStroke(strokes);
+                    for(Strokes listStrokes : selectedStrokes){
+                        structure.removeStroke(listStrokes);
+                        strokesArrayList.remove(listStrokes);
+                        this.remove(listStrokes);
+                    }
+                    selectedStrokes.clear();
                     return true;
                 }
             }
@@ -259,50 +297,94 @@ public class StrokeOptions extends Screen {
      */
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
-        if (this.currentStroke != null && button == 0 && !isSelecting && selectedStrokes.isEmpty()) {
-            // Case 1, moving a single stroke
-            int newX = (int) (mouseX - this.mouseOffsetX);
-            int newY = (int) (mouseY - this.mouseOffsetY);
+        // Left Click (Moving & Selecting Strokes)
+        if(button==0){
+            if (this.currentStroke != null && !isSelecting && selectedStrokes.isEmpty()) {
+                // Case 1, moving a single stroke
+                int newX = (int) (mouseX - this.mouseOffsetX);
+                int newY = (int) (mouseY - this.mouseOffsetY);
 
-            for (Strokes otherStroke : strokesArrayList) {
-                if (otherStroke == this.currentStroke || !otherStroke.isVisible()) {
-                    continue;
+                for (Strokes otherStroke : strokesArrayList) {
+                    if (otherStroke == this.currentStroke || !otherStroke.isVisible()) {
+                        continue;
+                    }
+                    newX = snapHorizontal(newX, this.currentStroke.getWidth(), otherStroke.getX(), otherStroke.getWidth());
+                    newY = snapVertical(newY, this.currentStroke.getHeight(), otherStroke.getY(), otherStroke.getHeight());
                 }
-                newX = snapHorizontal(newX, this.currentStroke.getWidth(), otherStroke.getX(), otherStroke.getWidth());
-                newY = snapVertical(newY, this.currentStroke.getHeight(), otherStroke.getY(), otherStroke.getHeight());
-            }
 
-            newX = Math.max(0, Math.min(newX, this.width - this.currentStroke.getWidth()));
-            newY = Math.max(0, Math.min(newY, this.height - this.currentStroke.getHeight()));
+                newX = Math.max(0, Math.min(newX, this.width - this.currentStroke.getWidth()));
+                newY = Math.max(0, Math.min(newY, this.height - this.currentStroke.getHeight()));
 
-            this.currentStroke.setPosition(new Vec3d(newX, newY, 0));
-            return true;
-        } else if (button == 0 && this.currentStroke != null && !selectedStrokes.isEmpty() && selectedStrokes.contains(currentStroke)){
-            // Case 2, moving a group
-            int newX = (int) (mouseX - this.mouseOffsetX);
-            int newY = (int) (mouseY - this.mouseOffsetY);
-            newX = Math.max(0, Math.min(newX, this.width - this.currentStroke.getWidth()));
-            newY = Math.max(0, Math.min(newY, this.height - this.currentStroke.getHeight()));
-            double deltaMoveX = newX - this.currentStroke.getX();
-            double deltaMoveY = newY - this.currentStroke.getY();
-            for(Strokes strokes : selectedStrokes){
-                if (strokes == this.currentStroke) {
-                    strokes.setPosition(new Vec3d(newX, newY, 0));
-                } else {
-                    int newStrokeX = (int) (strokes.getX() + deltaMoveX);
-                    int newStrokeY = (int) (strokes.getY() + deltaMoveY);
+                this.currentStroke.setPosition(new Vec3d(newX, newY, 0));
+                return true;
+            } else if (this.currentStroke != null && !selectedStrokes.isEmpty() && selectedStrokes.contains(currentStroke)){
+                // Case 2, moving a group
+                int newX = (int) (mouseX - this.mouseOffsetX);
+                int newY = (int) (mouseY - this.mouseOffsetY);
+                newX = Math.max(0, Math.min(newX, this.width - this.currentStroke.getWidth()));
+                newY = Math.max(0, Math.min(newY, this.height - this.currentStroke.getHeight()));
+                double deltaMoveX = newX - this.currentStroke.getX();
+                double deltaMoveY = newY - this.currentStroke.getY();
+                for(Strokes strokes : selectedStrokes){
+                    if (strokes == this.currentStroke) {
+                        strokes.setPosition(new Vec3d(newX, newY, 0));
+                    } else {
+                        int newStrokeX = (int) (strokes.getX() + deltaMoveX);
+                        int newStrokeY = (int) (strokes.getY() + deltaMoveY);
 
-                    newStrokeX = Math.max(0, Math.min(newStrokeX, this.width - strokes.getWidth()));
-                    newStrokeY = Math.max(0, Math.min(newStrokeY, this.height - strokes.getHeight()));
+                        newStrokeX = Math.max(0, Math.min(newStrokeX, this.width - strokes.getWidth()));
+                        newStrokeY = Math.max(0, Math.min(newStrokeY, this.height - strokes.getHeight()));
 
-                    strokes.setPosition(new Vec3d(newStrokeX, newStrokeY, 0));
+                        strokes.setPosition(new Vec3d(newStrokeX, newStrokeY, 0));
+                    }
                 }
+                return true;
+            } else if(this.isSelecting){
+                // Case 3, selecting an area
+                return true;
             }
-            return true;
-        } else if(button == 0 && this.isSelecting){
-            // Case 2, selecting an area
-            return true;
         }
+
+        // Right Click (Resizing Strokes)
+        if(button==1 && isResizing){
+            double deltaMouseX = mouseX - this.mouseOffsetX;
+            double deltaMouseY = mouseY - this.mouseOffsetY;
+
+            if (this.currentStroke != null && !isSelecting && selectedStrokes.isEmpty()) {
+                // Case 1, resizing a single stroke
+                int newWidth = (int) (this.initialWidth + deltaMouseX);
+                int newHeight = (int) (this.initialHeight + deltaMouseY);
+
+//                for (Strokes otherStroke : strokesArrayList) {
+//                    if (otherStroke == this.currentStroke || !otherStroke.isVisible()) {
+//                        continue;
+//                    }
+//                    newWidth = snapHorizontal(newWidth, this.currentStroke.getWidth(), otherStroke.getX(), otherStroke.getWidth());
+//                    newHeight = snapVertical(newHeight, this.currentStroke.getHeight(), otherStroke.getY(), otherStroke.getHeight());
+//                }
+
+                this.currentStroke.setWidth(Math.max(10, newWidth));
+                this.currentStroke.setHeight(Math.max(10, newHeight));
+                return true;
+            } else if (this.currentStroke != null && !selectedStrokes.isEmpty() && initialGroupSizes != null){
+                // Case 2, resizing a group
+                for(Strokes strokes : selectedStrokes){
+                    Vector2f initialSize = initialGroupSizes.get(strokes);
+                    if(initialSize != null){
+                        int newWidth = (int) (initialSize.getX() + deltaMouseX);
+                        int newHeight = (int) (initialSize.getY() + deltaMouseY);
+                        strokes.setWidth(Math.max(10, newWidth));
+                        strokes.setHeight(Math.max(10, newWidth));
+                    }
+                }
+                return true;
+            } else if(this.isSelecting){
+                // Case 3, clear selection
+                clearSelection();
+                return true;
+            }
+        }
+
         return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
     }
 
@@ -317,6 +399,16 @@ public class StrokeOptions extends Screen {
      */
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        if(button==1 && isResizing){
+            isResizing=false;
+            currentStroke=null;
+            if(initialGroupSizes != null){
+                initialGroupSizes.clear();
+                initialGroupSizes = null;
+            }
+            return true;
+        }
+
         if(currentStroke!=null){
             currentStroke=null;
             return true;
@@ -356,6 +448,15 @@ public class StrokeOptions extends Screen {
         if (keyCode == 256) { // 256 is ESCAPE
             this.close();
             return true;
+        }
+        // Open menu on a keystroke
+        if(controlKey.matchesKey(keyCode, scanCode)){
+            for (Strokes strokes : strokesArrayList){
+                if(strokes.isVisible() && strokes.isHovered()){
+                    MinecraftClient.getInstance().setScreen(new StrokeEditScreen(Text.empty(),strokes, this, structure));
+                    return true;
+                }
+            }
         }
         return false;
     }
