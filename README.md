@@ -16,5 +16,5 @@ Controls:
 
 Dependencies:
 - Minecraft 1.20.1
-- Fabric Loader 0.16.14
+- Fabric Loader >=0.15.11
 - owo-lib 0.11.2 1.20
