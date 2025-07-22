@@ -25,6 +25,7 @@ Dependencies:
 - owo-lib 0.11.2 1.20
 
 Some example setups:
+
 <img width="550" height="432" alt="image" src="https://github.com/user-attachments/assets/976f1535-83e5-4fac-95f4-b7760686d585" />
 <img width="328" height="323" alt="image" src="https://github.com/user-attachments/assets/07a2bd3a-e4d8-4723-8df1-87bcb5dd9984" />
 
