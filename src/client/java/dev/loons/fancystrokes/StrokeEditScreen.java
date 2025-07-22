@@ -308,7 +308,7 @@ public class StrokeEditScreen extends Screen {
                 strokes.setRoundness(targetStroke.getRoundness());
                 strokes.setShowKeybindText(targetStroke.isShowKeybindText());
             }
-            YetAnotherKeystrokesModClient.saveStrokesToConfig();
+            YetAnotherKeystrokesModClient.saveProfilesToConfig();
 
         }).dimensions(elementStartX, currentY, fieldWidth, fieldHeight).build();
         this.addDrawableChild(applyGlobalButton);
@@ -519,7 +519,7 @@ public class StrokeEditScreen extends Screen {
     @Override
     public void close() {
         this.targetStroke.setSelected(false);
-        YetAnotherKeystrokesModClient.saveStrokesToConfig();
+        YetAnotherKeystrokesModClient.saveProfilesToConfig();
         MinecraftClient.getInstance().setScreen(this.parentScreen);
     }
 

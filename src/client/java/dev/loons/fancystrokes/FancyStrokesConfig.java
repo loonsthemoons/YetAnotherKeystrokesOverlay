@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import dev.loons.fancystrokes.config.ProfileData;
 import dev.loons.fancystrokes.config.StrokeData;
 import net.fabricmc.loader.api.FabricLoader;
 
@@ -21,7 +22,7 @@ import java.util.List;
 public class FancyStrokesConfig {
     public boolean enableFancyStrokes = true;
     public int globalRoundness = 8;
-    public List<StrokeData> savedStrokes = new ArrayList<>();
+    public List<ProfileData> savedProfiles = new ArrayList<>();
 
     private static final Path CONFIG_PATH = FabricLoader.getInstance().getConfigDir().resolve("Yet-Another-Keystrokes-Mod.json");
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
@@ -59,6 +60,11 @@ public class FancyStrokesConfig {
         try (FileReader reader = new FileReader(CONFIG_PATH.toFile())) {
             JsonObject configJson = GSON.fromJson(reader, JsonObject.class);
 
+            if (configJson == null) {
+                System.err.println("Config file is empty or malformed JSON. Using defaults.");
+                return;
+            }
+
             if (configJson.has("enableFancyStrokes")) {
                 this.enableFancyStrokes = configJson.get("enableFancyStrokes").getAsBoolean();
             }
@@ -66,18 +72,56 @@ public class FancyStrokesConfig {
                 this.globalRoundness = configJson.get("globalRoundness").getAsInt();
             }
 
-            if (configJson.has("savedStrokes")) {
-                JsonArray strokesArray = configJson.getAsJsonArray("savedStrokes");
-                this.savedStrokes.clear();
-                for (JsonElement element : strokesArray) {
-                    StrokeData strokeData = new StrokeData();
-                    strokeData.load(element);
-                    this.savedStrokes.add(strokeData);
+            JsonElement savedProfilesElement = configJson.get("savedProfiles");
+            if (savedProfilesElement != null && savedProfilesElement.isJsonArray()) {
+                JsonArray profilesArray = savedProfilesElement.getAsJsonArray();
+                this.savedProfiles.clear();
+                for (JsonElement element : profilesArray) {
+                    if (element != null && element.isJsonObject()) {
+                        ProfileData profileData = new ProfileData();
+                        try {
+                            profileData.load(element);
+                            this.savedProfiles.add(profileData);
+                        } catch (Exception e) {
+                            System.err.println("Error loading individual profile data: " + e.getMessage() + ". Skipping profile: " + element.toString());
+                        }
+                    } else {
+                        System.err.println("Skipping malformed profile element: " + (element != null ? element.toString() : "null"));
+                    }
                 }
+            } else if (configJson.has("savedStrokes")) {
+                System.out.println("Found legacy 'savedStrokes' format. Converting to 'Default' profile.");
+                JsonElement savedStrokesElement = configJson.get("savedStrokes");
+                if (savedStrokesElement != null && savedStrokesElement.isJsonArray()) {
+                    JsonArray strokesArray = savedStrokesElement.getAsJsonArray();
+                    ProfileData defaultProfileData = new ProfileData();
+                    defaultProfileData.profileName = "Default";
+                    defaultProfileData.isActiveProfile = true; // Assume the legacy save was the active one
+                    for (JsonElement element : strokesArray) {
+                        if (element != null && element.isJsonObject()) {
+                            StrokeData strokeData = new StrokeData();
+                            try {
+                                strokeData.load(element);
+                                defaultProfileData.strokes.add(strokeData);
+                            } catch (Exception e) {
+                                System.err.println("Error loading legacy stroke data: " + e.getMessage() + ". Skipping stroke: " + element.toString());
+                            }
+                        }
+                    }
+                    this.savedProfiles.add(defaultProfileData);
+                } else {
+                    System.err.println("Legacy 'savedStrokes' found but not a valid array. Skipping conversion.");
+                }
+            } else {
+                this.savedProfiles = new ArrayList<>();
+                System.out.println("No saved profiles or legacy strokes found. Initializing with empty profile list.");
             }
 
         } catch (IOException e) {
             System.err.println("Failed to load Yet-Another-Keystroke-Mod config: " + e.getMessage());
+        } catch (Exception e) {
+            System.err.println("General error during config loading: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -87,11 +131,11 @@ public class FancyStrokesConfig {
         configJson.addProperty("enableFancyStrokes", this.enableFancyStrokes);
         configJson.addProperty("globalRoundness", this.globalRoundness);
 
-        JsonArray strokesArray = new JsonArray();
-        for (StrokeData strokeData : this.savedStrokes) {
-            strokesArray.add(strokeData.getSerializedForm());
+        JsonArray profilesArray = new JsonArray();
+        for (ProfileData profileData : this.savedProfiles) {
+            profilesArray.add(profileData.getSerializedForm());
         }
-        configJson.add("savedStrokes", strokesArray);
+        configJson.add("savedProfiles", profilesArray);
 
         try (FileWriter writer = new FileWriter(CONFIG_PATH.toFile())) {
             GSON.toJson(configJson, writer);
@@ -102,9 +146,9 @@ public class FancyStrokesConfig {
 
     public boolean isEnabled() { return enableFancyStrokes; }
     public int getGlobalRoundness() { return globalRoundness; }
-    public List<StrokeData> getSavedStrokes() { return savedStrokes; }
+    public List<ProfileData> getSavedProfiles() { return savedProfiles; }
 
-    public void setSavedStrokes(List<StrokeData> newStrokes) {
-        this.savedStrokes = newStrokes;
+    public void setSavedProfiles(ArrayList<ProfileData> newProfiles) {
+        this.savedProfiles = newProfiles;
     }
 }

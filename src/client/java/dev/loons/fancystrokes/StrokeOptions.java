@@ -11,6 +11,7 @@ import net.minecraft.util.math.Vec3d;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
 import static dev.loons.fancystrokes.Strokes.InputType;
 
@@ -21,6 +22,7 @@ import static dev.loons.fancystrokes.Strokes.InputType;
 public class StrokeOptions extends Screen {
     private StrokesStructure structure;
     private ArrayList<Strokes> strokesArrayList;
+    private ArrayList<StrokesStructure> profiles;
     private double mouseOffsetX;
     private double mouseOffsetY;
     private Strokes currentStroke = null;
@@ -41,11 +43,12 @@ public class StrokeOptions extends Screen {
      * @param title The title of the screen.
      * @param structure The {@link StrokesStructure} containing the strokes to be managed.
      */
-    public StrokeOptions(Text title, StrokesStructure structure) {
+    public StrokeOptions(Text title, StrokesStructure structure, ArrayList<StrokesStructure> profiles) {
         super(title);
         this.structure = structure;
         this.strokesArrayList = new ArrayList<>();
         this.strokesArrayList.addAll(structure.getStrokes());
+        this.profiles = profiles;
         this.controlKey = structure.getControlKey();
     }
 
@@ -117,7 +120,7 @@ public class StrokeOptions extends Screen {
      */
     public void openScreen(){
         MinecraftClient.getInstance().setScreen(
-                new StrokeOptions(Text.empty(),structure)
+                new StrokeOptions(Text.empty(),structure, profiles)
         );
     }
 
@@ -129,6 +132,7 @@ public class StrokeOptions extends Screen {
     protected void init() {
         super.init();
         this.strokesArrayList.clear();
+        structure = findActiveStructure(profiles);
         this.strokesArrayList.addAll(structure.getStrokes());
         this.clearChildren();
         for(Strokes strokes : strokesArrayList){
@@ -169,6 +173,15 @@ public class StrokeOptions extends Screen {
         for(Strokes strokes : strokesArrayList){
             if(strokes.isVisible() && strokes.isHovered()){
                 return strokes;
+            }
+        }
+        return null;
+    }
+
+    public StrokesStructure findActiveStructure(ArrayList<StrokesStructure> profiles){
+        for (StrokesStructure s : profiles){
+            if (s.getActive()){
+                return s;
             }
         }
         return null;
@@ -427,7 +440,7 @@ public class StrokeOptions extends Screen {
     @Override
     public void close() {
         clearSelection();
-        YetAnotherKeystrokesModClient.saveStrokesToConfig();
+        YetAnotherKeystrokesModClient.saveProfilesToConfig();
         super.close();
     }
 

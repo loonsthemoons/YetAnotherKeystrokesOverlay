@@ -2,6 +2,7 @@ package dev.loons.fancystrokes;
 
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * Manages the rendering of keystroke displays on the HUD.
@@ -9,14 +10,16 @@ import java.util.ArrayList;
  */
 public class StrokesView {
     private final StrokesStructure structure;
+    private final ArrayList<StrokesStructure> profiles;
 
     /**
      * Constructs a new StrokesView with the given {@link StrokesStructure}.
      *
      * @param structure The {@link StrokesStructure} containing the strokes to be rendered.
      */
-    public StrokesView(StrokesStructure structure){
+    public StrokesView(StrokesStructure structure, ArrayList<StrokesStructure> profiles){
         this.structure = structure;
+        this.profiles = profiles;
     }
 
     /**
@@ -25,12 +28,21 @@ public class StrokesView {
      */
     public void renderOverlay(){
         HudRenderCallback.EVENT.register((drawContext, tickDelta) ->{
-            ArrayList<Strokes> strokesToRender = structure.getStrokes();
+            ArrayList<Strokes> strokesToRender = findActiveStructure(profiles).getStrokes();
             for(Strokes strokes : strokesToRender){
                 if(strokes.isVisible()){
                     strokes.render(drawContext, 0, 0, tickDelta);
                 }
             }
         });
+    }
+
+    public StrokesStructure findActiveStructure(ArrayList<StrokesStructure> profiles){
+        for (StrokesStructure s : profiles){
+            if (s.getActive()){
+                return s;
+            }
+        }
+        return null;
     }
 }

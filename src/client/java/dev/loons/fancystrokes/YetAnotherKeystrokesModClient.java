@@ -1,6 +1,8 @@
 package dev.loons.fancystrokes;
 
+import dev.loons.fancystrokes.config.ProfileData;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.minecraft.text.Text;
 import java.util.ArrayList;
 
@@ -11,8 +13,9 @@ import java.util.ArrayList;
  */
 public class YetAnotherKeystrokesModClient implements ClientModInitializer {
 	public static FancyStrokesConfig CONFIG;
-	public static final ArrayList<Strokes> ACTIVE_STROKES = new ArrayList<>();
+	public static ArrayList<StrokesStructure> PROFILES = new ArrayList<>();
 	public static StrokesStructure STROKES_STRUCTURE;
+	//private String ACTIVE_PROFILE = "Default";
 
 	/**
 	 * Called when the client-side mod is initialized.
@@ -24,28 +27,48 @@ public class YetAnotherKeystrokesModClient implements ClientModInitializer {
 		STROKES_STRUCTURE = new StrokesStructure();
 		CONFIG = FancyStrokesConfig.getInstance();
 
-		if (CONFIG.getSavedStrokes().isEmpty()) {
-			System.out.println("No saved strokes found, initializing default strokes.");
+		if (CONFIG.getSavedProfiles().isEmpty()) {
+			System.out.println("No saved profiles found, initializing default profile.");
+			STROKES_STRUCTURE = new StrokesStructure(); // Create a new structure for the default profile
+			STROKES_STRUCTURE.setProfileName("Default");
 			STROKES_STRUCTURE.initializeDefaultStrokes();
-			saveStrokesToConfig();
+			STROKES_STRUCTURE.setActive(); // Set default as active
+			PROFILES.add(STROKES_STRUCTURE); // Add to the list of profiles
+			saveProfilesToConfig(); // Save the newly created default profile
 		} else {
-			System.out.println("Loading strokes from config file.");
-			for (dev.loons.fancystrokes.config.StrokeData data : CONFIG.getSavedStrokes()) {
-				Strokes stroke = data.toStroke();
-				stroke.setShowKeybindText(data.showKeybindText);
-				stroke.setOutlineStatus(data.outlineStatus);
-				STROKES_STRUCTURE.addStroke(stroke);
+			System.out.println("Loading profiles from config file.");
+			boolean foundActive = false;
+			for (ProfileData data : CONFIG.getSavedProfiles()) {
+				StrokesStructure loadedStructure = data.toStrokesStructure();
+				PROFILES.add(loadedStructure);
+				if (loadedStructure.getActive()) {
+					foundActive = true;
+					STROKES_STRUCTURE = loadedStructure; // Set the globally accessible STROKES_STRUCTURE to the active one
+				}
+			}
+			if (!foundActive && !PROFILES.isEmpty()) {
+				PROFILES.get(0).setActive();
+				STROKES_STRUCTURE = PROFILES.get(0); // Ensure STROKES_STRUCTURE points to an active one
+				System.out.println("No active profile found in config, setting first profile '" + STROKES_STRUCTURE.getProfileName() + "' as active.");
+			} else if (PROFILES.isEmpty()) {
+				System.err.println("PROFILES list is empty after loading, creating a new default profile.");
+				STROKES_STRUCTURE = new StrokesStructure();
+				STROKES_STRUCTURE.setProfileName("Default");
+				STROKES_STRUCTURE.initializeDefaultStrokes();
+				STROKES_STRUCTURE.setActive();
+				PROFILES.add(STROKES_STRUCTURE);
 			}
 		}
-		ACTIVE_STROKES.clear();
-		ACTIVE_STROKES.addAll(STROKES_STRUCTURE.getStrokes());
 
-
-		StrokeOptions menuScreen = new StrokeOptions(Text.literal("FancyStrokes Options"), STROKES_STRUCTURE);
-		StrokesView strokesView = new StrokesView(STROKES_STRUCTURE);
-		StrokesController strokesController = new StrokesController(strokesView, STROKES_STRUCTURE, menuScreen);
+		StrokeOptions menuScreen = new StrokeOptions(Text.literal("FancyStrokes Options"), STROKES_STRUCTURE, PROFILES);
+		StrokesView strokesView = new StrokesView(STROKES_STRUCTURE, PROFILES);
+		StrokesController strokesController = new StrokesController(strokesView, STROKES_STRUCTURE, menuScreen, PROFILES);
 
 		strokesView.renderOverlay();
+		ClientLifecycleEvents.CLIENT_STOPPING.register(client -> {
+			System.out.println("Client stopping, saving profiles...");
+			saveProfilesToConfig();
+		});
 	}
 
 	/**
@@ -54,18 +77,19 @@ public class YetAnotherKeystrokesModClient implements ClientModInitializer {
 	public void initializeDefaultStrokes() {
 		STROKES_STRUCTURE.clearAll();
 		STROKES_STRUCTURE.initializeDefaultStrokes();
+		saveProfilesToConfig();
 	}
 
 	/**
 	 * Saves the current keystroke configuration to the mod's configuration file.
 	 */
-	public static void saveStrokesToConfig() {
-		ArrayList<dev.loons.fancystrokes.config.StrokeData> dataToSave = new ArrayList<>();
-		for (Strokes stroke : STROKES_STRUCTURE.getStrokes()) {
-			dataToSave.add(new dev.loons.fancystrokes.config.StrokeData(stroke));
+	public static void saveProfilesToConfig() {
+		ArrayList<ProfileData> dataToSave = new ArrayList<>();
+		for (StrokesStructure profile : PROFILES) {
+			dataToSave.add(new ProfileData(profile));
 		}
-		CONFIG.setSavedStrokes(dataToSave);
+		CONFIG.setSavedProfiles(dataToSave);
 		CONFIG.save();
-		System.out.println("Strokes config saved.");
+		System.out.println("Profiles config saved.");
 	}
 }

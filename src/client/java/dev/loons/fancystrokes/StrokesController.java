@@ -1,9 +1,13 @@
 package dev.loons.fancystrokes;
 
+import com.mojang.brigadier.arguments.StringArgumentType;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
 import java.util.ArrayList;
 
@@ -18,6 +22,7 @@ public class StrokesController {
     private KeyBinding keyBinding;
     private KeyBinding disableKeystrokes;
     private StrokeOptions menuScreen;
+    private ArrayList<StrokesStructure> profiles;
 
     /**
      * Constructs a new StrokesController.
@@ -26,9 +31,11 @@ public class StrokesController {
      * @param structure The data structure holding all defined strokes.
      * @param menuScreen The options screen for the FancyStrokes mod.
      */
-    public StrokesController(StrokesView strokesView, StrokesStructure structure, StrokeOptions menuScreen){
+    public StrokesController(StrokesView strokesView, StrokesStructure structure, StrokeOptions menuScreen, ArrayList<StrokesStructure> profiles){
         this.strokesView = strokesView;
         this.structure = structure;
+        structure.setActive();
+        this.profiles = profiles;
         this.menuScreen = menuScreen;
         keyBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "Open Keystrokes Settings", // The translation key of the keybinding's name
@@ -54,7 +61,9 @@ public class StrokesController {
     private void buildController(){
         ClientTickEvents.END_CLIENT_TICK.register(minecraftClient -> {
             assert minecraftClient.player != null;
-            ArrayList<Strokes> strokesToRender = structure.getStrokes();
+//            ArrayList<Strokes> strokesToRender = structure.getStrokes();
+            ArrayList<Strokes> strokesToRender = strokesView.findActiveStructure(profiles).getStrokes();
+
             for(Strokes strokes : strokesToRender){
                 switch(strokes.getInputType()){
                     case FORWARD -> strokes.update(minecraftClient.options.forwardKey.isPressed());
@@ -77,6 +86,72 @@ public class StrokesController {
                 structure.disableKeystrokes();
             }
         });
-    }
 
+        ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
+            dispatcher.register(ClientCommandManager.literal("profiles").executes(context -> {
+                context.getSource().sendFeedback(Text.literal("currently active profile: " + strokesView.findActiveStructure(profiles)));
+                return 1;
+            }).then(ClientCommandManager.literal("list")
+                            .executes(context -> {
+                        context.getSource().sendFeedback(Text.literal("current stored profiles are: " + profiles.toString()));
+                        return 1;
+            })).then(ClientCommandManager.literal("create")
+                            .then(ClientCommandManager.argument("profileName", StringArgumentType.word())
+                            .executes(context ->{
+                String profileName = StringArgumentType.getString(context, "profileName");
+                StrokesStructure strokesStructure = new StrokesStructure();
+                strokesStructure.setProfileName(profileName);
+                strokesStructure.initializeDefaultStrokes();
+                profiles.add(strokesStructure);
+
+                context.getSource().sendFeedback(Text.literal("new profile created: " + profileName));
+                return 1;
+            }))).then(ClientCommandManager.literal("remove")
+                    .then(ClientCommandManager.argument("profile", StringArgumentType.word())
+                            .executes(context ->{
+                                if(profiles.size()==1){
+                                    context.getSource().sendFeedback(Text.literal("failed to remove profile: "));
+                                } else {
+                                    String profile = StringArgumentType.getString(context, "profile");
+                                    StrokesStructure s = strokesView.findActiveStructure(profiles);
+                                    if(s!=null){
+                                        profiles.remove(s);
+                                        context.getSource().sendFeedback(Text.literal("profile removed: " + profile));
+                                    } else {
+                                        context.getSource().sendFeedback(Text.literal("failed to remove profile: "));
+                                    }
+                                }
+
+                                return 1;
+                            })
+                    )).then(ClientCommandManager.literal("set").then(ClientCommandManager.argument("profile", StringArgumentType.word())
+                            .executes(context ->{
+                                String profile = StringArgumentType.getString(context, "profile");
+                                StrokesStructure targetStructure = null;
+                                for(StrokesStructure s : profiles){
+                                    if(s.getProfileName().equalsIgnoreCase(profile)){
+                                        targetStructure = s;
+                                    }
+                                }
+
+                                if(targetStructure!=null){
+                                    deactiveLastActive();
+                                    targetStructure.setActive();
+                                    context.getSource().sendFeedback(Text.literal("profile set: " + profile));
+                                } else {
+                                    context.getSource().sendFeedback(Text.literal("failed to set profile"));
+                                }
+                                return 1;
+                            })))
+
+            ); // end of Profiles Command
+        }); // end of event handler
+    }
+    public void deactiveLastActive(){
+        for(StrokesStructure s : profiles){
+            if(s.getActive()){
+                s.setInactive();
+            }
+        }
+    }
 }

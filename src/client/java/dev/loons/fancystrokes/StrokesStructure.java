@@ -22,6 +22,8 @@ public class StrokesStructure {
     private final int defaultHeight = 20;
     private KeyBinding controlKey;
     private boolean keystrokesStatus=true;
+    private String profileName;
+    private boolean isActiveProfile=false;
 
     public StrokesStructure(){}
 
@@ -155,4 +157,14 @@ public class StrokesStructure {
     public void setControlKey(KeyBinding controlKey){this.controlKey=controlKey;}
     public KeyBinding getControlKey(){return controlKey;}
     public boolean getKeystrokesStatus(){return keystrokesStatus;}
+    public void setProfileName(String profileName){this.profileName=profileName;}
+    public String getProfileName(){return profileName;}
+    public void setActive(){isActiveProfile=true;}
+    public void setInactive(){isActiveProfile=false;}
+    public boolean getActive(){return isActiveProfile;}
+
+    @Override
+    public String toString() {
+        return profileName;
+    }
 }
