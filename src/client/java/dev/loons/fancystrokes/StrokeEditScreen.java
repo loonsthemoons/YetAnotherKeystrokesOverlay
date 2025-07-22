@@ -321,8 +321,6 @@ public class StrokeEditScreen extends Screen {
             );
             structure.clearAll();
             structure.initializeDefaultStrokes();
-            YetAnotherKeystrokesModClient.ACTIVE_STROKES.clear();
-            YetAnotherKeystrokesModClient.ACTIVE_STROKES.addAll(structure.getStrokes());
             this.init(); // Re-initialize the screen to reflect default strokes
 
         }).dimensions(elementStartX, currentY, fieldWidth, fieldHeight).build();
