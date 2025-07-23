@@ -38,8 +38,3 @@ hs_err_*.log
 replay_*.log
 *.hprof
 *.jfr
-
-# ignore contents of clicky, linear and tactile
-YetAnotherKeystrokesMod/src/main/resources/assets/yet-another-keystrokes-mod/sounds/stroke_sounds/clicky/*
-YetAnotherKeystrokesMod/src/main/resources/assets/yet-another-keystrokes-mod/sounds/stroke_sounds/linear/*
-YetAnotherKeystrokesMod/src/main/resources/assets/yet-another-keystrokes-mod/sounds/stroke_sounds/tactile/*

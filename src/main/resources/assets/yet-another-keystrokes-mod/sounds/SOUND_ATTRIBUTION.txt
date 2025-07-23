@@ -1,0 +1,13 @@
+AUDIO FILE ATTRIBUTION AND USAGE INFORMATION
+
+These audio files (keyboard click sounds) are created and recorded by Hainguyents13.
+
+Source: https://github.com/hainguyents13/mechvibes/tree/main/src/audio (cherrymx-blue-pbt, eg-oreo, nk-cream)
+
+The creator, Hainguyents13, has publicly indicated that pre-installed sound packages are generally free for use in other projects.
+
+**However, please note:** As there is no formal, explicit open-source license attached to these specific audio files, they are technically protected by standard copyright. This means that, in the strictest legal sense, redistribution, modification, or use in other projects *may still be restricted* without a clear, written license from the original creator.
+
+For any usage outside of this project, it remains your responsibility to verify and obtain any necessary formal permissions from Hainguyents13.
+
+These audio files are provided "as is" without any warranty.
