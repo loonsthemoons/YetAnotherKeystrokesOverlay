@@ -40,11 +40,6 @@ replay_*.log
 *.jfr
 
 # ignore contents of clicky, linear and tactile
-YetAnotherKeystrokesMod/src/main/resources/assets/yet-another-keystrokes-mod/sounds/stroke_sounds/clicky/*.ogg
-YetAnotherKeystrokesMod/src/main/resources/assets/yet-another-keystrokes-mod/sounds/stroke_sounds/linear/*.ogg
-YetAnotherKeystrokesMod/src/main/resources/assets/yet-another-keystrokes-mod/sounds/stroke_sounds/tactile/*.ogg
-
-# keep the folder
-!YetAnotherKeystrokesMod/src/main/resources/assets/yet-another-keystrokes-mod/sounds/stroke_sounds/clicky/.gitkeep
-!YetAnotherKeystrokesMod/src/main/resources/assets/yet-another-keystrokes-mod/sounds/stroke_sounds/linear/.gitkeep
-!YetAnotherKeystrokesMod/src/main/resources/assets/yet-another-keystrokes-mod/sounds/stroke_sounds/tactile/.gitkeep
+YetAnotherKeystrokesMod/src/main/resources/assets/yet-another-keystrokes-mod/sounds/stroke_sounds/clicky/*
+YetAnotherKeystrokesMod/src/main/resources/assets/yet-another-keystrokes-mod/sounds/stroke_sounds/linear/*
+YetAnotherKeystrokesMod/src/main/resources/assets/yet-another-keystrokes-mod/sounds/stroke_sounds/tactile/*
