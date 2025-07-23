@@ -176,7 +176,8 @@ public class Strokes extends ClickableWidget {
     }
 
     public void playKeystrokeSound(){
-        if(isPressed && !previousPress && keypressSound){
+        boolean isMouseStroke=(inputType==InputType.ATTACK || inputType==InputType.USE);
+        if(isPressed && !previousPress && keypressSound && !isMouseStroke){
             StrokeSounds.playSound(soundProfile);
         }
     }

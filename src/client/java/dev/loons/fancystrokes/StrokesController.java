@@ -90,7 +90,7 @@ public class StrokesController {
 
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
             dispatcher.register(ClientCommandManager.literal("keystrokes").executes(context -> {
-                context.getSource().sendFeedback(Text.literal("currently active profile: " + strokesView.findActiveStructure(profiles)));
+                context.getSource().sendFeedback(Text.literal("currently active profile: " + strokesView.findActiveStructure(profiles) + "\n currently active sound profile: " + strokesView.findActiveStructure(profiles).getSoundProfile()));
                 return 1;
             }).then(ClientCommandManager.literal("list")
                             .executes(context -> {
@@ -178,7 +178,7 @@ public class StrokesController {
                                         return 1;
                                     })
                             ).then(ClientCommandManager.literal("sounds").executes(context -> {
-                                        context.getSource().sendFeedback(Text.literal("/keystrokes sounds \n activates or deactivates Keystrokes sound effects on key press (currently with a placeholder) \n can put 'linear', 'tactile' or 'clicky' after to change the profile"));
+                                        context.getSource().sendFeedback(Text.literal("/keystrokes sounds \n activates or deactivates Keystrokes sound effects on key press (currently with a placeholder) \n can put 'linear', 'tactile' or 'clicky' after to change the profile \n Default sound profile is linear"));
                                         return 1;
                                     })
                             )

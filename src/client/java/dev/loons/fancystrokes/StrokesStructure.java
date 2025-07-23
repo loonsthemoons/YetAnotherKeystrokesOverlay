@@ -168,6 +168,7 @@ public class StrokesStructure {
     public boolean getLetteringOption(){return letteringOption;}
     public boolean getKeypressSound(){return keypressSound;}
     public void setSoundProfile(String soundProfile){this.soundProfile=soundProfile;}
+    public String getSoundProfile(){return soundProfile;}
     public void letteringOption(){
         letteringOption= !letteringOption;
         for(Strokes s : strokes){
