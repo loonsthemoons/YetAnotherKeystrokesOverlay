@@ -151,7 +151,7 @@ public class StrokesController {
                                 }
                                 return 1;
                             }))).then(ClientCommandManager.literal("help").executes(context ->{
-                                context.getSource().sendFeedback(Text.literal("Help command options: \n list \n create \n remove \n set \n lettering \n settings"));
+                                context.getSource().sendFeedback(Text.literal("Help command options: \n list \n create \n remove \n set \n lettering \n settings \n sounds"));
                                 return 1;
                     }).then(ClientCommandManager.literal("list").executes(context ->{
                                 context.getSource().sendFeedback(Text.literal("/keystrokes list \n shows list of all profiles"));
@@ -177,14 +177,39 @@ public class StrokesController {
                                         context.getSource().sendFeedback(Text.literal("Yet Another Keystrokes Mod Settings \n Default keybind to open keystrokes menu is R\n pressing the button a Keystroke opens its menu \n Left mouse click moves keystrokes or creates a selection area \n Middle mouse button creates or deletes a keystroke \n Right click resizes a keystroke"));
                                         return 1;
                                     })
+                            ).then(ClientCommandManager.literal("sounds").executes(context -> {
+                                        context.getSource().sendFeedback(Text.literal("/keystrokes sounds \n activates or deactivates Keystrokes sound effects on key press (currently with a placeholder) \n can put 'linear', 'tactile' or 'clicky' after to change the profile"));
+                                        return 1;
+                                    })
                             )
 
                     ).then(ClientCommandManager.literal("lettering").executes(context -> {
                         strokesView.findActiveStructure(profiles).letteringOption();
                         context.getSource().sendFeedback(Text.literal("Default lettering switched"));
                         return 1;
-                    }))
-
+                    })).then(ClientCommandManager.literal("sounds").executes(context -> {
+                        strokesView.findActiveStructure(profiles).keypressSound();
+                        if(strokesView.findActiveStructure(profiles).getKeypressSound()){
+                            context.getSource().sendFeedback(Text.literal("Keystroke sounds activated"));
+                            return 1;
+                        } else {
+                            context.getSource().sendFeedback(Text.literal("Keystroke sounds deactivated"));
+                            return 1;
+                        }
+                    }).then(ClientCommandManager.literal("linear").executes(context -> {
+                        strokesView.findActiveStructure(profiles).soundProfile("linear");
+                        context.getSource().sendFeedback(Text.literal("Keystroke sounds set to linear"));
+                        return 1;
+                            })
+                    ).then(ClientCommandManager.literal("tactile").executes(context -> {
+                        strokesView.findActiveStructure(profiles).soundProfile("tactile");
+                        context.getSource().sendFeedback(Text.literal("Keystroke sounds set to tactile"));
+                        return 1;
+                    })).then(ClientCommandManager.literal("clicky").executes(context -> {
+                                strokesView.findActiveStructure(profiles).soundProfile("clicky");
+                                context.getSource().sendFeedback(Text.literal("Keystroke sounds set to clicky"));
+                                return 1;
+                            })))
             ); // end of Profiles Command
         }); // end of event handler
     }

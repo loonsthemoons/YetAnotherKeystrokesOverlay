@@ -1,0 +1,19 @@
+{
+  "keyboard.linear_click": {
+    "sounds": [
+      "yet-another-keystrokes-mod:stroke_sounds/linear/linear_click1"
+    ],
+    "subtitle": "subtitles.yet-another-keystrokes-mod.linear_click"
+  },
+  "keyboard.tactile_click": {
+    "sounds": [
+
+    ],
+    "subtitle": "subtitles.yet-another-keystrokes-mod.tactile_click"
+  },
+  "keyboard.clicky_click": {
+    "sounds": [
+    ],
+    "subtitle": "subtitles.yet-another-keystrokes-mod.clicky_click"
+  }
+}

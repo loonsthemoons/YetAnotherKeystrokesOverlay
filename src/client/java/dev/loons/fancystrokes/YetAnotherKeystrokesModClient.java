@@ -26,6 +26,7 @@ public class YetAnotherKeystrokesModClient implements ClientModInitializer {
 	public void onInitializeClient() {
 		STROKES_STRUCTURE = new StrokesStructure();
 		CONFIG = FancyStrokesConfig.getInstance();
+		SoundLibrary.initialize();
 
 		if (CONFIG.getSavedProfiles().isEmpty()) {
 			System.out.println("No saved profiles found, initializing default profile.");

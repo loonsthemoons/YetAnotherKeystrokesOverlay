@@ -25,6 +25,8 @@ public class StrokesStructure {
     private String profileName;
     private boolean isActiveProfile=false;
     private boolean letteringOption=false;
+    private boolean keypressSound=false;
+    private String soundProfile="linear";
 
     public StrokesStructure(){}
 
@@ -164,10 +166,24 @@ public class StrokesStructure {
     public void setInactive(){isActiveProfile=false;}
     public boolean getActive(){return isActiveProfile;}
     public boolean getLetteringOption(){return letteringOption;}
+    public boolean getKeypressSound(){return keypressSound;}
+    public void setSoundProfile(String soundProfile){this.soundProfile=soundProfile;}
     public void letteringOption(){
         letteringOption= !letteringOption;
         for(Strokes s : strokes){
             s.setLetteringOption(letteringOption);
+        }
+    }
+    public void keypressSound(){
+        keypressSound= !keypressSound;
+        for(Strokes s : strokes){
+            s.setKeypressSound(keypressSound);
+        }
+    }
+    public void soundProfile(String soundProfile){
+        this.soundProfile=soundProfile;
+        for(Strokes s : strokes){
+            s.setSoundProfile(soundProfile);
         }
     }
 
