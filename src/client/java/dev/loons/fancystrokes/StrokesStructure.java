@@ -1,8 +1,6 @@
 package dev.loons.fancystrokes;
 
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
-import net.minecraft.text.Text;
 import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.Vec3d;
 import java.util.ArrayList;

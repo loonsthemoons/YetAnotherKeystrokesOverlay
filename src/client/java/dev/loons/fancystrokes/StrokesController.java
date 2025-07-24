@@ -1,6 +1,5 @@
 package dev.loons.fancystrokes;
 
-import com.mojang.brigadier.arguments.DoubleArgumentType;
 import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
@@ -14,7 +13,7 @@ import org.lwjgl.glfw.GLFW;
 import java.util.ArrayList;
 
 /**
- * Manages the control logic for the FancyStrokes mod, handling key presses
+ * Manages the control logic for YAKO, handling key presses
  * and updating the state of individual keystroke displays. It also manages
  * the keybinding for opening the mod's options menu.
  */
@@ -59,7 +58,7 @@ public class StrokesController {
     /**
      * Sets up the client tick event listener to update stroke states
      * based on player input and to handle the custom keybinding for
-     * opening the FancyStrokes options menu.
+     * opening the YAKO options menu.
      */
     private void buildController(){
         ClientTickEvents.END_CLIENT_TICK.register(minecraftClient -> {
@@ -91,7 +90,7 @@ public class StrokesController {
         });
 
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
-            dispatcher.register(ClientCommandManager.literal("keystrokes").executes(context -> {
+            dispatcher.register(ClientCommandManager.literal("yako").executes(context -> {
                 context.getSource().sendFeedback(Text.literal("currently active profile: " + strokesView.findActiveStructure(profiles) + "\ncurrently active sound profile: " + strokesView.findActiveStructure(profiles).getSoundProfile()));
                 return 1;
             }).then(ClientCommandManager.literal("list")
@@ -156,35 +155,35 @@ public class StrokesController {
                                 context.getSource().sendFeedback(Text.literal("Help command options: \n list \n create \n remove \n set \n lettering \n settings \n sounds \n volume"));
                                 return 1;
                     }).then(ClientCommandManager.literal("list").executes(context ->{
-                                context.getSource().sendFeedback(Text.literal("/keystrokes list \n shows list of all profiles"));
+                                context.getSource().sendFeedback(Text.literal("/yako list \n shows list of all profiles"));
                                 return 1;
                                     })
                             ).then(ClientCommandManager.literal("create").executes(context -> {
-                                context.getSource().sendFeedback(Text.literal("/keystrokes create <yourProfileName> \n creates a new profile \n can't be a duplicate name"));
+                                context.getSource().sendFeedback(Text.literal("/yako create <yourProfileName> \n creates a new profile \n can't be a duplicate name"));
                                 return 1;
                                     })
                             ).then(ClientCommandManager.literal("remove").executes(context -> {
-                                        context.getSource().sendFeedback(Text.literal("/keystrokes remove <profileToRemove> \n removes an existing profile \n can't remove last profile"));
+                                        context.getSource().sendFeedback(Text.literal("/yako remove <profileToRemove> \n removes an existing profile \n can't remove last profile"));
                                         return 1;
                                     })
                             ).then(ClientCommandManager.literal("set").executes(context -> {
-                                        context.getSource().sendFeedback(Text.literal("/keystrokes set <profileName> \n sets a profile as active"));
+                                        context.getSource().sendFeedback(Text.literal("/yako set <profileName> \n sets a profile as active"));
                                         return 1;
                                     })
                             ).then(ClientCommandManager.literal("lettering").executes(context -> {
-                                        context.getSource().sendFeedback(Text.literal("/keystrokes lettering \n changes the default Keystroke lettering to an alternate one \n is not being saved in saved profiles"));
+                                        context.getSource().sendFeedback(Text.literal("/yako lettering \n changes the default Keystroke lettering to an alternate one \n is not being saved in saved profiles"));
                                         return 1;
                                     })
                             ).then(ClientCommandManager.literal("settings").executes(context -> {
-                                        context.getSource().sendFeedback(Text.literal("Yet Another Keystrokes Mod Settings \n Default keybind to open keystrokes menu is R\n pressing the button a Keystroke opens its menu \n Left mouse click moves keystrokes or creates a selection area \n Middle mouse button creates or deletes a keystroke \n Right click resizes a keystroke"));
+                                        context.getSource().sendFeedback(Text.literal("Yet Another Keystrokes Overlay Settings \n Default keybind to open keystrokes menu is R\n pressing the button a Keystroke opens its menu \n Left mouse click moves keystrokes or creates a selection area \n Middle mouse button creates or deletes a keystroke \n Right click resizes a keystroke"));
                                         return 1;
                                     })
                             ).then(ClientCommandManager.literal("sounds").executes(context -> {
-                                        context.getSource().sendFeedback(Text.literal("/keystrokes sounds \n activates or deactivates Keystrokes sound effects on key press \n can put 'linear', 'tactile' or 'clicky' after to change the profile \n Default sound profile is linear"));
+                                        context.getSource().sendFeedback(Text.literal("/yako sounds \n activates or deactivates Keystrokes sound effects on key press \n can put 'linear', 'tactile' or 'clicky' after to change the profile \n Default sound profile is linear"));
                                         return 1;
                                     })
                             ).then(ClientCommandManager.literal("volume").executes(context -> {
-                                        context.getSource().sendFeedback(Text.literal("/keystrokes volume \n changes the volume of the current profile \n volume can range from 0.01 to 25"));
+                                        context.getSource().sendFeedback(Text.literal("/yako volume \n changes the volume of the current profile \n volume can range from 0.01 to 25"));
                                         return 1;
                                     })
                             )

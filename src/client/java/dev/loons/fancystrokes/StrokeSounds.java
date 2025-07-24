@@ -5,6 +5,9 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.Text;
 
+/**
+ * A class to manage sound inputs and play them with the according volume
+ */
 public class StrokeSounds {
     public static void playSound(String profile, float volume){
         MinecraftClient client = MinecraftClient.getInstance();

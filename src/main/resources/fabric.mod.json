@@ -2,13 +2,13 @@
 	"schemaVersion": 1,
 	"id": "yet-another-keystrokes-mod",
 	"version": "${version}",
-	"name": "Yet Another Keystrokes Mod",
-	"description": "This is a simple Keystrokes Mod, that offers plenty of customizability to the user!",
+	"name": "Yet Another Keystrokes Overlay",
+	"description": "A customizable keystrokes overlay that lets you style each key to your heart’s content!",
 	"authors": [
 		"loonsthemoons"
 	],
 	"contact": {
-		"homepage": "https://modrinth.com/mod/yet-another-keystrokes-mod",
+		"homepage": "https://modrinth.com/mod/yako",
 		"sources": "https://github.com/loonsthemoons/YetAnotherKeystrokesMod"
 	},
 	"license": "CC0-1.0",

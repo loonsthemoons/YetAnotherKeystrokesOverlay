@@ -2,7 +2,6 @@ package dev.loons.fancystrokes;
 
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import java.util.ArrayList;
-import java.util.Objects;
 
 /**
  * Manages the rendering of keystroke displays on the HUD.

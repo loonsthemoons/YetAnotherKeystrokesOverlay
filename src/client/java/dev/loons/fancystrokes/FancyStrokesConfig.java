@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Manages the configuration for the FancyStrokes mod
+ * Manages the configuration for the YAKO mod
  */
 public class FancyStrokesConfig {
     public boolean enableFancyStrokes = true;

@@ -1,33 +1,82 @@
-# Yet Another Keystrokes Mod
-Hello! 
-This mod is a simple Keystrokes Mod, to show the user their WASD, Mouse button inputs, Sneak, Jump or more.
-Other features are moving keystrokes, resizing keystrokes, creating and changing profiles and much more! :)
-I've created this mod to allow for more customizability in the looks and feels, which not many implementations give the user. 
+# Yet Another Keystrokes Overlay (YAKO)
 
-This Mod is still in the early days, so expect some bugs and jank along the way!
+**YAKO** is a design-focused keystrokes overlay for Minecraft 1.20.1 (Fabric).  
+It shows your **WASD**, **mouse buttons**, **sneak**, **jump**, and **sprint** inputs, fully customizable to match your style and layout preferences.
 
-Future features that I want to implement are Mouse Strokes, more robust transparency, better scaling of the UI and many more.
+Built with customization in mind — tweak how each keystroke looks, feels, and behaves.
 
-Controls:
-- Left click to move a single stroke or a group
-  - If left click was not done on a stroke, you can drag your mouse to create a selected area 
-- Middle mouse click on a stroke to remove it or on blank space to create one
-- Right click to resize strokes
-- The default key to open the menu is R
-  - pressing that key on a keystroke its menu
-- Pressing K disabled / enables Keystrokes
-- /profiles for changing profiles
+---
+
+## Features
+
+- **Visual Keystrokes HUD**  
+  See your movement and mouse inputs in real time: WASD, LMB/RMB, Shift, Space, Ctrl.
+
+- **Highly Customizable Layout**  
+  Drag & resize strokes however you like! Whether you want round keystrokes, transparent ones, outlines or text, you can customize each keystroke by itself
 
 
-Dependencies:
+- **Simple Controls**  
+  Move, create, delete, and modify strokes using mouse actions (see below)
+
+- **Profile System**  
+  Save and switch between multiple layout profiles using the `/profiles` command.
+
+---
+
+##  Controls
+
+- **Left Click**:
+  - On a stroke: select it or drag to move
+  - On blank space: drag to create a selection box, to move or delete multiple strokes at once
+- **Middle Click**:
+  - On a stroke: delete it
+  - On blank space: create a new keystroke
+- **Right Click**:
+  - Resize a stroke
+- **R** (default):
+  - Opens the **YAKO menu**
+  - If hovering over a stroke, opens its specific menu
+- **K** (default):
+  - Toggle keystrokes overlay on/off
+- **`/profiles`**:
+  - Manage your custom layout profiles
+
+---
+
+##  Future Features
+
+- **Gradient & Rainbow colors:**:
+  - Instead of single colors, give your keystrokes gradient or cycling rainbow colors!
+- **Keystroke Animations:**
+  - Add animations to your Keystrokes, on press, while pressing or on release
+- **Add your own Input Types:**
+  - Instead of being limited to the existing Input types, add your own to monitor new keys!
+- **Scaling:**
+  - Currently, the Keystroke menu is placed absolute, however this should be based on your Screen resolution, so that nothing gets cut off
+- **Keypress Counter:**
+  - Ever wonder how many times you pressed a specific button? With this feature you would have an answer!
+
+---
+
+## Early Development Disclaimer
+
+YAKO is still in its early stages, so you may encounter the occasional bug or jank.  
+Feedback and suggestions are always welcome!
+
+---
+
+## Dependencies:
 - Minecraft 1.20.1
 - Fabric Loader >=0.15.11
 - owo-lib 0.11.2 1.20
 
-## Some example setups:
+---
+
+## YAKO In Action:
 
 <img width="550" height="432" alt="image" src="https://github.com/user-attachments/assets/976f1535-83e5-4fac-95f4-b7760686d585" />
 <img width="328" height="323" alt="image" src="https://github.com/user-attachments/assets/07a2bd3a-e4d8-4723-8df1-87bcb5dd9984" />
 
-### Settings Menu (outdated)
+**Settings Menu (outdated)**
 <img width="1920" height="1008" alt="image" src="https://github.com/user-attachments/assets/a9e4b520-dcfd-4523-86a3-d4c6ea1ac3a2" />
