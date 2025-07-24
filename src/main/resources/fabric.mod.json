@@ -12,7 +12,7 @@
 		"sources": "https://github.com/loonsthemoons/YetAnotherKeystrokesOverlay"
 	},
 	"license": "CC0-1.0",
-	"icon": "assets/yet-another-keystrokes-mod/icon.png",
+	"icon": "assets/yet-another-keystrokes-overlay/icon.png",
 	"environment": "*",
 	"entrypoints": {
 		"main": [
