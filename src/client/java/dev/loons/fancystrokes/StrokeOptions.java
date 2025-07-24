@@ -11,7 +11,7 @@ import net.minecraft.util.math.Vec3d;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Objects;
+
 
 import static dev.loons.fancystrokes.Strokes.InputType;
 
@@ -151,7 +151,7 @@ public class StrokeOptions extends Screen {
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
-        context.drawText(this.textRenderer, "Fancy-Strokes", 40, 40 - this.textRenderer.fontHeight - 10, 0xFFFFFFFF, true);
+        context.drawText(this.textRenderer, "YAKO - Yet Another Keystrokes Mod", 40, 40 - this.textRenderer.fontHeight - 10, 0xFFFFFFFF, true);
 
         if(isSelecting){
             int rectX1 = (int) Math.min(this.selectPositionX, mouseX);

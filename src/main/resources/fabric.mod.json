@@ -1,6 +1,6 @@
 {
 	"schemaVersion": 1,
-	"id": "yet-another-keystrokes-mod",
+	"id": "yet-another-keystrokes-overlay",
 	"version": "${version}",
 	"name": "Yet Another Keystrokes Overlay",
 	"description": "A customizable keystrokes overlay that lets you style each key to your heart’s content!",
@@ -9,7 +9,7 @@
 	],
 	"contact": {
 		"homepage": "https://modrinth.com/mod/yako",
-		"sources": "https://github.com/loonsthemoons/YetAnotherKeystrokesMod"
+		"sources": "https://github.com/loonsthemoons/YetAnotherKeystrokesOverlay"
 	},
 	"license": "CC0-1.0",
 	"icon": "assets/yet-another-keystrokes-mod/icon.png",

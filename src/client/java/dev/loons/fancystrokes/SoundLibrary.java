@@ -20,7 +20,7 @@ public class SoundLibrary {
     }
 
     public static void initialize() {
-        YetAnotherKeystrokesMod.LOGGER.info("Registering YAKM Sounds for " + YetAnotherKeystrokesMod.MOD_ID);
+        YetAnotherKeystrokesMod.LOGGER.info("Registering Keystroke Sounds for " + YetAnotherKeystrokesMod.MOD_ID);
         KEYBOARD_LINEAR_CLICK.getId();
         KEYBOARD_TACTILE_CLICK.getId();
         KEYBOARD_CLICKY_CLICK.getId();

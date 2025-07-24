@@ -7,7 +7,7 @@ import net.minecraft.text.Text;
 import java.util.ArrayList;
 
 /**
- * The main client-side initializer for the YAKO mod.
+ * The main client-side initializer for YAKO.
  * This class handles the initialization of configurations, stroke management,
  * and UI components upon the client's mod's startup.
  */

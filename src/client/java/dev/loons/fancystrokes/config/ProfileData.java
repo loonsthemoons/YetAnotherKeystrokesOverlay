@@ -4,7 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import dev.loons.fancystrokes.StrokesStructure;
-import dev.loons.fancystrokes.Strokes; // Import Strokes if StrokesStructure needs to convert it
+import dev.loons.fancystrokes.Strokes;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -42,13 +42,13 @@ public class StrokesController {
                 "Open Keystrokes Settings", // The translation key of the keybinding's name
                 InputUtil.Type.KEYSYM,                  // The type of the keybinding, KEYSYM for keyboard, MOUSE for mouse.
                 GLFW.GLFW_KEY_R,                        // The keycode of the key
-                "Yet Another Keystrokes Mod"            // The translation key of the keybinding's category.
+                "Yet Another Keystrokes Overlay"            // The translation key of the keybinding's category.
         ));
         disableKeystrokes = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "Disable Keystrokes",       // The translation key of the keybinding's name
                 InputUtil.Type.KEYSYM,                  // The type of the keybinding, KEYSYM for keyboard, MOUSE for mouse.
                 GLFW.GLFW_KEY_K,                        // The keycode of the key
-                "Yet Another Keystrokes Mod"            // The translation key of the keybinding's category.
+                "Yet Another Keystrokes Overlay"            // The translation key of the keybinding's category.
         ));
         structure.setControlKey(keyBinding);
         buildController();

@@ -3,7 +3,7 @@ plugins {
 	id 'maven-publish'
 }
 
-version = "1.1.0"
+version = "1.2.0"
 group = project.maven_group
 
 base {
@@ -18,7 +18,7 @@ loom {
 	splitEnvironmentSourceSets()
 
 	mods {
-		"yet-another-keystrokes-mod" {
+		"yet-another-keystrokes-overlay" {
 			sourceSet sourceSets.main
 			sourceSet sourceSets.client
 		}

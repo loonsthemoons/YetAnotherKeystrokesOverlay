@@ -17,14 +17,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Manages the configuration for the YAKO mod
+ * Manages the configuration for YAKO
  */
 public class FancyStrokesConfig {
     public boolean enableFancyStrokes = true;
     public int globalRoundness = 8;
     public List<ProfileData> savedProfiles = new ArrayList<>();
 
-    private static final Path CONFIG_PATH = FabricLoader.getInstance().getConfigDir().resolve("Yet-Another-Keystrokes-Mod.json");
+    private static final Path CONFIG_PATH = FabricLoader.getInstance().getConfigDir().resolve("Yet-Another-Keystrokes-Overlay.json");
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static FancyStrokesConfig instance;
 
@@ -53,7 +53,7 @@ public class FancyStrokesConfig {
      */
     public void load() {
         if (!CONFIG_PATH.toFile().exists()) {
-            System.out.println("No config file found, using defaults for Yet-Another-Keystroke-Mod.");
+            System.out.println("No config file found, using defaults for Yet-Another-Keystroke-Overlay.");
             return;
         }
 
@@ -118,7 +118,7 @@ public class FancyStrokesConfig {
             }
 
         } catch (IOException e) {
-            System.err.println("Failed to load Yet-Another-Keystroke-Mod config: " + e.getMessage());
+            System.err.println("Failed to load Yet-Another-Keystroke-Overlay config: " + e.getMessage());
         } catch (Exception e) {
             System.err.println("General error during config loading: " + e.getMessage());
             e.printStackTrace();
@@ -140,7 +140,7 @@ public class FancyStrokesConfig {
         try (FileWriter writer = new FileWriter(CONFIG_PATH.toFile())) {
             GSON.toJson(configJson, writer);
         } catch (IOException e) {
-            System.err.println("Failed to save Yet-Another-Keystroke-Mod config: " + e.getMessage());
+            System.err.println("Failed to save Yet-Another-Keystroke-Overlay config: " + e.getMessage());
         }
     }
 
