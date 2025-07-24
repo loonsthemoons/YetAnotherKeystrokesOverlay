@@ -1,6 +1,8 @@
 package dev.loons.fancystrokes;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.Vec3d;
 import java.util.ArrayList;
@@ -167,6 +169,7 @@ public class StrokesStructure {
     public boolean getActive(){return isActiveProfile;}
     public boolean getLetteringOption(){return letteringOption;}
     public boolean getKeypressSound(){return keypressSound;}
+    public void setKeypressSound(Boolean keypressSound){this.keypressSound=keypressSound;}
     public void setSoundProfile(String soundProfile){this.soundProfile=soundProfile;}
     public String getSoundProfile(){return soundProfile;}
     public void letteringOption(){
@@ -175,8 +178,8 @@ public class StrokesStructure {
             s.setLetteringOption(letteringOption);
         }
     }
-    public void keypressSound(){
-        keypressSound= !keypressSound;
+    public void keypressSound(Boolean keypressSound){
+        this.keypressSound=keypressSound;
         for(Strokes s : strokes){
             s.setKeypressSound(keypressSound);
         }

@@ -18,6 +18,8 @@ public class ProfileData {
     public String profileName;
     public boolean isActiveProfile;
     public List<StrokeData> strokes;
+    public boolean keypressSound;
+    public String soundProfile;
 
     /**
      * Default constructor for creating an empty ProfileData object.
@@ -36,6 +38,8 @@ public class ProfileData {
     public ProfileData(StrokesStructure structure) {
         this.profileName = structure.getProfileName();
         this.isActiveProfile = structure.getActive();
+        this.keypressSound = structure.getKeypressSound();
+        this.soundProfile = structure.getSoundProfile();
         this.strokes = new ArrayList<>();
         for (Strokes stroke : structure.getStrokes()) {
             this.strokes.add(new StrokeData(stroke));
@@ -56,6 +60,8 @@ public class ProfileData {
         } else {
             newStructure.setInactive(); // Ensure it's explicitly inactive if not marked active
         }
+        newStructure.setSoundProfile(this.soundProfile);
+        newStructure.setKeypressSound(this.keypressSound);
         for (StrokeData strokeData : this.strokes) {
             newStructure.addStroke(strokeData.toStroke());
         }
@@ -72,6 +78,8 @@ public class ProfileData {
         JsonObject json = new JsonObject();
         json.addProperty("profileName", this.profileName);
         json.addProperty("isActiveProfile", this.isActiveProfile);
+        json.addProperty("keypressSound", this.keypressSound);
+        json.addProperty("soundProfile", this.soundProfile);
 
         JsonArray strokesArray = new JsonArray();
         for (StrokeData strokeData : this.strokes) {
@@ -100,7 +108,9 @@ public class ProfileData {
         JsonObject json = jsonElement.getAsJsonObject();
 
         this.profileName = json.has("profileName") ? json.get("profileName").getAsString() : "Unnamed Profile";
-        this.isActiveProfile = json.has("isActiveProfile") ? json.get("isActiveProfile").getAsBoolean() : false;
+        this.isActiveProfile = json.has("isActiveProfile") && json.get("isActiveProfile").getAsBoolean();
+        this.keypressSound = json.has("keypressSound") && json.get("keypressSound").getAsBoolean();
+        this.soundProfile = json.has("soundProfile") ? json.get("soundProfile").getAsString() : "linear";
 
         JsonElement strokesElement = json.get("strokes");
         if (strokesElement != null && strokesElement.isJsonArray()) {

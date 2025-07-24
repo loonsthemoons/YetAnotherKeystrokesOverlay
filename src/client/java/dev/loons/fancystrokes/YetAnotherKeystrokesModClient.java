@@ -46,6 +46,8 @@ public class YetAnotherKeystrokesModClient implements ClientModInitializer {
 					foundActive = true;
 					STROKES_STRUCTURE = loadedStructure; // Set the globally accessible STROKES_STRUCTURE to the active one
 				}
+				loadedStructure.soundProfile(data.soundProfile);
+				loadedStructure.keypressSound(data.keypressSound);
 			}
 			if (!foundActive && !PROFILES.isEmpty()) {
 				PROFILES.get(0).setActive();

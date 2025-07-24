@@ -2,6 +2,7 @@ package dev.loons.fancystrokes;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.sound.SoundEvent;
+import net.minecraft.text.Text;
 
 public class StrokeSounds {
     public static void playSound(String profile){
@@ -27,6 +28,7 @@ public class StrokeSounds {
                 return;
         }
         if (soundToPlay != null) {
+            // client.player.sendMessage(Text.literal("Sound played")); // debug
             client.player.playSound(soundToPlay, volume, 1.0f);
         }
     }

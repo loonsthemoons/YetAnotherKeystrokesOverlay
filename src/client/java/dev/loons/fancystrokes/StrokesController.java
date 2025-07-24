@@ -90,7 +90,7 @@ public class StrokesController {
 
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
             dispatcher.register(ClientCommandManager.literal("keystrokes").executes(context -> {
-                context.getSource().sendFeedback(Text.literal("currently active profile: " + strokesView.findActiveStructure(profiles) + "\n currently active sound profile: " + strokesView.findActiveStructure(profiles).getSoundProfile()));
+                context.getSource().sendFeedback(Text.literal("currently active profile: " + strokesView.findActiveStructure(profiles) + "\ncurrently active sound profile: " + strokesView.findActiveStructure(profiles).getSoundProfile()));
                 return 1;
             }).then(ClientCommandManager.literal("list")
                             .executes(context -> {
@@ -188,7 +188,8 @@ public class StrokesController {
                         context.getSource().sendFeedback(Text.literal("Default lettering switched"));
                         return 1;
                     })).then(ClientCommandManager.literal("sounds").executes(context -> {
-                        strokesView.findActiveStructure(profiles).keypressSound();
+                        //strokesView.findActiveStructure(profiles).setKeypressSound();
+                        strokesView.findActiveStructure(profiles).keypressSound(!strokesView.findActiveStructure(profiles).getKeypressSound());
                         if(strokesView.findActiveStructure(profiles).getKeypressSound()){
                             context.getSource().sendFeedback(Text.literal("Keystroke sounds activated"));
                             return 1;
