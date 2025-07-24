@@ -48,6 +48,7 @@ public class YetAnotherKeystrokesModClient implements ClientModInitializer {
 				}
 				loadedStructure.soundProfile(data.soundProfile);
 				loadedStructure.keypressSound(data.keypressSound);
+				loadedStructure.setVolume(data.volume);
 			}
 			if (!foundActive && !PROFILES.isEmpty()) {
 				PROFILES.get(0).setActive();

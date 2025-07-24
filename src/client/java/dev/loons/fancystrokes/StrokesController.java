@@ -1,5 +1,7 @@
 package dev.loons.fancystrokes;
 
+import com.mojang.brigadier.arguments.DoubleArgumentType;
+import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
@@ -151,7 +153,7 @@ public class StrokesController {
                                 }
                                 return 1;
                             }))).then(ClientCommandManager.literal("help").executes(context ->{
-                                context.getSource().sendFeedback(Text.literal("Help command options: \n list \n create \n remove \n set \n lettering \n settings \n sounds"));
+                                context.getSource().sendFeedback(Text.literal("Help command options: \n list \n create \n remove \n set \n lettering \n settings \n sounds \n volume"));
                                 return 1;
                     }).then(ClientCommandManager.literal("list").executes(context ->{
                                 context.getSource().sendFeedback(Text.literal("/keystrokes list \n shows list of all profiles"));
@@ -178,7 +180,11 @@ public class StrokesController {
                                         return 1;
                                     })
                             ).then(ClientCommandManager.literal("sounds").executes(context -> {
-                                        context.getSource().sendFeedback(Text.literal("/keystrokes sounds \n activates or deactivates Keystrokes sound effects on key press (currently with a placeholder) \n can put 'linear', 'tactile' or 'clicky' after to change the profile \n Default sound profile is linear"));
+                                        context.getSource().sendFeedback(Text.literal("/keystrokes sounds \n activates or deactivates Keystrokes sound effects on key press \n can put 'linear', 'tactile' or 'clicky' after to change the profile \n Default sound profile is linear"));
+                                        return 1;
+                                    })
+                            ).then(ClientCommandManager.literal("volume").executes(context -> {
+                                        context.getSource().sendFeedback(Text.literal("/keystrokes volume \n changes the volume of the current profile \n volume can range from 0.01 to 25"));
                                         return 1;
                                     })
                             )
@@ -210,7 +216,21 @@ public class StrokesController {
                                 strokesView.findActiveStructure(profiles).soundProfile("clicky");
                                 context.getSource().sendFeedback(Text.literal("Keystroke sounds set to clicky"));
                                 return 1;
-                            })))
+                            }))).then(ClientCommandManager.literal("volume").executes(context ->{
+                                context.getSource().sendFeedback(Text.literal("Current volume is: " + strokesView.findActiveStructure(profiles).getVolume()));
+                                return 1;
+                            })
+                                  .then(ClientCommandManager.argument("volume", FloatArgumentType.floatArg()).executes(context ->{
+                                float volume = FloatArgumentType.getFloat(context, "volume");
+                                if(volume>0.0f && volume<=25.0f){
+                                    strokesView.findActiveStructure(profiles).volume(volume);
+                                    context.getSource().sendFeedback(Text.literal("Volume for this profile now is: " + volume));
+                                    return 1;
+                                } else {
+                                    context.getSource().sendFeedback(Text.literal("Failed to set volume"));
+                                    return 1;
+                                }
+                    })))
             ); // end of Profiles Command
         }); // end of event handler
     }

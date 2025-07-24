@@ -20,6 +20,7 @@ public class ProfileData {
     public List<StrokeData> strokes;
     public boolean keypressSound;
     public String soundProfile;
+    public float volume;
 
     /**
      * Default constructor for creating an empty ProfileData object.
@@ -40,6 +41,7 @@ public class ProfileData {
         this.isActiveProfile = structure.getActive();
         this.keypressSound = structure.getKeypressSound();
         this.soundProfile = structure.getSoundProfile();
+        this.volume = structure.getVolume();
         this.strokes = new ArrayList<>();
         for (Strokes stroke : structure.getStrokes()) {
             this.strokes.add(new StrokeData(stroke));
@@ -62,6 +64,7 @@ public class ProfileData {
         }
         newStructure.setSoundProfile(this.soundProfile);
         newStructure.setKeypressSound(this.keypressSound);
+        newStructure.setVolume(this.volume);
         for (StrokeData strokeData : this.strokes) {
             newStructure.addStroke(strokeData.toStroke());
         }
@@ -80,6 +83,7 @@ public class ProfileData {
         json.addProperty("isActiveProfile", this.isActiveProfile);
         json.addProperty("keypressSound", this.keypressSound);
         json.addProperty("soundProfile", this.soundProfile);
+        json.addProperty("volume", this.volume);
 
         JsonArray strokesArray = new JsonArray();
         for (StrokeData strokeData : this.strokes) {
@@ -111,6 +115,7 @@ public class ProfileData {
         this.isActiveProfile = json.has("isActiveProfile") && json.get("isActiveProfile").getAsBoolean();
         this.keypressSound = json.has("keypressSound") && json.get("keypressSound").getAsBoolean();
         this.soundProfile = json.has("soundProfile") ? json.get("soundProfile").getAsString() : "linear";
+        this.volume = json.has("volume") ? json.get("volume").getAsFloat() : 1.0f;
 
         JsonElement strokesElement = json.get("strokes");
         if (strokesElement != null && strokesElement.isJsonArray()) {

@@ -4,8 +4,6 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.Vec3d;
 
@@ -34,6 +32,7 @@ public class Strokes extends ClickableWidget {
     private boolean letteringOption=false;
     private boolean keypressSound=false;
     private String soundProfile="linear";
+    private float volume = 1.0f;
 
     /**
      * Defines the types of input actions that a stroke can represent.
@@ -178,7 +177,7 @@ public class Strokes extends ClickableWidget {
     public void playKeystrokeSound(){
         boolean isMouseStroke=(inputType==InputType.ATTACK || inputType==InputType.USE);
         if(isPressed && !previousPress && keypressSound && !isMouseStroke){
-            StrokeSounds.playSound(soundProfile);
+            StrokeSounds.playSound(soundProfile, volume);
         }
     }
 
@@ -217,4 +216,5 @@ public class Strokes extends ClickableWidget {
     public void setKeystrokeText(String keystrokeText) {this.keystrokeText = keystrokeText;}
     public void setKeypressSound(boolean keypressSound){this.keypressSound=keypressSound;}
     public void setSoundProfile(String soundProfile){this.soundProfile=soundProfile;}
+    public void setVolume(float volume) {this.volume = volume;}
 }

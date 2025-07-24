@@ -29,6 +29,7 @@ public class StrokesStructure {
     private boolean letteringOption=false;
     private boolean keypressSound=false;
     private String soundProfile="linear";
+    private float volume=1.0f;
 
     public StrokesStructure(){}
 
@@ -172,6 +173,9 @@ public class StrokesStructure {
     public void setKeypressSound(Boolean keypressSound){this.keypressSound=keypressSound;}
     public void setSoundProfile(String soundProfile){this.soundProfile=soundProfile;}
     public String getSoundProfile(){return soundProfile;}
+    public float getVolume(){return volume;}
+    public void setVolume(float volume) {this.volume = volume;}
+
     public void letteringOption(){
         letteringOption= !letteringOption;
         for(Strokes s : strokes){
@@ -188,6 +192,12 @@ public class StrokesStructure {
         this.soundProfile=soundProfile;
         for(Strokes s : strokes){
             s.setSoundProfile(soundProfile);
+        }
+    }
+    public void volume(float volume){
+        this.volume = volume;
+        for(Strokes s : strokes){
+            s.setVolume(volume);
         }
     }
 
