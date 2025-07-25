@@ -221,6 +221,7 @@ public class Strokes extends ClickableWidget {
     public String getKeystrokeText() {return keystrokeText;}
     public void setKeystrokeText(String keystrokeText) {this.keystrokeText = keystrokeText;}
     public void setKeypressSound(boolean keypressSound){this.keypressSound=keypressSound;}
+    public String getSoundProfile(){return soundProfile;}
     public void setSoundProfile(String soundProfile){this.soundProfile=soundProfile;}
     public void setVolume(float volume) {this.volume = volume;}
 }

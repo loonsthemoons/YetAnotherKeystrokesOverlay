@@ -331,6 +331,9 @@ public class StrokeOptions extends Screen {
             structure.getLast().setPosition((int)mouseX, (int)mouseY);
             strokesArrayList.add(structure.getLast());
             structure.getLast().setLetteringOption(structure.getLetteringOption());
+            structure.getLast().setVolume(structure.getVolume());
+            structure.getLast().setKeypressSound(structure.getKeypressSound());
+            structure.getLast().setSoundProfile(structure.getSoundProfile());
             this.addDrawableChild(structure.getLast());
             return true;
         }
