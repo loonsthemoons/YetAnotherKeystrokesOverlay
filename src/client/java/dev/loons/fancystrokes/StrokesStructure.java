@@ -184,6 +184,7 @@ public class StrokesStructure {
     public void setInactive(){isActiveProfile=false;}
     public boolean getActive(){return isActiveProfile;}
     public boolean getLetteringOption(){return letteringOption;}
+    public void setLetteringOption(boolean letteringOption){this.letteringOption = letteringOption;}
     public boolean getKeypressSound(){return keypressSound;}
     public void setKeypressSound(Boolean keypressSound){this.keypressSound=keypressSound;}
     public void setSoundProfile(String soundProfile){this.soundProfile=soundProfile;}
@@ -193,8 +194,8 @@ public class StrokesStructure {
     public boolean isDidPopupShow(){return didPopupShow;}
     public void setDidPopupShow(boolean didPopupShow){this.didPopupShow = didPopupShow;}
 
-    public void letteringOption(){
-        letteringOption= !letteringOption;
+    public void letteringOption(Boolean letteringOption){
+        this.letteringOption = letteringOption;
         for(Strokes s : strokes){
             s.setLetteringOption(letteringOption);
         }

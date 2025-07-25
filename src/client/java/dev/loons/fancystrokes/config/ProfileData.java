@@ -21,7 +21,8 @@ public class ProfileData {
     public boolean keypressSound;
     public String soundProfile;
     public float volume;
-    private boolean didPopupShow;
+    public boolean didPopupShow;
+    public boolean letteringOption;
 
     /**
      * Default constructor for creating an empty ProfileData object.
@@ -44,6 +45,7 @@ public class ProfileData {
         this.soundProfile = structure.getSoundProfile();
         this.volume = structure.getVolume();
         this.didPopupShow = structure.isDidPopupShow();
+        this.letteringOption = structure.getLetteringOption();
         this.strokes = new ArrayList<>();
         for (Strokes stroke : structure.getStrokes()) {
             this.strokes.add(new StrokeData(stroke));
@@ -68,6 +70,7 @@ public class ProfileData {
         newStructure.setKeypressSound(this.keypressSound);
         newStructure.setVolume(this.volume);
         newStructure.setDidPopupShow(this.didPopupShow);
+        newStructure.setLetteringOption(this.letteringOption);
         for (StrokeData strokeData : this.strokes) {
             newStructure.addStroke(strokeData.toStroke());
         }
@@ -88,6 +91,7 @@ public class ProfileData {
         json.addProperty("soundProfile", this.soundProfile);
         json.addProperty("volume", this.volume);
         json.addProperty("didPopupShow", this.didPopupShow);
+        json.addProperty("letteringOption", this.letteringOption);
 
         JsonArray strokesArray = new JsonArray();
         for (StrokeData strokeData : this.strokes) {
@@ -121,6 +125,7 @@ public class ProfileData {
         this.soundProfile = json.has("soundProfile") ? json.get("soundProfile").getAsString() : "linear";
         this.volume = json.has("volume") ? json.get("volume").getAsFloat() : 1.0f;
         this.didPopupShow = json.has("didPopupShow") && json.get("didPopupShow").getAsBoolean();
+        this.letteringOption = json.has("letteringOption") && json.get("letteringOption").getAsBoolean();
 
         JsonElement strokesElement = json.get("strokes");
         if (strokesElement != null && strokesElement.isJsonArray()) {

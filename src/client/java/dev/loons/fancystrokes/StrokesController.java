@@ -177,7 +177,7 @@ public class StrokesController {
                                         return 1;
                                     })
                             ).then(ClientCommandManager.literal("lettering").executes(context -> {
-                                        context.getSource().sendFeedback(Text.literal("/yako lettering \n changes the default Keystroke lettering to an alternate one \n is not being saved in saved profiles"));
+                                        context.getSource().sendFeedback(Text.literal("/yako lettering \n changes the default Keystroke lettering to an alternate one"));
                                         return 1;
                                     })
                             ).then(ClientCommandManager.literal("settings").executes(context -> {
@@ -195,7 +195,7 @@ public class StrokesController {
                             )
 
                     ).then(ClientCommandManager.literal("lettering").executes(context -> {
-                        strokesView.findActiveStructure(profiles).letteringOption();
+                        strokesView.findActiveStructure(profiles).letteringOption(!strokesView.findActiveStructure(profiles).getLetteringOption());
                         context.getSource().sendFeedback(Text.literal("Default lettering switched"));
                         return 1;
                     })).then(ClientCommandManager.literal("sounds").executes(context -> {
