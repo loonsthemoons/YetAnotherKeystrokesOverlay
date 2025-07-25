@@ -158,7 +158,7 @@ public class StrokesController {
                                 }
                                 return 1;
                             }))).then(ClientCommandManager.literal("help").executes(context ->{
-                                context.getSource().sendFeedback(Text.literal("Help command options: \n list \n create \n remove \n set \n lettering \n settings \n sounds \n volume"));
+                                context.getSource().sendFeedback(Text.literal("Help command options: \n list \n create \n remove \n set \n lettering \n settings \n sounds \n volume \n rename"));
                                 return 1;
                     }).then(ClientCommandManager.literal("list").executes(context ->{
                                 context.getSource().sendFeedback(Text.literal("/yako list \n shows list of all profiles"));
