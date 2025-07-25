@@ -39,7 +39,11 @@ public class StrokesStructure {
      * These strokes are added to the internal list.
      */
 
-    public void initializeDefaultStrokes(){
+    public void newDefaultStrokes(){
+        initializeDefaultStrokes(defaultColor, defaultPressedColor, defaultOutlineColor, defaultPressedOutlineColor, defaultTextColor, defaultPressedTextColor, defaultRoundness);
+    }
+
+    public void initializeDefaultStrokes(int defaultColor, int defaultPressedColor, int defaultOutlineColor, int defaultPressedOutlineColor, int defaultTextColor, int defaultPressedTextColor, int defaultRoundness){
         strokes.add(new Strokes(
                 new Vec3d(60,50,0),
                 defaultColor,
@@ -216,6 +220,12 @@ public class StrokesStructure {
         this.volume = volume;
         for(Strokes s : strokes){
             s.setVolume(volume);
+        }
+    }
+
+    public void setOutlineStatus(boolean status){
+        for (Strokes s : strokes){
+            s.setOutlineStatus(true);
         }
     }
 

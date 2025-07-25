@@ -483,7 +483,7 @@ public class StrokeEditScreen extends Screen {
                     SystemToast.create(this.client, SystemToast.Type.NARRATOR_TOGGLE, Text.of("Config reset!"), Text.of("Default config loaded."))
             );
             structure.clearAll();
-            structure.initializeDefaultStrokes();
+            structure.newDefaultStrokes();
             this.init(); // Re-initialize the screen to reflect default strokes
 
         }).dimensions(elementStartX, currentY, fieldWidth, fieldHeight).build();

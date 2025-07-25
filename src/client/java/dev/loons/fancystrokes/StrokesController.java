@@ -110,7 +110,7 @@ public class StrokesController {
                 }
                 StrokesStructure strokesStructure = new StrokesStructure();
                 strokesStructure.setProfileName(profileName);
-                strokesStructure.initializeDefaultStrokes();
+                strokesStructure.newDefaultStrokes();
                 profiles.add(strokesStructure);
                 strokesStructure.setDidPopupShow(strokesView.findActiveStructure(profiles).isDidPopupShow());
 
