@@ -235,7 +235,26 @@ public class StrokesController {
                                     context.getSource().sendFeedback(Text.literal("Failed to set volume"));
                                     return 1;
                                 }
-                    })))
+                    }))).then(ClientCommandManager.literal("rename").then(ClientCommandManager.argument("profile", StringArgumentType.word()).then(ClientCommandManager.argument("name", StringArgumentType.word()).executes(context -> {
+                        String profile = StringArgumentType.getString(context, "profile");
+                        String name = StringArgumentType.getString(context, "name");
+                         boolean nameExists = profiles.stream().anyMatch(s -> s.getProfileName().equalsIgnoreCase(name));
+
+                         if (nameExists) {
+                            context.getSource().sendFeedback(Text.literal("failed to set name, as it already exists"));
+                            return 1;
+                         }
+
+                        for(StrokesStructure s : profiles){
+                            if(s.getProfileName().equalsIgnoreCase(profile)){
+                                s.setProfileName(name);
+                                context.getSource().sendFeedback(Text.literal("Profile: " + s.getProfileName() + " was renamed to " + name));
+                                return 1;
+                            }
+                        }
+                         context.getSource().sendFeedback(Text.literal("Failed to find profile"));
+                        return 1;
+                    }))))
             ); // end of Profiles Command
         }); // end of event handler
     }
