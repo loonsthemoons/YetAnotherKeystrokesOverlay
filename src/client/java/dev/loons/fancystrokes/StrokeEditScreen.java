@@ -22,6 +22,7 @@ public class StrokeEditScreen extends Screen {
 
     private int fillColorPanelX, fillColorPanelY, fillColorPanelWidth, fillColorPanelHeight;
     private int outlinePanelX, outlinePanelY, outlinePanelWidth, outlinePanelHeight;
+    private int textPanelX, textPanelY, textPanelWidth, textPanelHeight;
     private int generalPanelX, generalPanelY, generalPanelWidth, generalPanelHeight;
 
     // General widget parameters
@@ -48,6 +49,24 @@ public class StrokeEditScreen extends Screen {
     private RgbSlider pressedOutlineGreenSlider;
     private RgbSlider pressedOutlineBlueSlider;
 
+    // RGB Sliders for Text Color
+    private RgbSlider textRedSlider;
+    private RgbSlider textGreenSlider;
+    private RgbSlider textBlueSlider;
+
+    // RGB Sliders for Pressed-Text Color
+    private RgbSlider pressedTextRedSlider;
+    private RgbSlider pressedTextGreenSlider;
+    private RgbSlider pressedTextBlueSlider;
+
+    // Text Widgets for color menus
+    private TextLabelWidget unpressedColorText;
+    private TextLabelWidget pressedColorText;
+    private TextLabelWidget unpressedOutlineText;
+    private TextLabelWidget pressedOutlineText;
+    private TextLabelWidget unpressedTextText;
+    private TextLabelWidget pressedTextText;
+
     // General Settings Widgets
     private ButtonWidget applyGlobalButton;
     private ButtonWidget resetButton;
@@ -60,6 +79,9 @@ public class StrokeEditScreen extends Screen {
 
     // Done Button
     private ButtonWidget doneButton;
+    private ButtonWidget rightPageButton;
+    private ButtonWidget leftPageButton;
+    private boolean page1=true;
 
     /**
      * Constructs a new StrokeEditScreen.
@@ -84,7 +106,45 @@ public class StrokeEditScreen extends Screen {
     @Override
     protected void init() {
         super.init();
+        setPage1();
+        // Done Button
+        doneButton = ButtonWidget.builder(Text.literal("Done"), (button) -> {
+            this.close();
+        }).dimensions(this.width / 2 - 75, this.height - 30, 150, 20).build();
+        this.addDrawableChild(doneButton);
+    }
 
+    // general settings and statistic
+    public void setPage1(){
+        // Calculate panel dimensions and positions
+        int panelCount = 3;
+        int panelSpacing = 20;
+        int panelHeight = 2 * (fieldHeight + 5) * 3 + 20 + 20 + 30 + 30;
+        int titleOffset = 20;
+
+        int totalWidthNeeded = (fieldWidth + 50) * panelCount + (panelSpacing * (panelCount - 1));
+        int startX = (this.width - totalWidthNeeded) / 2;
+        int panelStartYOffset = this.height / 2 - (panelHeight + titleOffset) / 2;
+
+        // General Settings Panel
+        generalPanelX = panelSpacing;
+        generalPanelY = panelStartYOffset + titleOffset;
+        generalPanelWidth = fieldWidth + 50;
+        generalPanelHeight = panelHeight;
+        addGeneralSettings(generalPanelX, generalPanelY, generalPanelWidth, generalPanelHeight);
+
+        // Page Switch Button
+        rightPageButton = ButtonWidget.builder(Text.literal(">"), (button -> {
+            setPage2();
+            removeGeneralSettings();
+            page1=false;
+            remove(rightPageButton);
+        })).dimensions(this.width / 2 + 80, this.height - 30, 20, 20).build();
+        this.addDrawableChild(rightPageButton);
+    }
+
+    // page for color settings
+    public void setPage2(){
         // Calculate panel dimensions and positions
         int panelCount = 3;
         int panelSpacing = 20;
@@ -94,7 +154,6 @@ public class StrokeEditScreen extends Screen {
         int totalWidthNeeded = (fieldWidth + 50) * panelCount + (panelSpacing * (panelCount - 1));
         int startX = (this.width - totalWidthNeeded) / 2;
         int panelStartYOffset = this.height / 2 - (panelHeight + titleOffset) / 2;
-
 
         // Fill Color Panel
         fillColorPanelX = startX;
@@ -110,19 +169,21 @@ public class StrokeEditScreen extends Screen {
         outlinePanelHeight = panelHeight;
         addOutlineColorSettings(outlinePanelX, outlinePanelY, outlinePanelWidth, outlinePanelHeight);
 
-        // General Settings Panel
-        generalPanelX = outlinePanelX + outlinePanelWidth + panelSpacing;
-        generalPanelY = panelStartYOffset + titleOffset;
-        generalPanelWidth = fieldWidth + 50;
-        generalPanelHeight = panelHeight;
-        addGeneralSettings(generalPanelX, generalPanelY, generalPanelWidth, generalPanelHeight);
+        // Text Color Panel
+        textPanelX = outlinePanelX + outlinePanelWidth + panelSpacing;
+        textPanelY = panelStartYOffset + titleOffset;
+        textPanelWidth = fieldWidth + 50;
+        textPanelHeight = panelHeight;
+        addTextColorSettings(textPanelX, textPanelY, textPanelWidth, textPanelHeight);
 
-
-        // Done Button
-        doneButton = ButtonWidget.builder(Text.literal("Done"), (button) -> {
-            this.close();
-        }).dimensions(this.width / 2 - 75, this.height - 30, 150, 20).build();
-        this.addDrawableChild(doneButton);
+        // Page Switch Button
+        leftPageButton = ButtonWidget.builder(Text.literal("<"), (button -> {
+            setPage1();
+            page1=true;
+            removeColorSettings();
+            remove(leftPageButton);
+        })).dimensions(this.width / 2 - 100, this.height - 30, 20, 20).build();
+        this.addDrawableChild(leftPageButton);
     }
 
     /**
@@ -139,7 +200,8 @@ public class StrokeEditScreen extends Screen {
         int sliderStartX = panelX + (panelW - fieldWidth) / 2;
 
         // Title for Unpressed Color within the box
-        this.addDrawableChild(new TextLabelWidget(sliderStartX, currentY, fieldWidth, Text.literal("Unpressed Color")));
+        unpressedColorText = new TextLabelWidget(sliderStartX, currentY, fieldWidth, Text.literal("Unpressed Color"));
+        this.addDrawableChild(unpressedColorText);
         currentY += fieldHeight + 5;
 
         // Unpressed Color Sliders
@@ -171,7 +233,8 @@ public class StrokeEditScreen extends Screen {
         currentY += fieldHeight + 15;
 
         // Title for Pressed Color within the box
-        this.addDrawableChild(new TextLabelWidget(sliderStartX, currentY, fieldWidth, Text.literal("Pressed Color")));
+        pressedColorText = new TextLabelWidget(sliderStartX, currentY, fieldWidth, Text.literal("Pressed Color"));
+        this.addDrawableChild(pressedColorText);
         currentY += fieldHeight + 5;
 
         // Pressed Color Sliders
@@ -217,7 +280,8 @@ public class StrokeEditScreen extends Screen {
         int sliderStartX = panelX + (panelW - fieldWidth) / 2;
 
         // Title for Unpressed Outline Color within the box
-        this.addDrawableChild(new TextLabelWidget(sliderStartX, currentY, fieldWidth, Text.literal("Unpressed Outline Color")));
+        unpressedOutlineText = new TextLabelWidget(sliderStartX, currentY, fieldWidth, Text.literal("Unpressed Outline Color"));
+        this.addDrawableChild(unpressedOutlineText);
         currentY += fieldHeight + 5;
 
         outlineRedSlider = new RgbSlider(sliderStartX, currentY, fieldWidth, fieldHeight, "R", ColorHelper.Argb.getRed(targetStroke.getOutlineColor()) / 255.0D) {
@@ -249,7 +313,8 @@ public class StrokeEditScreen extends Screen {
         currentY += fieldHeight + 15;
 
         // Title for Pressed Outline Color within the box
-        this.addDrawableChild(new TextLabelWidget(sliderStartX, currentY, fieldWidth, Text.literal("Pressed Outline Color")));
+        pressedOutlineText = new TextLabelWidget(sliderStartX, currentY, fieldWidth, Text.literal("Pressed Outline Color"));
+        this.addDrawableChild(pressedOutlineText);
         currentY += fieldHeight + 5;
 
         pressedOutlineRedSlider = new RgbSlider(sliderStartX, currentY, fieldWidth, fieldHeight, "R", ColorHelper.Argb.getRed(targetStroke.getPressedOutlineColor()) / 255.0D) {
@@ -277,6 +342,102 @@ public class StrokeEditScreen extends Screen {
             }
         };
         this.addDrawableChild(pressedOutlineBlueSlider);
+    }
+
+    private void addTextColorSettings(int panelX, int panelY, int panelW, int panelH) {
+        int currentY = panelY + 5;
+        int sliderStartX = panelX + (panelW - fieldWidth) / 2;
+
+        // Title for Unpressed Text Color within the box
+        unpressedTextText = new TextLabelWidget(sliderStartX, currentY, fieldWidth, Text.literal("Unpressed Text Color"));
+        this.addDrawableChild(unpressedTextText);
+        currentY += fieldHeight + 5;
+
+        textRedSlider = new RgbSlider(sliderStartX, currentY, fieldWidth, fieldHeight, "R", ColorHelper.Argb.getRed(targetStroke.getTextColor()) / 255.0D) {
+            @Override
+            protected void applyValue() {
+                refreshTextColorFromSliders();
+            }
+        };
+        this.addDrawableChild(textRedSlider);
+        currentY += fieldHeight + 5;
+
+        textGreenSlider = new RgbSlider(sliderStartX, currentY, fieldWidth, fieldHeight, "G", ColorHelper.Argb.getGreen(targetStroke.getTextColor()) / 255.0D) {
+            @Override
+            protected void applyValue() {
+                refreshTextColorFromSliders();
+            }
+        };
+        this.addDrawableChild(textGreenSlider);
+        currentY += fieldHeight + 5;
+
+        textBlueSlider = new RgbSlider(sliderStartX, currentY, fieldWidth, fieldHeight, "B", ColorHelper.Argb.getBlue(targetStroke.getTextColor()) / 255.0D) {
+            @Override
+            protected void applyValue() {
+                refreshTextColorFromSliders();
+            }
+        };
+        this.addDrawableChild(textBlueSlider);
+
+        currentY += fieldHeight + 15;
+
+        // Title for Pressed Outline Color within the box
+        pressedTextText = new TextLabelWidget(sliderStartX, currentY, fieldWidth, Text.literal("Pressed Text Color"));
+        this.addDrawableChild(pressedTextText);
+        currentY += fieldHeight + 5;
+
+        pressedTextRedSlider = new RgbSlider(sliderStartX, currentY, fieldWidth, fieldHeight, "R", ColorHelper.Argb.getRed(targetStroke.getPressedTextColor()) / 255.0D) {
+            @Override
+            protected void applyValue() {
+                refreshPressedTextColorFromSliders();
+            }
+        };
+        this.addDrawableChild(pressedTextRedSlider);
+        currentY += fieldHeight + 5;
+
+        pressedTextGreenSlider = new RgbSlider(sliderStartX, currentY, fieldWidth, fieldHeight, "G", ColorHelper.Argb.getGreen(targetStroke.getPressedTextColor()) / 255.0D) {
+            @Override
+            protected void applyValue() {
+                refreshPressedTextColorFromSliders();
+            }
+        };
+        this.addDrawableChild(pressedTextGreenSlider);
+        currentY += fieldHeight + 5;
+
+        pressedTextBlueSlider = new RgbSlider(sliderStartX, currentY, fieldWidth, fieldHeight, "B", ColorHelper.Argb.getBlue(targetStroke.getPressedTextColor()) / 255.0D) {
+            @Override
+            protected void applyValue() {
+                refreshPressedTextColorFromSliders();
+            }
+        };
+        this.addDrawableChild(pressedTextBlueSlider);
+    }
+
+    private void removeColorSettings(){
+        this.remove(unpressedColorText);
+        this.remove(unpressedRedSlider);
+        this.remove(unpressedBlueSlider);
+        this.remove(unpressedGreenSlider);
+        this.remove(pressedColorText);
+        this.remove(pressedRedSlider);
+        this.remove(pressedBlueSlider);
+        this.remove(pressedGreenSlider);
+        this.remove(unpressedOutlineText);
+        this.remove(outlineRedSlider);
+        this.remove(outlineBlueSlider);
+        this.remove(outlineGreenSlider);
+        this.remove(pressedOutlineText);
+        this.remove(pressedOutlineRedSlider);
+        this.remove(pressedOutlineBlueSlider);
+        this.remove(pressedOutlineGreenSlider);
+        this.remove(unpressedTextText);
+        this.remove(textRedSlider);
+        this.remove(textBlueSlider);
+        this.remove(textGreenSlider);
+        this.remove(pressedTextText);
+        this.remove(pressedTextRedSlider);
+        this.remove(pressedTextBlueSlider);
+        this.remove(pressedTextGreenSlider);
     }
 
     /**
@@ -307,6 +468,8 @@ public class StrokeEditScreen extends Screen {
                 strokes.setPressedOutlineColor(targetStroke.getPressedOutlineColor());
                 strokes.setRoundness(targetStroke.getRoundness());
                 strokes.setShowKeybindText(targetStroke.isShowKeybindText());
+                strokes.setTextColor(targetStroke.getTextColor());
+                strokes.setPressedTextColor(targetStroke.getPressedTextColor());
             }
             YetAnotherKeystrokesModClient.saveProfilesToConfig();
 
@@ -393,6 +556,17 @@ public class StrokeEditScreen extends Screen {
         currentY += fieldHeight + 5;
     }
 
+    private void removeGeneralSettings(){
+        this.remove(applyGlobalButton);
+        this.remove(resetButton);
+        this.remove(inputTypeCycleButton);
+        this.remove(outlinesButton);
+        this.remove(roundnessSlider);
+        this.remove(textButton);
+        this.remove(transparencySlider);
+        this.remove(displayTextInput);
+    }
+
 
     /**
      * Updates the target stroke's unpressed fill color based on the current values of the RGB sliders.
@@ -444,6 +618,26 @@ public class StrokeEditScreen extends Screen {
         targetStroke.setPressedOutlineColor(newColor);
     }
 
+    private void refreshTextColorFromSliders() {
+        int r = (int) (textRedSlider.getCurrentValue() * 255);
+        int g = (int) (textGreenSlider.getCurrentValue() * 255);
+        int b = (int) (textBlueSlider.getCurrentValue() * 255);
+
+        int currentAlpha = 255;
+        int newColor = ColorHelper.Argb.getArgb(currentAlpha, r, g, b);
+        targetStroke.setTextColor(newColor);
+    }
+
+    private void refreshPressedTextColorFromSliders() {
+        int r = (int) (pressedTextRedSlider.getCurrentValue() * 255);
+        int g = (int) (pressedTextGreenSlider.getCurrentValue() * 255);
+        int b = (int) (pressedTextBlueSlider.getCurrentValue() * 255);
+
+        int currentAlpha = 255;
+        int newColor = ColorHelper.Argb.getArgb(currentAlpha, r, g, b);
+        targetStroke.setPressedTextColor(newColor);
+    }
+
     /**
      * Cycles through the available {@link Strokes.InputType} values for the target stroke.
      *
@@ -476,9 +670,13 @@ public class StrokeEditScreen extends Screen {
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         this.renderBackground(context);
 
-        renderPanelWithTitle(context, fillColorPanelX, fillColorPanelY, fillColorPanelWidth, fillColorPanelHeight, Text.literal("Fill Color"));
-        renderPanelWithTitle(context, outlinePanelX, outlinePanelY, outlinePanelWidth, outlinePanelHeight, Text.literal("Outlines"));
-        renderPanelWithTitle(context, generalPanelX, generalPanelY, generalPanelWidth, generalPanelHeight, Text.literal("General Settings"));
+        if(page1){
+            renderPanelWithTitle(context, generalPanelX, generalPanelY, generalPanelWidth, generalPanelHeight, Text.literal("General Settings"));
+        } else {
+            renderPanelWithTitle(context, fillColorPanelX, fillColorPanelY, fillColorPanelWidth, fillColorPanelHeight, Text.literal("Fill Color"));
+            renderPanelWithTitle(context, outlinePanelX, outlinePanelY, outlinePanelWidth, outlinePanelHeight, Text.literal("Outline Color"));
+            renderPanelWithTitle(context, textPanelX, textPanelY, textPanelWidth, textPanelHeight, Text.literal("Text Color"));
+        }
 
         // Render preview strokes
         int drawX = (outlinePanelX+outlinePanelWidth/2);

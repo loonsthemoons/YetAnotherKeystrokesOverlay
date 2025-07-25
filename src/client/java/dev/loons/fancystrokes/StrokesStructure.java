@@ -17,6 +17,8 @@ public class StrokesStructure {
     private final int defaultPressedColor = ColorHelper.Argb.getArgb(255, 0, 255, 0);           // Green
     private final int defaultOutlineColor = ColorHelper.Argb.getArgb(255, 255, 255, 255);       // White
     private final int defaultPressedOutlineColor = ColorHelper.Argb.getArgb(255, 255, 255, 0);  // Yellow
+    private final int defaultTextColor = ColorHelper.Argb.getArgb(255, 255, 255, 255);
+    private final int defaultPressedTextColor = ColorHelper.Argb.getArgb(255, 255, 255, 255);
     private final int defaultRoundness = 0;
     private final int defaultWidth = 20;
     private final int defaultHeight = 20;
@@ -43,6 +45,8 @@ public class StrokesStructure {
                 defaultPressedColor,
                 defaultOutlineColor,
                 defaultPressedOutlineColor,
+                defaultTextColor,
+                defaultPressedTextColor,
                 defaultWidth,
                 defaultHeight,
                 InputType.FORWARD,
@@ -54,6 +58,8 @@ public class StrokesStructure {
                 defaultPressedColor,
                 defaultOutlineColor,
                 defaultPressedOutlineColor,
+                defaultTextColor,
+                defaultPressedTextColor,
                 defaultWidth,
                 defaultHeight,
                 InputType.LEFT,
@@ -65,6 +71,8 @@ public class StrokesStructure {
                 defaultPressedColor,
                 defaultOutlineColor,
                 defaultPressedOutlineColor,
+                defaultTextColor,
+                defaultPressedTextColor,
                 defaultWidth,
                 defaultHeight,
                 InputType.BACK,
@@ -76,6 +84,8 @@ public class StrokesStructure {
                 defaultPressedColor,
                 defaultOutlineColor,
                 defaultPressedOutlineColor,
+                defaultTextColor,
+                defaultPressedTextColor,
                 defaultWidth,
                 defaultHeight,
                 InputType.RIGHT,
@@ -87,6 +97,8 @@ public class StrokesStructure {
                 defaultPressedColor,
                 defaultOutlineColor,
                 defaultPressedOutlineColor,
+                defaultTextColor,
+                defaultPressedTextColor,
                 30,
                 10,
                 InputType.ATTACK,
@@ -98,6 +110,8 @@ public class StrokesStructure {
                 defaultPressedColor,
                 defaultOutlineColor,
                 defaultPressedOutlineColor,
+                defaultTextColor,
+                defaultPressedTextColor,
                 30,
                 10,
                 InputType.USE,
@@ -118,6 +132,8 @@ public class StrokesStructure {
                 defaultPressedColor,
                 defaultOutlineColor,
                 defaultPressedOutlineColor,
+                defaultTextColor,
+                defaultPressedTextColor,
                 defaultWidth,
                 defaultHeight,
                 inputType,

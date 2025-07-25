@@ -19,6 +19,8 @@ public class Strokes extends ClickableWidget {
     private int pressedColor;
     private int outlineColor;
     private int pressedOutlineColor;
+    private int textColor = 0xFFFFFFFF;
+    private int pressedTextColor = 0xFFFFFFFF;
     private int roundness;
     private boolean outlineStatus = false;
     private boolean isVisible = true;
@@ -27,7 +29,6 @@ public class Strokes extends ClickableWidget {
     private boolean isPressed = false;
     private boolean previousPress=false;
     private boolean showKeybindText = true;
-    private int textColor = 0xFFFFFFFF;
     private String keystrokeText;
     private boolean letteringOption=false;
     private boolean keypressSound=false;
@@ -54,13 +55,15 @@ public class Strokes extends ClickableWidget {
      * @param inputType The {@link InputType} associated with this stroke.
      * @param roundness The roundness of the corners for the stroke's rectangle. (from 0 to 15)
      */
-    public Strokes(Vec3d position, int color, int pressedColor, int outlineColor, int pressedOutlineColor, int width, int height, InputType inputType, int roundness){
+    public Strokes(Vec3d position, int color, int pressedColor, int outlineColor, int pressedOutlineColor, int textColor, int pressedTextColor, int width, int height, InputType inputType, int roundness){
         super((int) position.x, (int) position.y, width, height, Text.empty());
         this.position = position;
         this.color = color;
         this.pressedColor = pressedColor;
         this.outlineColor = outlineColor;
         this.pressedOutlineColor = pressedOutlineColor;
+        this.textColor = textColor;
+        this.pressedTextColor = pressedTextColor;
         this.width = width;
         this.height = height;
         this.inputType = inputType;
@@ -122,6 +125,7 @@ public class Strokes extends ClickableWidget {
             int drawHeight = this.getHeight();
             int fillColorToUse = isPressed ? this.pressedColor : this.color;
             int outlineColorToUse = isPressed ? this.pressedOutlineColor : this.outlineColor;
+            int textColorToUse = isPressed ? this.pressedTextColor : this.textColor;
 
             FancyStrokesRenderer.drawRoundedRect(context, drawX, drawY, drawWidth, drawHeight, this.roundness, fillColorToUse);
             if (outlineStatus) {
@@ -145,7 +149,7 @@ public class Strokes extends ClickableWidget {
                     double offsetY = (double) (drawHeight - textRenderer.fontHeight) / 2;
                     int centerX = (int) Math.round(drawX + (float) drawWidth / 2);
                     int centerY = drawY + (int) Math.round(offsetY);
-                    context.drawCenteredTextWithShadow(textRenderer, Text.literal(textToShow), centerX, centerY, this.textColor);
+                    context.drawCenteredTextWithShadow(textRenderer, Text.literal(textToShow), centerX, centerY, textColorToUse);
                 }
             }
 
@@ -212,6 +216,8 @@ public class Strokes extends ClickableWidget {
     public void setShowKeybindText(boolean showKeybindText) { this.showKeybindText = showKeybindText; }
     public int getTextColor() { return textColor; }
     public void setTextColor(int textColor) { this.textColor = textColor; }
+    public int getPressedTextColor(){return pressedTextColor;}
+    public void setPressedTextColor(int pressedTextColor){this.pressedTextColor=pressedTextColor;}
     public String getKeystrokeText() {return keystrokeText;}
     public void setKeystrokeText(String keystrokeText) {this.keystrokeText = keystrokeText;}
     public void setKeypressSound(boolean keypressSound){this.keypressSound=keypressSound;}

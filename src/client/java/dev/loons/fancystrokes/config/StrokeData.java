@@ -17,6 +17,8 @@ public class StrokeData {
     public int pressedColor;
     public int outlineColor;
     public int pressedOutlineColor;
+    public int textColor;
+    public int pressedTextColor;
     public int width;
     public int height;
     public int roundness;
@@ -44,6 +46,8 @@ public class StrokeData {
         this.pressedColor = stroke.getPressedColor();
         this.outlineColor = stroke.getOutlineColor();
         this.pressedOutlineColor = stroke.getPressedOutlineColor();
+        this.textColor = stroke.getTextColor();
+        this.pressedTextColor = stroke.getPressedTextColor();
         this.width = stroke.getWidth();
         this.height = stroke.getHeight();
         this.roundness = stroke.getRoundness();
@@ -64,6 +68,8 @@ public class StrokeData {
                 pressedColor,
                 outlineColor,
                 pressedOutlineColor,
+                textColor,
+                pressedTextColor,
                 width,
                 height,
                 inputType,
@@ -90,6 +96,8 @@ public class StrokeData {
         json.addProperty("pressedColor", this.pressedColor);
         json.addProperty("outlineColor", this.outlineColor);
         json.addProperty("pressedOutlineColor", this.pressedOutlineColor);
+        json.addProperty("textColor", this.textColor);
+        json.addProperty("pressedTextColor", this.pressedTextColor);
         json.addProperty("width", this.width);
         json.addProperty("height", this.height);
         json.addProperty("roundness", this.roundness);
@@ -119,6 +127,8 @@ public class StrokeData {
         this.pressedColor = json.get("pressedColor").getAsInt();
         this.outlineColor = json.get("outlineColor").getAsInt();
         this.pressedOutlineColor = json.get("pressedOutlineColor").getAsInt();
+        this.textColor = json.get("textColor").getAsInt();
+        this.pressedTextColor = json.get("pressedTextColor").getAsInt();
         this.width = json.get("width").getAsInt();
         this.height = json.get("height").getAsInt();
         this.roundness = json.get("roundness").getAsInt();
