@@ -32,24 +32,15 @@ public class StrokesController {
      * @param structure The data structure holding all defined strokes.
      * @param menuScreen The options screen for the FancyStrokes mod.
      */
-    public StrokesController(StrokesView strokesView, StrokesStructure structure, StrokeOptions menuScreen, ArrayList<StrokesStructure> profiles){
+    public StrokesController(StrokesView strokesView, StrokesStructure structure, StrokeOptions menuScreen, ArrayList<StrokesStructure> profiles, KeyBinding keyBinding, KeyBinding disableKeystrokes){
         this.strokesView = strokesView;
         this.structure = structure;
         structure.setActive();
         this.profiles = profiles;
         this.menuScreen = menuScreen;
-        keyBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "Open Keystrokes Settings", // The translation key of the keybinding's name
-                InputUtil.Type.KEYSYM,                  // The type of the keybinding, KEYSYM for keyboard, MOUSE for mouse.
-                GLFW.GLFW_KEY_R,                        // The keycode of the key
-                "Yet Another Keystrokes Overlay"            // The translation key of the keybinding's category.
-        ));
-        disableKeystrokes = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "Disable Keystrokes",       // The translation key of the keybinding's name
-                InputUtil.Type.KEYSYM,                  // The type of the keybinding, KEYSYM for keyboard, MOUSE for mouse.
-                GLFW.GLFW_KEY_K,                        // The keycode of the key
-                "Yet Another Keystrokes Overlay"            // The translation key of the keybinding's category.
-        ));
+        this.keyBinding = keyBinding;
+        this.disableKeystrokes = disableKeystrokes;
+
         structure.setControlKey(keyBinding);
         buildController();
 
@@ -258,7 +249,11 @@ public class StrokesController {
                         }
                          context.getSource().sendFeedback(Text.literal("Failed to find profile"));
                         return 1;
-                    }))))
+                    })))).then(ClientCommandManager.literal("reset").executes(context -> {
+                        YetAnotherKeystrokesModClient.resetAllProfiles();
+                        context.getSource().sendFeedback(Text.literal("Successfully resetted the config"));
+                        return 1;
+                    }))
             ); // end of Profiles Command
         }); // end of event handler
     }

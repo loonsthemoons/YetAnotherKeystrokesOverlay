@@ -3,8 +3,12 @@ package dev.loons.fancystrokes;
 import dev.loons.fancystrokes.config.ProfileData;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
+import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.ColorHelper;
+import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
 
@@ -17,6 +21,11 @@ public class YetAnotherKeystrokesModClient implements ClientModInitializer {
 	public static FancyStrokesConfig CONFIG;
 	public static ArrayList<StrokesStructure> PROFILES = new ArrayList<>();
 	public static StrokesStructure STROKES_STRUCTURE;
+	private static StrokeOptions menuScreen;
+	private static StrokesView strokesView;
+	private static StrokesController strokesController;
+	public static KeyBinding OPEN_SETTINGS_KEYBINDING;
+	public static KeyBinding DISABLE_KEYSTROKES_KEYBINDING;
 
 	/**
 	 * Called when the client-side mod is initialized.
@@ -25,9 +34,30 @@ public class YetAnotherKeystrokesModClient implements ClientModInitializer {
 	 */
 	@Override
 	public void onInitializeClient() {
-		STROKES_STRUCTURE = new StrokesStructure();
 		CONFIG = FancyStrokesConfig.getInstance();
+		OPEN_SETTINGS_KEYBINDING = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+				"Open Keystrokes Settings", // The translation key of the keybinding's name
+				InputUtil.Type.KEYSYM,                  // The type of the keybinding, KEYSYM for keyboard, MOUSE for mouse.
+				GLFW.GLFW_KEY_R,                        // The keycode of the key
+				"Yet Another Keystrokes Overlay"            // The translation key of the keybinding's category.
+		));
+		DISABLE_KEYSTROKES_KEYBINDING = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+				"Disable Keystrokes",       // The translation key of the keybinding's name
+				InputUtil.Type.KEYSYM,                  // The type of the keybinding, KEYSYM for keyboard, MOUSE for mouse.
+				GLFW.GLFW_KEY_K,                        // The keycode of the key
+				"Yet Another Keystrokes Overlay"            // The translation key of the keybinding's category.
+		));
 		SoundLibrary.initialize();
+		initializeUI();
+		ClientLifecycleEvents.CLIENT_STOPPING.register(client -> {
+			System.out.println("Client stopping, saving profiles...");
+			saveProfilesToConfig();
+		});
+	}
+
+	public static void initializeUI(){
+		PROFILES.clear();
+		STROKES_STRUCTURE = new StrokesStructure();
 
 		if (CONFIG.getSavedProfiles().isEmpty()) {
 			System.out.println("No saved profiles found, initializing default profile.");
@@ -58,21 +88,17 @@ public class YetAnotherKeystrokesModClient implements ClientModInitializer {
 			}
 		}
 
-		StrokeOptions menuScreen = new StrokeOptions(Text.literal("FancyStrokes Options"), STROKES_STRUCTURE, PROFILES);
-		StrokesView strokesView = new StrokesView(STROKES_STRUCTURE, PROFILES);
-		StrokesController strokesController = new StrokesController(strokesView, STROKES_STRUCTURE, menuScreen, PROFILES);
+		menuScreen = new StrokeOptions(Text.literal("FancyStrokes Options"), STROKES_STRUCTURE, PROFILES);
+		strokesView = new StrokesView(STROKES_STRUCTURE, PROFILES);
+		strokesController = new StrokesController(strokesView, STROKES_STRUCTURE, menuScreen, PROFILES, OPEN_SETTINGS_KEYBINDING, DISABLE_KEYSTROKES_KEYBINDING);
 
 		strokesView.renderOverlay();
-		ClientLifecycleEvents.CLIENT_STOPPING.register(client -> {
-			System.out.println("Client stopping, saving profiles...");
-			saveProfilesToConfig();
-		});
 	}
 
 	/**
 	 * Initializes or resets the keystroke structure to its default settings.
 	 */
-	public void initializeDefaultStrokes() {
+	public static void initializeDefaultStrokes() {
 		StrokesStructure default1 = new StrokesStructure();
 		StrokesStructure default2 = new StrokesStructure();
 		StrokesStructure default3 = new StrokesStructure();
@@ -107,5 +133,11 @@ public class YetAnotherKeystrokesModClient implements ClientModInitializer {
 		CONFIG.setSavedProfiles(dataToSave);
 		CONFIG.save();
 		System.out.println("Profiles config saved.");
+	}
+
+	public static void resetAllProfiles(){
+		CONFIG.getSavedProfiles().clear();
+		CONFIG.save();
+		initializeUI();
 	}
 }
