@@ -62,6 +62,7 @@ Use `/yako help` for command hints in-game. Here's what you can do:
 - `/yako create <name>` – Create a new profile
 - `/yako set <name>` – Switch to a specific profile
 - `/yako remove <name>` – Delete the current profile (cannot delete the last one)
+- `/yako rename <profile> <name>` – Rename a profile
 
 ### Settings
 - `/yako settings` – Show all controls and interactions as a quick reference
@@ -107,15 +108,17 @@ Feedback and suggestions are always welcome!
 ## Dependencies
 
 - Minecraft **1.20.1**
-- Fabric Loader **≥ 0.15.11**
-- [owo-lib](https://github.com/wisp-forest/owo-lib) **0.11.2+1.20**
+- Fabric Loader **≥ 0.14.0**
 
 ---
 
 ## YAKO In Action
+<img width="573" height="473" alt="yako1" src="https://github.com/user-attachments/assets/08b6f032-8547-4b35-bc4a-c9c3588fc03f" />
+<img width="610" height="646" alt="yako2" src="https://github.com/user-attachments/assets/72a3f64c-d8bf-45b1-8aad-7a46469c69e5" />
+<img width="730" height="611" alt="yako3" src="https://github.com/user-attachments/assets/40425e3a-6943-40d1-9282-96aaa41a28a9" />
+<img width="477" height="592" alt="yako_personal" src="https://github.com/user-attachments/assets/5050498f-ef7c-4f53-9295-7cca4bdb7f96" />
 
-<img width="550" height="432" alt="image" src="https://github.com/user-attachments/assets/976f1535-83e5-4fac-95f4-b7760686d585" />
-<img width="328" height="323" alt="image" src="https://github.com/user-attachments/assets/07a2bd3a-e4d8-4723-8df1-87bcb5dd9984" />
+**Settings Menu**
+<img width="1908" height="1028" alt="2025-07-25_19 46 53" src="https://github.com/user-attachments/assets/44ba0e7c-6e1a-46b8-a9b0-b3a4876671f7" />
+<img width="1908" height="1028" alt="2025-07-25_19 47 02" src="https://github.com/user-attachments/assets/e712b9b3-3212-49a7-8d5d-8be2a443e131" />
 
-**Settings Menu (outdated)**
-<img width="1920" height="1008" alt="image" src="https://github.com/user-attachments/assets/a9e4b520-dcfd-4523-86a3-d4c6ea1ac3a2" />
