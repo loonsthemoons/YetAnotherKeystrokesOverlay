@@ -451,7 +451,7 @@ public class StrokeEditScreen extends Screen {
      * @param panelH The height of the panel.
      */
     private void addGeneralSettings(int panelX, int panelY, int panelW, int panelH) {
-        int currentY = panelY + 5;
+        int currentY = panelY + 10;
         int elementStartX = panelX + (panelW - fieldWidth) / 2;
 
         // Apply Global Button

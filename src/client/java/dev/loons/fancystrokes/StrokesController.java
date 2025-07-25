@@ -112,6 +112,7 @@ public class StrokesController {
                 strokesStructure.setProfileName(profileName);
                 strokesStructure.initializeDefaultStrokes();
                 profiles.add(strokesStructure);
+                strokesStructure.setDidPopupShow(strokesView.findActiveStructure(profiles).isDidPopupShow());
 
                 context.getSource().sendFeedback(Text.literal("new profile created: " + profileName));
                 return 1;
@@ -119,18 +120,23 @@ public class StrokesController {
                     .then(ClientCommandManager.argument("profile", StringArgumentType.word())
                             .executes(context ->{
                                 if(profiles.size()==1){
-                                    context.getSource().sendFeedback(Text.literal("failed to remove profile: "));
+                                    context.getSource().sendFeedback(Text.literal("failed to remove profile, due to only one profile existing"));
                                 } else {
                                     String profile = StringArgumentType.getString(context, "profile");
                                     StrokesStructure s = strokesView.findActiveStructure(profiles);
-                                    if(s!=null){
-                                        profiles.remove(s);
+                                    if (profile.equalsIgnoreCase(s.getProfileName())) {
+                                        context.getSource().sendFeedback(Text.literal("Failed: Cannot remove the active profile."));
+                                        return 1;
+                                    }
+
+                                    boolean removed = profiles.removeIf(structure1 -> structure1.getProfileName().equalsIgnoreCase(profile) && !structure1.getProfileName().equalsIgnoreCase(s.getProfileName()));
+                                    if (removed) {
                                         context.getSource().sendFeedback(Text.literal("profile removed: " + profile));
                                     } else {
-                                        context.getSource().sendFeedback(Text.literal("failed to remove profile: "));
+                                        context.getSource().sendFeedback(Text.literal("did not find a profile called " + profile));
                                     }
+                                    return 1;
                                 }
-
                                 return 1;
                             })
                     )).then(ClientCommandManager.literal("set").then(ClientCommandManager.argument("profile", StringArgumentType.word())
@@ -183,7 +189,7 @@ public class StrokesController {
                                         return 1;
                                     })
                             ).then(ClientCommandManager.literal("volume").executes(context -> {
-                                        context.getSource().sendFeedback(Text.literal("/yako volume \n changes the volume of the current profile \n volume can range from 0.01 to 25"));
+                                        context.getSource().sendFeedback(Text.literal("/yako volume \n changes the volume of the current profile \n volume can range from 0.01 to 100"));
                                         return 1;
                                     })
                             )
@@ -221,7 +227,7 @@ public class StrokesController {
                             })
                                   .then(ClientCommandManager.argument("volume", FloatArgumentType.floatArg()).executes(context ->{
                                 float volume = FloatArgumentType.getFloat(context, "volume");
-                                if(volume>0.0f && volume<=25.0f){
+                                if(volume>0.0f && volume<=100.0f){
                                     strokesView.findActiveStructure(profiles).volume(volume);
                                     context.getSource().sendFeedback(Text.literal("Volume for this profile now is: " + volume));
                                     return 1;

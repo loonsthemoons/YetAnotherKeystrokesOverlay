@@ -4,6 +4,8 @@ package dev.loons.fancystrokes;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.gui.widget.TextWidget;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.math.Vector2f;
 import net.minecraft.text.Text;
@@ -36,6 +38,7 @@ public class StrokeOptions extends Screen {
     private java.util.Map<Strokes, Vector2f> initialGroupSizes;
     private ArrayList<Strokes> selectedStrokes = new ArrayList<>();
     private KeyBinding controlKey;
+    private ButtonWidget popupDone;
 
     /**
      * Constructs a new StrokeOptions screen.
@@ -131,12 +134,23 @@ public class StrokeOptions extends Screen {
     @Override
     protected void init() {
         super.init();
+
+        this.clearChildren();
         this.strokesArrayList.clear();
         structure = findActiveStructure(profiles);
         this.strokesArrayList.addAll(structure.getStrokes());
-        this.clearChildren();
         for(Strokes strokes : strokesArrayList){
             this.addDrawableChild(strokes);
+        }
+
+        if(!structure.isDidPopupShow()){
+            popupDone = ButtonWidget.builder(Text.literal("Understood"), (button) -> {
+                this.remove(button);
+                for(StrokesStructure s : profiles){
+                    s.setDidPopupShow(true);
+                }
+            }).dimensions(((this.width - 80)/2), (this.height/2)+80, 80, 20).build();
+            this.addDrawableChild(popupDone);
         }
     }
 
@@ -153,6 +167,18 @@ public class StrokeOptions extends Screen {
         super.render(context, mouseX, mouseY, delta);
         context.drawText(this.textRenderer, "YAKO - Yet Another Keystrokes Mod", 40, 40 - this.textRenderer.fontHeight - 10, 0xFFFFFFFF, true);
 
+        if(!structure.isDidPopupShow()){
+            // Calculate panel dimensions and positions
+            int panelHeight = 200;
+            int panelWidth = 400;
+            int titleOffset = 20;
+
+            int startX = (this.width - panelWidth) / 2;
+            int panelStartYOffset = this.height / 2 - (panelHeight + titleOffset) / 2;
+
+            renderPopupWindow(context, startX, panelStartYOffset+titleOffset, panelWidth, panelHeight, Text.literal("Welcome Message!"));
+        }
+
         if(isSelecting){
             int rectX1 = (int) Math.min(this.selectPositionX, mouseX);
             int rectY1 = (int) Math.min(this.selectPositionY, mouseY);
@@ -162,6 +188,19 @@ public class StrokeOptions extends Screen {
             context.fill(rectX1, rectY1, rectX2, rectY2, 0x4000FF00);
             context.drawBorder(rectX1, rectY1, rectX2 - rectX1, rectY2 - rectY1, 0xFF00FF00);
         }
+    }
+
+    private void renderPopupWindow(DrawContext context, int x, int y, int width, int height, Text title) {
+        int titleY = y - 15; // 15 Pixel über der Box
+        context.drawText(this.textRenderer, title, x + width / 2 - this.textRenderer.getWidth(title) / 2, titleY, 0xFFFFFFFF, true);
+        context.drawCenteredTextWithShadow(this.textRenderer, "Welcome to Yet Another Keystrokes Mod", (this.width/2), (this.height/2)-40, 0xFFFFFFFF);
+        context.drawCenteredTextWithShadow(this.textRenderer, "To configure a keystroke, press the configure button on a keystroke", (this.width/2), (this.height/2)-20, 0xFFFFFFFF);
+        context.drawCenteredTextWithShadow(this.textRenderer, "For more configuration, use /yako help", (this.width/2), (this.height/2), 0xFFFFFFFF);
+        context.drawCenteredTextWithShadow(this.textRenderer, "If you found a bug, please report it on github", (this.width/2), (this.height/2)+20, 0xFFFFFFFF);
+        context.drawCenteredTextWithShadow(this.textRenderer, "this message will not be shown again", (this.width/2), (this.height/2)+40, 0xFFFFFFFF);
+
+        context.fill(x, y, x + width, y + height, 0xA0000000);
+        context.drawBorder(x, y, width, height, 0xFFFFFFFF);
     }
 
     /**

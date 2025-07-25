@@ -30,6 +30,7 @@ public class StrokesStructure {
     private boolean keypressSound=false;
     private String soundProfile="linear";
     private float volume=1.0f;
+    private boolean didPopupShow=false;
 
     public StrokesStructure(){}
 
@@ -189,6 +190,8 @@ public class StrokesStructure {
     public String getSoundProfile(){return soundProfile;}
     public float getVolume(){return volume;}
     public void setVolume(float volume) {this.volume = volume;}
+    public boolean isDidPopupShow(){return didPopupShow;}
+    public void setDidPopupShow(boolean didPopupShow){this.didPopupShow = didPopupShow;}
 
     public void letteringOption(){
         letteringOption= !letteringOption;
