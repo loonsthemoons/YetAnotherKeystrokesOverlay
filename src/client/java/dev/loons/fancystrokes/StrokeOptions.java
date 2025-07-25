@@ -193,11 +193,12 @@ public class StrokeOptions extends Screen {
     private void renderPopupWindow(DrawContext context, int x, int y, int width, int height, Text title) {
         int titleY = y - 15; // 15 Pixel über der Box
         context.drawText(this.textRenderer, title, x + width / 2 - this.textRenderer.getWidth(title) / 2, titleY, 0xFFFFFFFF, true);
-        context.drawCenteredTextWithShadow(this.textRenderer, "Welcome to Yet Another Keystrokes Mod", (this.width/2), (this.height/2)-40, 0xFFFFFFFF);
-        context.drawCenteredTextWithShadow(this.textRenderer, "To configure a keystroke, press the configure button on a keystroke", (this.width/2), (this.height/2)-20, 0xFFFFFFFF);
-        context.drawCenteredTextWithShadow(this.textRenderer, "For more configuration, use /yako help", (this.width/2), (this.height/2), 0xFFFFFFFF);
-        context.drawCenteredTextWithShadow(this.textRenderer, "If you found a bug, please report it on github", (this.width/2), (this.height/2)+20, 0xFFFFFFFF);
-        context.drawCenteredTextWithShadow(this.textRenderer, "this message will not be shown again", (this.width/2), (this.height/2)+40, 0xFFFFFFFF);
+        context.drawCenteredTextWithShadow(this.textRenderer, "Welcome to Yet Another Keystrokes Mod", (this.width/2), (this.height/2)-60, 0xFFFFFFFF);
+        context.drawCenteredTextWithShadow(this.textRenderer, "To configure a keystroke, press the configure button on a keystroke", (this.width/2), (this.height/2)-40, 0xFFFFFFFF);
+        context.drawCenteredTextWithShadow(this.textRenderer, "Use your left mouse button to move keystrokes", (this.width/2), (this.height/2)-20, 0xFFFFFFFF);
+        context.drawCenteredTextWithShadow(this.textRenderer, "Pressing the middle mouse button creates or deletes keystrokes", (this.width/2), (this.height/2), 0xFFFFFFFF);
+        context.drawCenteredTextWithShadow(this.textRenderer, "Using the right mouse button resizes keystrokes", (this.width/2), (this.height/2)+20, 0xFFFFFFFF);
+        context.drawCenteredTextWithShadow(this.textRenderer, "For more configuration, use /yako help", (this.width/2), (this.height/2)+40, 0xFFFFFFFF);
 
         context.fill(x, y, x + width, y + height, 0xA0000000);
         context.drawBorder(x, y, width, height, 0xFFFFFFFF);

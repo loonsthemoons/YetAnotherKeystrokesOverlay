@@ -189,7 +189,11 @@ public class StrokesController {
                                         return 1;
                                     })
                             ).then(ClientCommandManager.literal("volume").executes(context -> {
-                                        context.getSource().sendFeedback(Text.literal("/yako volume \n changes the volume of the current profile \n volume can range from 0.01 to 100"));
+                                        context.getSource().sendFeedback(Text.literal("/yako volume <volume> \n changes the volume of the current profile \n volume can range from 0.01 to 100"));
+                                        return 1;
+                                    })
+                            ).then(ClientCommandManager.literal("rename").executes(context -> {
+                                        context.getSource().sendFeedback(Text.literal("/yako rename <profile> <name> \n changes the name of a profile"));
                                         return 1;
                                     })
                             )
