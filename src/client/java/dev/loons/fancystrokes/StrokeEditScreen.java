@@ -1,6 +1,7 @@
 package dev.loons.fancystrokes;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -24,6 +25,11 @@ public class StrokeEditScreen extends Screen {
     private int outlinePanelX, outlinePanelY, outlinePanelWidth, outlinePanelHeight;
     private int textPanelX, textPanelY, textPanelWidth, textPanelHeight;
     private int generalPanelX, generalPanelY, generalPanelWidth, generalPanelHeight;
+    int panelSpacing;
+    int buttonWidth;
+    int buttonHeight;
+    int pageButtonWidth;
+    int pageButtonHeight;
 
     // General widget parameters
     private int fieldWidth = 150;
@@ -114,23 +120,82 @@ public class StrokeEditScreen extends Screen {
         this.addDrawableChild(doneButton);
     }
 
+    @Override
+    public void resize(MinecraftClient client, int width, int height) {
+        super.resize(client, width, height);
+    }
+
+    private void calculateDynamicDimensions() {
+        int screenW = this.width;
+        int screenH = this.height;
+
+        double uiWidthPercentage = 0.9;
+        int effectiveUIWidth = (int) (screenW * uiWidthPercentage);
+
+        int maxFieldWidth=200;
+        int maxFieldHeight=20;
+        //int maxButtonWidth=180;
+        //int maxButtonHeight=30;
+
+        int panelCount = 3;
+        int minPanelWidth = 100;
+        int minPanelHeight = 150;
+
+        panelSpacing = (int) (screenW * 0.02);
+        if (panelSpacing < 10) panelSpacing = 10;
+
+        generalPanelWidth = (effectiveUIWidth - (panelSpacing * (panelCount - 1))) / panelCount;
+        if (generalPanelWidth < minPanelWidth) generalPanelWidth = minPanelWidth;
+        if (generalPanelWidth > maxFieldWidth) generalPanelWidth = maxFieldWidth;
+
+        fillColorPanelWidth = generalPanelWidth;
+        outlinePanelWidth = generalPanelWidth;
+        textPanelWidth = generalPanelWidth;
+
+        fieldHeight = (int) (screenH * 0.06);
+        if (fieldHeight < 15) fieldHeight = 15;
+        if (fieldHeight > maxFieldHeight) fieldHeight = maxFieldHeight;
+
+        fieldWidth = generalPanelWidth - (int)(generalPanelWidth * 0.12);
+        if (fieldWidth < 80) fieldWidth = 80;
+        if (fieldWidth > maxFieldWidth) fieldWidth = maxFieldWidth;
+
+        generalPanelHeight = (fieldHeight + 5) * 8 + 20;
+        //if (generalPanelHeight < minPanelHeight) generalPanelHeight = minPanelHeight;
+        fillColorPanelHeight = generalPanelHeight;
+        outlinePanelHeight = generalPanelHeight;
+        textPanelHeight = generalPanelHeight;
+
+        int totalWidthNeeded = (generalPanelWidth) * panelCount + (panelSpacing * (panelCount - 1));
+        int startX = (screenW - totalWidthNeeded) / 2;
+        int verticalOffsetForCentering = (screenH - generalPanelHeight) / 2;
+
+        generalPanelX = startX;
+        generalPanelY = verticalOffsetForCentering;
+
+        fillColorPanelX = startX;
+        fillColorPanelY = verticalOffsetForCentering;
+
+        outlinePanelX = fillColorPanelX + fillColorPanelWidth + panelSpacing;
+        outlinePanelY = verticalOffsetForCentering;
+
+        textPanelX = outlinePanelX + outlinePanelWidth + panelSpacing;
+        textPanelY = verticalOffsetForCentering;
+
+        buttonWidth = (int) (screenW * 0.1);
+        if (buttonWidth < 100) buttonWidth = 100;
+        buttonHeight = (int) (screenH * 0.04);
+        if (buttonHeight < 20) buttonHeight = 20;
+
+        pageButtonWidth = (int) (screenW * 0.03);
+        if (pageButtonWidth < 20) pageButtonWidth = 20;
+        pageButtonHeight = buttonHeight;
+    }
+
     // general settings and statistic
     public void setPage1(){
         // Calculate panel dimensions and positions
-        int panelCount = 3;
-        int panelSpacing = 20;
-        int panelHeight = 2 * (fieldHeight + 5) * 3 + 20 + 20 + 30 + 30;
-        int titleOffset = 20;
-
-        int totalWidthNeeded = (fieldWidth + 50) * panelCount + (panelSpacing * (panelCount - 1));
-        int startX = (this.width - totalWidthNeeded) / 2;
-        int panelStartYOffset = this.height / 2 - (panelHeight + titleOffset) / 2;
-
-        // General Settings Panel
-        generalPanelX = panelSpacing;
-        generalPanelY = panelStartYOffset + titleOffset;
-        generalPanelWidth = fieldWidth + 50;
-        generalPanelHeight = panelHeight;
+        calculateDynamicDimensions();
         addGeneralSettings(generalPanelX, generalPanelY, generalPanelWidth, generalPanelHeight);
 
         // Page Switch Button
@@ -146,34 +211,11 @@ public class StrokeEditScreen extends Screen {
     // page for color settings
     public void setPage2(){
         // Calculate panel dimensions and positions
-        int panelCount = 3;
-        int panelSpacing = 20;
-        int panelHeight = 2 * (fieldHeight + 5) * 3 + 20 + 20 + 30;
-        int titleOffset = 20;
-
-        int totalWidthNeeded = (fieldWidth + 50) * panelCount + (panelSpacing * (panelCount - 1));
-        int startX = (this.width - totalWidthNeeded) / 2;
-        int panelStartYOffset = this.height / 2 - (panelHeight + titleOffset) / 2;
+        calculateDynamicDimensions();
 
         // Fill Color Panel
-        fillColorPanelX = startX;
-        fillColorPanelY = panelStartYOffset + titleOffset;
-        fillColorPanelWidth = fieldWidth + 50;
-        fillColorPanelHeight = panelHeight;
         addFillColorSettings(fillColorPanelX, fillColorPanelY, fillColorPanelWidth, fillColorPanelHeight);
-
-        // Outline Color Panel
-        outlinePanelX = fillColorPanelX + fillColorPanelWidth + panelSpacing;
-        outlinePanelY = panelStartYOffset + titleOffset;
-        outlinePanelWidth = fieldWidth + 50;
-        outlinePanelHeight = panelHeight;
         addOutlineColorSettings(outlinePanelX, outlinePanelY, outlinePanelWidth, outlinePanelHeight);
-
-        // Text Color Panel
-        textPanelX = outlinePanelX + outlinePanelWidth + panelSpacing;
-        textPanelY = panelStartYOffset + titleOffset;
-        textPanelWidth = fieldWidth + 50;
-        textPanelHeight = panelHeight;
         addTextColorSettings(textPanelX, textPanelY, textPanelWidth, textPanelHeight);
 
         // Page Switch Button
@@ -680,20 +722,52 @@ public class StrokeEditScreen extends Screen {
 
         // Render preview strokes
         int drawX = (outlinePanelX+outlinePanelWidth/2);
-        int drawY = outlinePanelY-60;
+        int drawY = (int) (this.height * 0.05);
+        //if (drawY < 20) drawY = 20;
         int drawWidth = 20;
         int drawHeight = 20;
 
-        FancyStrokesRenderer.drawRoundedRect(context, drawX-40, drawY, drawWidth, drawHeight, targetStroke.getRoundness(), targetStroke.getColor());
-        FancyStrokesRenderer.drawRoundedOutline(context, drawX-40, drawY, drawWidth, drawHeight, targetStroke.getRoundness(), targetStroke.getOutlineColor());
+        FancyStrokesRenderer.drawRoundedRect(context, drawX-60, drawY, drawWidth, drawHeight, targetStroke.getRoundness(), targetStroke.getColor());
+        FancyStrokesRenderer.drawRoundedOutline(context, drawX-60, drawY, drawWidth, drawHeight, targetStroke.getRoundness(), targetStroke.getOutlineColor());
+        if (targetStroke.isShowKeybindText()) {
+            String textToShow = targetStroke.getKeystrokeText();
 
-        FancyStrokesRenderer.drawRoundedRect(context, drawX+20, drawY, drawWidth, drawHeight, targetStroke.getRoundness(), targetStroke.getPressedColor());
-        FancyStrokesRenderer.drawRoundedOutline(context, drawX+20, drawY, drawWidth, drawHeight, targetStroke.getRoundness(), targetStroke.getPressedOutlineColor());
+            if(textToShow==null){
+                textToShow = targetStroke.getKeyTextForInputType();
+            } else if(textToShow.isBlank()){
+                textToShow = targetStroke.getKeyTextForInputType();
+            }
+            if (!textToShow.isEmpty()) {
+                TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
+                double offsetY = (double) (drawHeight - textRenderer.fontHeight) / 2;
+                int centerX = (int) Math.round(drawX-60 + (float) drawWidth / 2);
+                int centerY = drawY + (int) Math.round(offsetY);
+                context.drawCenteredTextWithShadow(textRenderer, Text.literal(textToShow), centerX, centerY, targetStroke.getTextColor());
+            }
+        }
+
+        FancyStrokesRenderer.drawRoundedRect(context, drawX+40, drawY, drawWidth, drawHeight, targetStroke.getRoundness(), targetStroke.getPressedColor());
+        FancyStrokesRenderer.drawRoundedOutline(context, drawX+40, drawY, drawWidth, drawHeight, targetStroke.getRoundness(), targetStroke.getPressedOutlineColor());
+        if (targetStroke.isShowKeybindText()) {
+            String textToShow = targetStroke.getKeystrokeText();
+
+            if(textToShow==null){
+                textToShow = targetStroke.getKeyTextForInputType();
+            } else if(textToShow.isBlank()){
+                textToShow = targetStroke.getKeyTextForInputType();
+            }
+            if (!textToShow.isEmpty()) {
+                TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
+                double offsetY = (double) (drawHeight - textRenderer.fontHeight) / 2;
+                int centerX = (int) Math.round(drawX+40 + (float) drawWidth / 2);
+                int centerY = drawY + (int) Math.round(offsetY);
+                context.drawCenteredTextWithShadow(textRenderer, Text.literal(textToShow), centerX, centerY, targetStroke.getPressedTextColor());
+            }
+        }
 
         super.render(context, mouseX, mouseY, delta);
 
         context.drawText(this.textRenderer, this.title, this.width / 2 - this.textRenderer.getWidth(this.title) / 2, 20, 0xFFFFFFFF, true);
-        context.drawText(this.textRenderer, "Editing: " + targetStroke.getMessage().getString(), this.width / 2 - this.textRenderer.getWidth("Editing: " + targetStroke.getMessage().getString()) / 2, 40, 0xFFFFFF00, true);
     }
 
     /**
