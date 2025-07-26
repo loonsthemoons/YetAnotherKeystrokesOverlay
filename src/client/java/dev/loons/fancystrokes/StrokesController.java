@@ -149,7 +149,7 @@ public class StrokesController {
                                 }
                                 return 1;
                             }))).then(ClientCommandManager.literal("help").executes(context ->{
-                                context.getSource().sendFeedback(Text.literal("Help command options: \n list \n create \n remove \n set \n lettering \n settings \n sounds \n volume \n rename"));
+                                context.getSource().sendFeedback(Text.literal("Help command options: \n list \n create \n remove \n set \n lettering \n settings \n sounds \n volume \n rename \n reset"));
                                 return 1;
                     }).then(ClientCommandManager.literal("list").executes(context ->{
                                 context.getSource().sendFeedback(Text.literal("/yako list \n shows list of all profiles"));
@@ -185,6 +185,10 @@ public class StrokesController {
                                     })
                             ).then(ClientCommandManager.literal("rename").executes(context -> {
                                         context.getSource().sendFeedback(Text.literal("/yako rename <profile> <name> \n changes the name of a profile"));
+                                        return 1;
+                                    })
+                            ).then(ClientCommandManager.literal("reset").executes(context -> {
+                                        context.getSource().sendFeedback(Text.literal("/yako reset \n resets the entire config"));
                                         return 1;
                                     })
                             )
