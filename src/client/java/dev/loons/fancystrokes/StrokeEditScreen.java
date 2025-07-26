@@ -134,12 +134,9 @@ public class StrokeEditScreen extends Screen {
 
         int maxFieldWidth=200;
         int maxFieldHeight=20;
-        //int maxButtonWidth=180;
-        //int maxButtonHeight=30;
 
         int panelCount = 3;
         int minPanelWidth = 100;
-        int minPanelHeight = 150;
 
         panelSpacing = (int) (screenW * 0.02);
         if (panelSpacing < 10) panelSpacing = 10;
@@ -161,7 +158,6 @@ public class StrokeEditScreen extends Screen {
         if (fieldWidth > maxFieldWidth) fieldWidth = maxFieldWidth;
 
         generalPanelHeight = (fieldHeight + 5) * 8 + 20;
-        //if (generalPanelHeight < minPanelHeight) generalPanelHeight = minPanelHeight;
         fillColorPanelHeight = generalPanelHeight;
         outlinePanelHeight = generalPanelHeight;
         textPanelHeight = generalPanelHeight;
@@ -723,7 +719,6 @@ public class StrokeEditScreen extends Screen {
         // Render preview strokes
         int drawX = (outlinePanelX+outlinePanelWidth/2);
         int drawY = (int) (this.height * 0.05);
-        //if (drawY < 20) drawY = 20;
         int drawWidth = 20;
         int drawHeight = 20;
 
