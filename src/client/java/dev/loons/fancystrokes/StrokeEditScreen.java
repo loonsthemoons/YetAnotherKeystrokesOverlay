@@ -11,6 +11,8 @@ import net.minecraft.client.toast.SystemToast;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.ColorHelper;
 
+import java.util.Objects;
+
 /**
  * A screen for editing the properties of a single {@link Strokes} object.
  * This screen provides sliders for color adjustments, toggles for outlines and text,
@@ -643,12 +645,18 @@ public class StrokeEditScreen extends Screen {
 
         displayTextInput = new TextFieldWidget(textRenderer, elementStartX, currentY, fieldWidth, fieldHeight, Text.literal("Stroke Text Button"));
         displayTextInput.setPlaceholder(Text.literal("Edit Unpressed Text"));
+        if(targetStroke.getKeystrokeText()!=null && !Objects.equals(targetStroke.getKeyTextForInputType(), targetStroke.getKeystrokeText())){
+            displayTextInput.setText(targetStroke.getKeystrokeText());
+        }
         displayTextInput.setChangedListener(targetStroke::setKeystrokeText);
         this.addDrawableChild(displayTextInput);
         currentY += fieldHeight + 5;
 
         pressedDisplayTextInput = new TextFieldWidget(textRenderer, elementStartX, currentY, fieldWidth, fieldHeight, Text.literal("Stroke Text Button"));
         pressedDisplayTextInput.setPlaceholder(Text.literal("Edit Pressed Text"));
+        if(targetStroke.getPressedKeystrokeText()!=null && !Objects.equals(targetStroke.getKeyTextForInputType(), targetStroke.getPressedKeystrokeText())){
+            pressedDisplayTextInput.setText(targetStroke.getPressedKeystrokeText());
+        }
         pressedDisplayTextInput.setChangedListener(targetStroke::setPressedKeystrokeText);
         this.addDrawableChild(pressedDisplayTextInput);
     }
@@ -714,7 +722,6 @@ public class StrokeEditScreen extends Screen {
         specificInstanceText = new TextLabelWidget(elementStartX, currentY, fieldWidth, Text.literal("Specific Instance: " + structure.getProfileStatistics().getSpecificInstancePresses(currentInputTypeCycling)));
         this.addDrawableChild(specificInstanceText);
         currentY += fieldHeight;
-
     }
 
     private void removeGeneralSettings(){
@@ -738,6 +745,8 @@ public class StrokeEditScreen extends Screen {
         this.remove(rightSelector);
         this.remove(specificConfigText);
         this.remove(specificInstanceText);
+        this.remove(currentInputType);
+        this.remove(instanceStatisticsText);
     }
 
 

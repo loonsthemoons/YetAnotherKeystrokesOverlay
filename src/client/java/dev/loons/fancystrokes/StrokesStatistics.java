@@ -52,4 +52,5 @@ public class StrokesStatistics {
     public Map<InputType, Long> getKeypressCounter() {
         return keypressCounter;
     }
+
 }

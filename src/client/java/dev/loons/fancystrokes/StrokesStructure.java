@@ -4,6 +4,7 @@ import net.minecraft.client.option.KeyBinding;
 import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.Vec3d;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import static dev.loons.fancystrokes.Strokes.InputType;
@@ -36,7 +37,9 @@ public class StrokesStructure {
     private boolean previousSoundState=false;
     private StrokesStatistics profileStatistics;
 
-    public StrokesStructure(){}
+    public StrokesStructure(){
+        this.profileStatistics = new StrokesStatistics(new HashMap<>(), 0L);
+    }
 
     /**
      * Initializes a set of default keystrokes for WASD, RMB & LMB
