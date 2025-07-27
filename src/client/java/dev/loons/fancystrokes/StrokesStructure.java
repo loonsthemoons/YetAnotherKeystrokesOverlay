@@ -31,6 +31,7 @@ public class StrokesStructure {
     private String soundProfile="linear";
     private float volume=1.0f;
     private boolean didPopupShow=false;
+    private boolean previousSoundState=false;
 
     public StrokesStructure(){}
 
@@ -197,6 +198,8 @@ public class StrokesStructure {
     public void setVolume(float volume) {this.volume = volume;}
     public boolean isDidPopupShow(){return didPopupShow;}
     public void setDidPopupShow(boolean didPopupShow){this.didPopupShow = didPopupShow;}
+    public boolean getPreviousSoundState(){return previousSoundState;}
+    public void setPreviousSoundState(boolean previousSoundState){this.previousSoundState = previousSoundState;}
 
     public void letteringOption(Boolean letteringOption){
         this.letteringOption = letteringOption;

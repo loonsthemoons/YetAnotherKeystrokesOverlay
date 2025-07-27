@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.Text;
@@ -24,6 +25,8 @@ public class StrokesController {
     private KeyBinding disableKeystrokes;
     private StrokeOptions menuScreen;
     private ArrayList<StrokesStructure> profiles;
+    private boolean lastKeysoundStatus=false;
+    private boolean disabledStatus=false;
 
     /**
      * Constructs a new StrokesController.
@@ -54,7 +57,6 @@ public class StrokesController {
     private void buildController(){
         ClientTickEvents.END_CLIENT_TICK.register(minecraftClient -> {
             assert minecraftClient.player != null;
-//            ArrayList<Strokes> strokesToRender = structure.getStrokes();
             ArrayList<Strokes> strokesToRender = strokesView.findActiveStructure(profiles).getStrokes();
 
             for(Strokes strokes : strokesToRender){
@@ -76,7 +78,17 @@ public class StrokesController {
             }
 
             while (disableKeystrokes.wasPressed()){
-                structure.disableKeystrokes();
+                disabledStatus=!disabledStatus;
+                for(StrokesStructure s : profiles){
+                    s.disableKeystrokes();
+                    if(disabledStatus){
+                        s.setPreviousSoundState(s.getKeypressSound());
+                        s.keypressSound(false);
+                    } else {
+                        s.keypressSound(s.getPreviousSoundState());
+                    }
+
+                }
             }
         });
 
