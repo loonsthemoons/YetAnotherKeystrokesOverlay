@@ -226,12 +226,6 @@ public class StrokesStructure {
         }
     }
 
-    public void setOutlineStatus(boolean status){
-        for (Strokes s : strokes){
-            s.setOutlineStatus(true);
-        }
-    }
-
     @Override
     public String toString() {
         return profileName;

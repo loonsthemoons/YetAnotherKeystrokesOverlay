@@ -106,13 +106,10 @@ public class YetAnotherKeystrokesModClient implements ClientModInitializer {
 		default2.setProfileName("Default2");
 		default3.setProfileName("Default3");
 		default1.initializeDefaultStrokes(ColorHelper.Argb.getArgb(255, 60, 60, 60), ColorHelper.Argb.getArgb(255, 230, 230, 230),ColorHelper.Argb.getArgb(255, 255, 255, 255),ColorHelper.Argb.getArgb(255, 150, 200, 255),ColorHelper.Argb.getArgb(255, 255, 255, 255),ColorHelper.Argb.getArgb(255, 150, 200, 255),4);
-		default1.setOutlineStatus(true);
 		default2.initializeDefaultStrokes(ColorHelper.Argb.getArgb(255, 255, 200, 255),ColorHelper.Argb.getArgb(255, 220, 255, 220),ColorHelper.Argb.getArgb(255, 220, 240, 255),ColorHelper.Argb.getArgb(255, 150, 150, 150),ColorHelper.Argb.getArgb(255, 220, 255, 220),ColorHelper.Argb.getArgb(255, 255, 200, 255),8);
 		default2.letteringOption(true);
 		default2.keypressSound(true);
-		default2.setOutlineStatus(true);
 		default3.initializeDefaultStrokes(ColorHelper.Argb.getArgb(155, 0, 0, 0),ColorHelper.Argb.getArgb(155, 150, 50, 50),ColorHelper.Argb.getArgb(255, 100, 50, 50),ColorHelper.Argb.getArgb(255, 0, 0, 0),ColorHelper.Argb.getArgb(255, 255, 90, 90),ColorHelper.Argb.getArgb(255, 255, 255, 255),0);
-		default3.setOutlineStatus(true);
 		default3.soundProfile("tactile");
 		default3.keypressSound(true);
 		default1.setActive();

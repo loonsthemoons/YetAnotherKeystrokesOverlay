@@ -22,7 +22,6 @@ public class Strokes extends ClickableWidget {
     private int textColor;
     private int pressedTextColor;
     private int roundness;
-    private boolean outlineStatus = false;
     private boolean isVisible = true;
     private InputType inputType;
     private boolean isSelected = false;
@@ -129,9 +128,8 @@ public class Strokes extends ClickableWidget {
             int alpha = (textColorToUse >> 24) & 0xFF;
 
             FancyStrokesRenderer.drawRoundedRect(context, drawX, drawY, drawWidth, drawHeight, this.roundness, fillColorToUse);
-            if (outlineStatus) {
-                FancyStrokesRenderer.drawRoundedOutline(context, drawX, drawY, drawWidth, drawHeight, this.roundness, outlineColorToUse);
-            }
+            FancyStrokesRenderer.drawRoundedOutline(context, drawX, drawY, drawWidth, drawHeight, this.roundness, outlineColorToUse);
+
 
             if (this.isHovered(mouseX, mouseY) || this.isSelected) {
                 FancyStrokesRenderer.drawRoundedOutline(context, drawX - 1, drawY - 1, drawWidth + 2, drawHeight + 2, this.roundness + 1, 0xFFFFFFFF);
@@ -208,8 +206,6 @@ public class Strokes extends ClickableWidget {
     public boolean isHovered(int mouseX, int mouseY){return this.active && this.visible && mouseX >= this.getX() && mouseX < this.getX() + this.getWidth() && mouseY >= this.getY() && mouseY < this.getY() + this.getHeight();}
     public boolean isSelected() {return isSelected;}
     public void setSelected(boolean selected) {isSelected = selected;}
-    public boolean getOutlineStatus() {return outlineStatus;}
-    public void setOutlineStatus(boolean outlineStatus) {this.outlineStatus = outlineStatus;}
     public int getTextColor() { return textColor; }
     public void setTextColor(int textColor) { this.textColor = textColor; }
     public int getPressedTextColor(){return pressedTextColor;}

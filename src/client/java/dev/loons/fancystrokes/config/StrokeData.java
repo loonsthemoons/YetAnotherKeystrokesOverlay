@@ -22,7 +22,6 @@ public class StrokeData {
     public int width;
     public int height;
     public int roundness;
-    public boolean outlineStatus;
     public String keystrokeText;
     public String pressedKeystrokeText;
 
@@ -52,7 +51,6 @@ public class StrokeData {
         this.width = stroke.getWidth();
         this.height = stroke.getHeight();
         this.roundness = stroke.getRoundness();
-        this.outlineStatus = stroke.getOutlineStatus();
         this.keystrokeText = stroke.getKeystrokeText();
         if(this.keystrokeText==null) this.keystrokeText=stroke.getKeyTextForInputType();
         this.pressedKeystrokeText = stroke.getPressedKeystrokeText();
@@ -79,7 +77,6 @@ public class StrokeData {
                 inputType,
                 roundness
         );
-        newStroke.setOutlineStatus(this.outlineStatus);
         newStroke.setKeystrokeText(this.keystrokeText);
         newStroke.setPressedKeystrokeText(this.pressedKeystrokeText);
         return newStroke;
@@ -106,7 +103,6 @@ public class StrokeData {
         json.addProperty("width", this.width);
         json.addProperty("height", this.height);
         json.addProperty("roundness", this.roundness);
-        json.addProperty("outlineStatus", this.outlineStatus);
         json.addProperty("keystrokeText", this.keystrokeText);
         json.addProperty("pressedKeystrokeText", this.pressedKeystrokeText);
         return json;
@@ -138,7 +134,6 @@ public class StrokeData {
         this.width = json.get("width").getAsInt();
         this.height = json.get("height").getAsInt();
         this.roundness = json.get("roundness").getAsInt();
-        this.outlineStatus = json.get("outlineStatus").getAsBoolean();
         this.keystrokeText = json.get("keystrokeText").getAsString();
         this.pressedKeystrokeText = json.get("pressedKeystrokeText").getAsString();
     }

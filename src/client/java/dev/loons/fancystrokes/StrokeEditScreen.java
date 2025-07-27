@@ -84,7 +84,6 @@ public class StrokeEditScreen extends Screen {
     private ButtonWidget resetButton;
     private ButtonWidget inputTypeCycleButton;
     private SliderWidget roundnessSlider;
-    private ButtonWidget outlinesButton;
     private TextFieldWidget displayTextInput;
     private TextFieldWidget pressedDisplayTextInput;
 
@@ -565,7 +564,6 @@ public class StrokeEditScreen extends Screen {
             for(Strokes strokes : structure.getStrokes()){
                 strokes.setColor(targetStroke.getColor());
                 strokes.setPressedColor(targetStroke.getPressedColor());
-                strokes.setOutlineStatus(targetStroke.getOutlineStatus());
                 strokes.setOutlineColor(targetStroke.getOutlineColor());
                 strokes.setPressedOutlineColor(targetStroke.getPressedOutlineColor());
                 strokes.setRoundness(targetStroke.getRoundness());
@@ -596,14 +594,6 @@ public class StrokeEditScreen extends Screen {
             cycleInputType(1);
         }).dimensions(elementStartX, currentY, fieldWidth, fieldHeight).build();
         this.addDrawableChild(inputTypeCycleButton);
-        currentY += fieldHeight + 5;
-
-        // Outlines Button
-        outlinesButton = ButtonWidget.builder(Text.literal("Outlines: " + targetStroke.getOutlineStatus()), (button) -> {
-            targetStroke.setOutlineStatus(!targetStroke.getOutlineStatus());
-            outlinesButton.setMessage(Text.literal("Outlines: " + targetStroke.getOutlineStatus()));
-        }).dimensions(elementStartX, currentY, fieldWidth, fieldHeight).build();
-        this.addDrawableChild(outlinesButton);
         currentY += fieldHeight + 5;
 
         // Roundness Slider
@@ -637,7 +627,6 @@ public class StrokeEditScreen extends Screen {
         this.remove(applyGlobalButton);
         this.remove(resetButton);
         this.remove(inputTypeCycleButton);
-        this.remove(outlinesButton);
         this.remove(roundnessSlider);
         this.remove(displayTextInput);
         this.remove(pressedDisplayTextInput);
