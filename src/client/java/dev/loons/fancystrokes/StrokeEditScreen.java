@@ -101,11 +101,13 @@ public class StrokeEditScreen extends Screen {
     private TextLabelWidget seperatorLine1;
     private TextLabelWidget seperatorLine2;
     private TextLabelWidget seperatorLine3;
-    private TextLabelWidget seperatorLine4;
     private ButtonWidget leftSelector;
     private ButtonWidget rightSelector;
+    private TextLabelWidget currentInputType;
     private TextLabelWidget specificConfigText;
     private TextLabelWidget specificInstanceText;
+    private int currentCycleIndex;
+    private Strokes.InputType currentInputTypeCycling;
 
     // Done Button
     private ButtonWidget doneButton;
@@ -136,6 +138,8 @@ public class StrokeEditScreen extends Screen {
     @Override
     protected void init() {
         super.init();
+        currentCycleIndex = targetStroke.getInputType().ordinal();
+        currentInputTypeCycling = targetStroke.getInputType();
         setPage1();
         // Done Button
         doneButton = ButtonWidget.builder(Text.literal("Done"), (button) -> {
@@ -661,7 +665,7 @@ public class StrokeEditScreen extends Screen {
         this.addDrawableChild(overallStatisticsText);
         currentY += fieldHeight;
 
-        configStatisticsText = new TextLabelWidget(elementStartX, currentY, fieldWidth, Text.literal("Lifetime: 10 mil"));
+        configStatisticsText = new TextLabelWidget(elementStartX, currentY, fieldWidth, Text.literal("Lifetime: " + structure.getProfileStatistics().getLifetimePresses()));
         this.addDrawableChild(configStatisticsText);
         currentY += fieldHeight;
 
@@ -693,23 +697,24 @@ public class StrokeEditScreen extends Screen {
         individualStatisticsText = new TextLabelWidget(elementStartX, currentY, fieldWidth, Text.literal("Individual Statistics"));
         this.addDrawableChild(individualStatisticsText);
         leftSelector = ButtonWidget.builder(Text.literal("<"), (button -> {
-            //
+            cycleCurrentInputType(-1);
         })).dimensions(this.width / 2 - 70, currentY, 15, 15).build();
         this.addDrawableChild(leftSelector);
         rightSelector = ButtonWidget.builder(Text.literal(">"), (button -> {
-            //
+            cycleCurrentInputType(1);
         })).dimensions(this.width / 2 + 55, currentY, 15, 15).build();
         this.addDrawableChild(rightSelector);
         currentY += fieldHeight;
-        specificConfigText = new TextLabelWidget(elementStartX, currentY, fieldWidth, Text.literal("Specific Config: "));
+        currentInputType = new TextLabelWidget(elementStartX, currentY, fieldWidth, Text.literal("Input Type: " + targetStroke.getInputType()));
+        this.addDrawableChild(currentInputType);
+        currentY += fieldHeight;
+        specificConfigText = new TextLabelWidget(elementStartX, currentY, fieldWidth, Text.literal("Specific Config: " + structure.getProfileStatistics().getSpecificLifetimePresses(currentInputTypeCycling)));
         this.addDrawableChild(specificConfigText);
         currentY += fieldHeight;
-        specificInstanceText = new TextLabelWidget(elementStartX, currentY, fieldWidth, Text.literal("Specific Instance: "));
+        specificInstanceText = new TextLabelWidget(elementStartX, currentY, fieldWidth, Text.literal("Specific Instance: " + structure.getProfileStatistics().getSpecificInstancePresses(currentInputTypeCycling)));
         this.addDrawableChild(specificInstanceText);
         currentY += fieldHeight;
-        seperatorLine4 = new TextLabelWidget(elementStartX, currentY, fieldWidth, Text.literal("––––––––––––––––––––"));
-        this.addDrawableChild(seperatorLine4);
-        currentY += (int) (fieldHeight*0.6);
+
     }
 
     private void removeGeneralSettings(){
@@ -820,6 +825,22 @@ public class StrokeEditScreen extends Screen {
         Strokes.InputType newType = types[newIndex];
         targetStroke.setInputType(newType);
         inputTypeCycleButton.setMessage(Text.literal("Input Type: " + newType.name()));
+    }
+
+    private void cycleCurrentInputType(int direction){
+        Strokes.InputType[] types = Strokes.InputType.values();
+        currentCycleIndex = (currentCycleIndex + direction);
+
+        if (currentCycleIndex < 0) {
+            currentCycleIndex = types.length + currentCycleIndex;
+        }
+        currentCycleIndex %= types.length;
+
+        Strokes.InputType newType = types[currentCycleIndex];
+        currentInputTypeCycling = newType;
+        currentInputType.setMessage(Text.literal("Input Type: " + newType.name()));
+        specificConfigText.setMessage(Text.literal("Specific Config: " + structure.getProfileStatistics().getSpecificLifetimePresses(currentInputTypeCycling)));
+        specificInstanceText.setMessage(Text.literal("Specific Instance: " + structure.getProfileStatistics().getSpecificInstancePresses(currentInputTypeCycling)));
     }
 
     /**

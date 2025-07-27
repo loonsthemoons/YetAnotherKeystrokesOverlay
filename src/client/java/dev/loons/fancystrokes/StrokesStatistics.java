@@ -23,6 +23,27 @@ public class StrokesStatistics {
 
     public long getTotalPressCounter() {return totalPressCounter;}
     public long getOldTotalPresses() {return oldTotalPresses;}
+    public long getLifetimePresses(){return totalPressCounter+oldTotalPresses;}
+    public long getSpecificLifetimePresses(InputType inputType){
+        long currentCount = 0L;
+        if (this.keypressCounter != null) {
+            currentCount = this.keypressCounter.getOrDefault(inputType, 0L);
+        }
+
+        long oldCount = 0L;
+        if (this.oldKeypressCounter != null) {
+            oldCount = this.oldKeypressCounter.getOrDefault(inputType, 0L);
+        }
+
+        return currentCount + oldCount;
+    }
+    public long getSpecificInstancePresses(InputType inputType){
+        long currentCount = 0L;
+        if (this.keypressCounter != null) {
+            currentCount = this.keypressCounter.getOrDefault(inputType, 0L);
+        }
+        return currentCount;
+    }
 
     public Map<InputType, Long> getOldKeypressCounter() {
         return oldKeypressCounter;

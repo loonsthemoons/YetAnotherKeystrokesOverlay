@@ -7,7 +7,6 @@ import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallba
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.text.Text;
-import org.apache.commons.lang3.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,7 +25,6 @@ public class StrokesController {
     private StrokeOptions menuScreen;
     private ArrayList<StrokesStructure> profiles;
     private boolean disabledStatus=false;
-    private StrokesStatistics profileStatistics;
     private final Map<Strokes.InputType, Boolean> previousKeyState = new HashMap<>();
 
     /**
@@ -44,14 +42,10 @@ public class StrokesController {
         this.menuScreen = menuScreen;
         this.keyBinding = keyBinding;
         this.disableKeystrokes = disableKeystrokes;
-        this.profileStatistics = new StrokesStatistics(new HashMap<>(), 0L);
-        for (StrokesStructure s : profiles){
-            s.setProfileStatistics(profileStatistics);
-        }
+
         for (Strokes.InputType type : Strokes.InputType.values()) {
             previousKeyState.put(type, false);
         }
-        // this.profileStatistics = new StrokesStatistics(loadedKeyPressCounts, loadedTotalPresses);
         structure.setControlKey(keyBinding);
         buildController();
 

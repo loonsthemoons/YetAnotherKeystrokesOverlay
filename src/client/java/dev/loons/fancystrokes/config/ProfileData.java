@@ -7,7 +7,9 @@ import dev.loons.fancystrokes.StrokesStructure;
 import dev.loons.fancystrokes.Strokes;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A data class representing the configurable properties of a single StrokesStructure (profile).
@@ -23,6 +25,8 @@ public class ProfileData {
     public float volume;
     public boolean didPopupShow;
     public boolean letteringOption;
+    public Map<Strokes.InputType, Long> keypressCount;
+    public long totalKeypressCount;
 
     /**
      * Default constructor for creating an empty ProfileData object.
@@ -47,6 +51,13 @@ public class ProfileData {
         this.didPopupShow = structure.isDidPopupShow();
         this.letteringOption = structure.getLetteringOption();
         this.strokes = new ArrayList<>();
+        if(structure.getProfileStatistics() != null){
+            this.keypressCount = structure.getProfileStatistics().getKeypressCounter();
+            this.totalKeypressCount = structure.getProfileStatistics().getLifetimePresses();
+        } else {
+            this.keypressCount = new HashMap<>();
+            this.totalKeypressCount = 0L;
+        }
         for (Strokes stroke : structure.getStrokes()) {
             this.strokes.add(new StrokeData(stroke));
         }
@@ -71,6 +82,7 @@ public class ProfileData {
         newStructure.setVolume(this.volume);
         newStructure.setDidPopupShow(this.didPopupShow);
         newStructure.setLetteringOption(this.letteringOption);
+        newStructure.setProfileStatistics(this.keypressCount, this.totalKeypressCount);
         for (StrokeData strokeData : this.strokes) {
             newStructure.addStroke(strokeData.toStroke());
         }
@@ -93,6 +105,17 @@ public class ProfileData {
         json.addProperty("didPopupShow", this.didPopupShow);
         json.addProperty("letteringOption", this.letteringOption);
 
+        if (this.keypressCount != null && !this.keypressCount.isEmpty()) {
+            JsonObject keypressCountJson = new JsonObject();
+            for (Map.Entry<Strokes.InputType, Long> entry : this.keypressCount.entrySet()) {
+                keypressCountJson.addProperty(entry.getKey().name(), entry.getValue());
+            }
+            json.add("keypressCount", keypressCountJson);
+        } else {
+            json.add("keypressCount", new JsonObject());
+        }
+        json.addProperty("totalKeypressCount", this.totalKeypressCount);
+
         JsonArray strokesArray = new JsonArray();
         for (StrokeData strokeData : this.strokes) {
             strokesArray.add(strokeData.getSerializedForm());
@@ -114,6 +137,8 @@ public class ProfileData {
             this.profileName = "Corrupted Profile";
             this.isActiveProfile = false;
             this.strokes = new ArrayList<>();
+            this.keypressCount = new HashMap<>();
+            this.totalKeypressCount = 0L;
             return;
         }
 
@@ -126,6 +151,20 @@ public class ProfileData {
         this.volume = json.has("volume") ? json.get("volume").getAsFloat() : 1.0f;
         this.didPopupShow = json.has("didPopupShow") && json.get("didPopupShow").getAsBoolean();
         this.letteringOption = json.has("letteringOption") && json.get("letteringOption").getAsBoolean();
+
+        this.keypressCount = new HashMap<>();
+        if (json.has("keypressCount") && json.get("keypressCount").isJsonObject()) {
+            JsonObject keypressCountJson = json.get("keypressCount").getAsJsonObject();
+            for (Map.Entry<String, JsonElement> entry : keypressCountJson.entrySet()) {
+                try {
+                    Strokes.InputType type = Strokes.InputType.valueOf(entry.getKey());
+                    this.keypressCount.put(type, entry.getValue().getAsLong());
+                } catch (IllegalArgumentException e) {
+                    System.err.println("Unknown InputType in saved data: " + entry.getKey() + ". Skipping.");
+                }
+            }
+        }
+        this.totalKeypressCount = json.has("totalKeypressCount") ? json.get("totalKeypressCount").getAsLong() : 0L;
 
         JsonElement strokesElement = json.get("strokes");
         if (strokesElement != null && strokesElement.isJsonArray()) {
