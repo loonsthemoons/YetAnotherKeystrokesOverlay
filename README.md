@@ -63,6 +63,7 @@ Use `/yako help` for command hints in-game. Here's what you can do:
 - `/yako set <name>` – Switch to a specific profile
 - `/yako remove <name>` – Delete the current profile (cannot delete the last one)
 - `/yako rename <profile> <name>` – Rename a profile
+- `/yako reset` – Resets the entire config
 
 ### Settings
 - `/yako settings` – Show all controls and interactions as a quick reference
@@ -89,9 +90,6 @@ Use `/yako help` for command hints in-game. Here's what you can do:
 
 - **Custom Input Types**  
   Instead of being limited to the existing Input types, add your own to track new keys!
-
-- **Scaling**  
-  Currently, the Keystroke menu is placed absolute, however this should be based on your Screen resolution, so that nothing gets cut off.
 
 - **Keypress Counter**  
   Ever wonder how many times you pressed a specific button? With this feature you would have an answer!
