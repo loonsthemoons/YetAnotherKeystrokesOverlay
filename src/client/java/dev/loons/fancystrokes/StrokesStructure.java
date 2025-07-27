@@ -4,6 +4,8 @@ import net.minecraft.client.option.KeyBinding;
 import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.Vec3d;
 import java.util.ArrayList;
+import java.util.Map;
+
 import static dev.loons.fancystrokes.Strokes.InputType;
 
 /**
@@ -32,6 +34,7 @@ public class StrokesStructure {
     private float volume=1.0f;
     private boolean didPopupShow=false;
     private boolean previousSoundState=false;
+    private StrokesStatistics profileStatistics;
 
     public StrokesStructure(){}
 
@@ -200,6 +203,10 @@ public class StrokesStructure {
     public void setDidPopupShow(boolean didPopupShow){this.didPopupShow = didPopupShow;}
     public boolean getPreviousSoundState(){return previousSoundState;}
     public void setPreviousSoundState(boolean previousSoundState){this.previousSoundState = previousSoundState;}
+    public StrokesStatistics getProfileStatistics() {return profileStatistics;}
+    public void setProfileStatistics(Map<InputType, Long> oldKeypressCounter, long oldTotalPresses){this.profileStatistics = new StrokesStatistics(oldKeypressCounter, oldTotalPresses);}
+    public void setProfileStatistics(StrokesStatistics s1){this.profileStatistics = s1;}
+
 
     public void letteringOption(Boolean letteringOption){
         this.letteringOption = letteringOption;
@@ -230,4 +237,5 @@ public class StrokesStructure {
     public String toString() {
         return profileName;
     }
+
 }

@@ -25,6 +25,8 @@ public class StrokeEditScreen extends Screen {
     private int outlinePanelX, outlinePanelY, outlinePanelWidth, outlinePanelHeight;
     private int textPanelX, textPanelY, textPanelWidth, textPanelHeight;
     private int generalPanelX, generalPanelY, generalPanelWidth, generalPanelHeight;
+    private int statisticPanelX, statisticPanelY, statisticPanelWidth, statisticPanelHeight;
+
     int panelSpacing;
     int buttonWidth;
     int buttonHeight;
@@ -86,6 +88,24 @@ public class StrokeEditScreen extends Screen {
     private SliderWidget roundnessSlider;
     private TextFieldWidget displayTextInput;
     private TextFieldWidget pressedDisplayTextInput;
+
+    // Statistics Widgets
+    private TextLabelWidget overallStatisticsText;
+    private TextLabelWidget configStatisticsText;
+    private TextLabelWidget instanceStatisticsText;
+    private TextLabelWidget top3Text;
+    private TextLabelWidget place1Text;
+    private TextLabelWidget place2Text;
+    private TextLabelWidget place3Text;
+    private TextLabelWidget individualStatisticsText;
+    private TextLabelWidget seperatorLine1;
+    private TextLabelWidget seperatorLine2;
+    private TextLabelWidget seperatorLine3;
+    private TextLabelWidget seperatorLine4;
+    private ButtonWidget leftSelector;
+    private ButtonWidget rightSelector;
+    private TextLabelWidget specificConfigText;
+    private TextLabelWidget specificInstanceText;
 
     // Done Button
     private ButtonWidget doneButton;
@@ -149,6 +169,7 @@ public class StrokeEditScreen extends Screen {
         if (generalPanelWidth < minPanelWidth) generalPanelWidth = minPanelWidth;
         if (generalPanelWidth > maxFieldWidth) generalPanelWidth = maxFieldWidth;
 
+        statisticPanelWidth = generalPanelWidth;
         fillColorPanelWidth = generalPanelWidth;
         outlinePanelWidth = generalPanelWidth;
         textPanelWidth = generalPanelWidth;
@@ -162,6 +183,7 @@ public class StrokeEditScreen extends Screen {
         if (fieldWidth > maxFieldWidth) fieldWidth = maxFieldWidth;
 
         generalPanelHeight = (fieldHeight + 5) * 9 + 20;
+        statisticPanelHeight = generalPanelHeight;
         fillColorPanelHeight = generalPanelHeight;
         outlinePanelHeight = generalPanelHeight;
         textPanelHeight = generalPanelHeight;
@@ -172,6 +194,9 @@ public class StrokeEditScreen extends Screen {
 
         generalPanelX = startX;
         generalPanelY = verticalOffsetForCentering;
+
+        statisticPanelX = generalPanelX + generalPanelWidth + panelSpacing;
+        statisticPanelY = verticalOffsetForCentering;
 
         fillColorPanelX = startX;
         fillColorPanelY = verticalOffsetForCentering;
@@ -197,6 +222,7 @@ public class StrokeEditScreen extends Screen {
         // Calculate panel dimensions and positions
         calculateDynamicDimensions();
         addGeneralSettings(generalPanelX, generalPanelY, generalPanelWidth, generalPanelHeight);
+        addStatistic(statisticPanelX, statisticPanelY, statisticPanelWidth, statisticPanelHeight);
 
         // Page Switch Button
         rightPageButton = ButtonWidget.builder(Text.literal(">"), (button -> {
@@ -623,6 +649,69 @@ public class StrokeEditScreen extends Screen {
         this.addDrawableChild(pressedDisplayTextInput);
     }
 
+    private void addStatistic(int panelX, int panelY, int panelW, int panelH) {
+        int currentY = panelY+5;
+        int elementStartX = panelX + (panelW - fieldWidth) / 2;
+
+        // Title Overall Statistic
+        seperatorLine1 = new TextLabelWidget(elementStartX, currentY, fieldWidth, Text.literal("––––––––––––––––––––"));
+        this.addDrawableChild(seperatorLine1);
+        currentY += (int) (fieldHeight*0.6);
+        overallStatisticsText = new TextLabelWidget(elementStartX, currentY, fieldWidth, Text.literal("Overall Statistics"));
+        this.addDrawableChild(overallStatisticsText);
+        currentY += fieldHeight;
+
+        configStatisticsText = new TextLabelWidget(elementStartX, currentY, fieldWidth, Text.literal("Lifetime: 10 mil"));
+        this.addDrawableChild(configStatisticsText);
+        currentY += fieldHeight;
+
+        instanceStatisticsText = new TextLabelWidget(elementStartX, currentY, fieldWidth, Text.literal("Instance: " + structure.getProfileStatistics().getTotalPressCounter()));
+        this.addDrawableChild(instanceStatisticsText);
+        currentY += (int) (fieldHeight*0.6);
+
+        // Top 3 Statistic
+        seperatorLine2 = new TextLabelWidget(elementStartX, currentY, fieldWidth, Text.literal("––––––––––––––––––––"));
+        this.addDrawableChild(seperatorLine2);
+        currentY += (int) (fieldHeight*0.6);
+        top3Text = new TextLabelWidget(elementStartX, currentY, fieldWidth, Text.literal("Top 3"));
+        this.addDrawableChild(top3Text);
+        currentY += fieldHeight;
+        place1Text = new TextLabelWidget(elementStartX, currentY, fieldWidth, Text.literal("Place 1: W"));
+        this.addDrawableChild(place1Text);
+        currentY += fieldHeight;
+        place2Text = new TextLabelWidget(elementStartX, currentY, fieldWidth, Text.literal("Place 2: S"));
+        this.addDrawableChild(place2Text);
+        currentY += fieldHeight;
+        place3Text = new TextLabelWidget(elementStartX, currentY, fieldWidth, Text.literal("Place 3: LMB"));
+        this.addDrawableChild(place3Text);
+        currentY += (int) (fieldHeight*0.6);
+
+        // Individual Statistic
+        seperatorLine3 = new TextLabelWidget(elementStartX, currentY, fieldWidth, Text.literal("––––––––––––––––––––"));
+        this.addDrawableChild(seperatorLine3);
+        currentY += (int) (fieldHeight*0.6);
+        individualStatisticsText = new TextLabelWidget(elementStartX, currentY, fieldWidth, Text.literal("Individual Statistics"));
+        this.addDrawableChild(individualStatisticsText);
+        leftSelector = ButtonWidget.builder(Text.literal("<"), (button -> {
+            //
+        })).dimensions(this.width / 2 - 70, currentY, 15, 15).build();
+        this.addDrawableChild(leftSelector);
+        rightSelector = ButtonWidget.builder(Text.literal(">"), (button -> {
+            //
+        })).dimensions(this.width / 2 + 55, currentY, 15, 15).build();
+        this.addDrawableChild(rightSelector);
+        currentY += fieldHeight;
+        specificConfigText = new TextLabelWidget(elementStartX, currentY, fieldWidth, Text.literal("Specific Config: "));
+        this.addDrawableChild(specificConfigText);
+        currentY += fieldHeight;
+        specificInstanceText = new TextLabelWidget(elementStartX, currentY, fieldWidth, Text.literal("Specific Instance: "));
+        this.addDrawableChild(specificInstanceText);
+        currentY += fieldHeight;
+        seperatorLine4 = new TextLabelWidget(elementStartX, currentY, fieldWidth, Text.literal("––––––––––––––––––––"));
+        this.addDrawableChild(seperatorLine4);
+        currentY += (int) (fieldHeight*0.6);
+    }
+
     private void removeGeneralSettings(){
         this.remove(applyGlobalButton);
         this.remove(resetButton);
@@ -630,6 +719,20 @@ public class StrokeEditScreen extends Screen {
         this.remove(roundnessSlider);
         this.remove(displayTextInput);
         this.remove(pressedDisplayTextInput);
+        this.remove(overallStatisticsText);
+        this.remove(top3Text);
+        this.remove(individualStatisticsText);
+        this.remove(configStatisticsText);
+        this.remove(seperatorLine1);
+        this.remove(seperatorLine2);
+        this.remove(seperatorLine3);
+        this.remove(place1Text);
+        this.remove(place2Text);
+        this.remove(place3Text);
+        this.remove(leftSelector);
+        this.remove(rightSelector);
+        this.remove(specificConfigText);
+        this.remove(specificInstanceText);
     }
 
 
@@ -733,6 +836,7 @@ public class StrokeEditScreen extends Screen {
 
         if(page1){
             renderPanelWithTitle(context, generalPanelX, generalPanelY, generalPanelWidth, generalPanelHeight, Text.literal("General Settings"));
+            renderPanelWithTitle(context, statisticPanelX, statisticPanelY, statisticPanelWidth, statisticPanelHeight, Text.literal("Statistics"));
         } else {
             renderPanelWithTitle(context, fillColorPanelX, fillColorPanelY, fillColorPanelWidth, fillColorPanelHeight, Text.literal("Fill Color"));
             renderPanelWithTitle(context, outlinePanelX, outlinePanelY, outlinePanelWidth, outlinePanelHeight, Text.literal("Outline Color"));

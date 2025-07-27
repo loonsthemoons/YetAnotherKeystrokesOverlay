@@ -5,13 +5,13 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.Text;
-import org.lwjgl.glfw.GLFW;
+import org.apache.commons.lang3.ObjectUtils;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Manages the control logic for YAKO, handling key presses
@@ -25,8 +25,9 @@ public class StrokesController {
     private KeyBinding disableKeystrokes;
     private StrokeOptions menuScreen;
     private ArrayList<StrokesStructure> profiles;
-    private boolean lastKeysoundStatus=false;
     private boolean disabledStatus=false;
+    private StrokesStatistics profileStatistics;
+    private final Map<Strokes.InputType, Boolean> previousKeyState = new HashMap<>();
 
     /**
      * Constructs a new StrokesController.
@@ -43,7 +44,14 @@ public class StrokesController {
         this.menuScreen = menuScreen;
         this.keyBinding = keyBinding;
         this.disableKeystrokes = disableKeystrokes;
-
+        this.profileStatistics = new StrokesStatistics(new HashMap<>(), 0L);
+        for (StrokesStructure s : profiles){
+            s.setProfileStatistics(profileStatistics);
+        }
+        for (Strokes.InputType type : Strokes.InputType.values()) {
+            previousKeyState.put(type, false);
+        }
+        // this.profileStatistics = new StrokesStatistics(loadedKeyPressCounts, loadedTotalPresses);
         structure.setControlKey(keyBinding);
         buildController();
 
@@ -57,20 +65,34 @@ public class StrokesController {
     private void buildController(){
         ClientTickEvents.END_CLIENT_TICK.register(minecraftClient -> {
             assert minecraftClient.player != null;
-            ArrayList<Strokes> strokesToRender = strokesView.findActiveStructure(profiles).getStrokes();
+            StrokesStructure activeStructure = strokesView.findActiveStructure(profiles);
+            ArrayList<Strokes> strokesToRender = activeStructure.getStrokes();
 
             for(Strokes strokes : strokesToRender){
+                Strokes.InputType currentInputType = strokes.getInputType();
+                boolean isCurrentlyPressed = false;
+
                 switch(strokes.getInputType()){
-                    case FORWARD -> strokes.update(minecraftClient.options.forwardKey.isPressed());
-                    case LEFT -> strokes.update(minecraftClient.options.leftKey.isPressed());
-                    case BACK -> strokes.update(minecraftClient.options.backKey.isPressed());
-                    case RIGHT -> strokes.update(minecraftClient.options.rightKey.isPressed());
-                    case ATTACK -> strokes.update(minecraftClient.options.attackKey.isPressed());
-                    case USE -> strokes.update(minecraftClient.options.useKey.isPressed());
-                    case SNEAK -> strokes.update(minecraftClient.options.sneakKey.isPressed());
-                    case SPRINT -> strokes.update(minecraftClient.options.sprintKey.isPressed());
-                    case JUMP -> strokes.update(minecraftClient.options.jumpKey.isPressed());
+                    case FORWARD -> isCurrentlyPressed = minecraftClient.options.forwardKey.isPressed();
+                    case LEFT -> isCurrentlyPressed = minecraftClient.options.leftKey.isPressed();
+                    case BACK -> isCurrentlyPressed = minecraftClient.options.backKey.isPressed();
+                    case RIGHT -> isCurrentlyPressed = minecraftClient.options.rightKey.isPressed();
+                    case ATTACK -> isCurrentlyPressed = minecraftClient.options.attackKey.isPressed();
+                    case USE -> isCurrentlyPressed = minecraftClient.options.useKey.isPressed();
+                    case SNEAK -> isCurrentlyPressed = minecraftClient.options.sneakKey.isPressed();
+                    case SPRINT -> isCurrentlyPressed = minecraftClient.options.sprintKey.isPressed();
+                    case JUMP -> isCurrentlyPressed = minecraftClient.options.jumpKey.isPressed();
                 }
+                boolean wasPreviouslyPressed = previousKeyState.getOrDefault(currentInputType, false);
+                strokes.update(isCurrentlyPressed);
+                if (isCurrentlyPressed && !wasPreviouslyPressed) {
+                    if (activeStructure.getProfileStatistics() != null) {
+                        activeStructure.getProfileStatistics().increasePressCount(currentInputType);
+                    }
+                }
+                previousKeyState.put(currentInputType, isCurrentlyPressed);
+
+
             }
             while (keyBinding.wasPressed()) {
                 if(structure.getKeystrokesStatus())
