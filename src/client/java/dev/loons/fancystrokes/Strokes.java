@@ -29,7 +29,7 @@ public class Strokes extends ClickableWidget {
     private boolean isPressed = false;
     private boolean previousPress=false;
     private boolean showKeybindText = true;
-    private String keystrokeText;
+    private String keystrokeText=null;
     private boolean letteringOption=false;
     private boolean keypressSound=false;
     private String soundProfile="linear";

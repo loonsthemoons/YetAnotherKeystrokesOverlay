@@ -24,6 +24,7 @@ public class StrokeData {
     public int roundness;
     public boolean showKeybindText;
     public boolean outlineStatus;
+    public String keystrokeText;
 
     /**
      * Default constructor for creating an empty StrokeData object.
@@ -53,6 +54,8 @@ public class StrokeData {
         this.roundness = stroke.getRoundness();
         this.showKeybindText = stroke.isShowKeybindText();
         this.outlineStatus = stroke.getOutlineStatus();
+        this.keystrokeText = stroke.getKeystrokeText();
+        if(this.keystrokeText==null) this.keystrokeText=stroke.getKeyTextForInputType();
     }
 
     /**
@@ -77,6 +80,7 @@ public class StrokeData {
         );
         newStroke.setShowKeybindText(this.showKeybindText);
         newStroke.setOutlineStatus(this.outlineStatus);
+        newStroke.setKeystrokeText(this.keystrokeText);
         return newStroke;
     }
 
@@ -103,6 +107,7 @@ public class StrokeData {
         json.addProperty("roundness", this.roundness);
         json.addProperty("showKeybindText", this.showKeybindText);
         json.addProperty("outlineStatus", this.outlineStatus);
+        json.addProperty("keystrokeText", this.keystrokeText);
         return json;
     }
 
@@ -134,5 +139,6 @@ public class StrokeData {
         this.roundness = json.get("roundness").getAsInt();
         this.showKeybindText = json.get("showKeybindText").getAsBoolean();
         this.outlineStatus = json.get("outlineStatus").getAsBoolean();
+        this.keystrokeText = json.get("keystrokeText").getAsString();
     }
 }
