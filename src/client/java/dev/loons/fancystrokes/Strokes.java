@@ -19,8 +19,8 @@ public class Strokes extends ClickableWidget {
     private int pressedColor;
     private int outlineColor;
     private int pressedOutlineColor;
-    private int textColor = 0xFFFFFFFF;
-    private int pressedTextColor = 0xFFFFFFFF;
+    private int textColor;
+    private int pressedTextColor;
     private int roundness;
     private boolean outlineStatus = false;
     private boolean isVisible = true;
@@ -117,8 +117,7 @@ public class Strokes extends ClickableWidget {
      */
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        if(!this.isVisible){
-        } else {
+        if(!this.isVisible){} else {
             int drawX = this.getX();
             int drawY = this.getY();
             int drawWidth = this.getWidth();
@@ -126,6 +125,7 @@ public class Strokes extends ClickableWidget {
             int fillColorToUse = isPressed ? this.pressedColor : this.color;
             int outlineColorToUse = isPressed ? this.pressedOutlineColor : this.outlineColor;
             int textColorToUse = isPressed ? this.pressedTextColor : this.textColor;
+            int alpha = (textColorToUse >> 24) & 0xFF;
 
             FancyStrokesRenderer.drawRoundedRect(context, drawX, drawY, drawWidth, drawHeight, this.roundness, fillColorToUse);
             if (outlineStatus) {
@@ -136,21 +136,18 @@ public class Strokes extends ClickableWidget {
                 FancyStrokesRenderer.drawRoundedOutline(context, drawX - 1, drawY - 1, drawWidth + 2, drawHeight + 2, this.roundness + 1, 0xFFFFFFFF);
             }
 
-            if (this.showKeybindText) {
-                String textToShow = keystrokeText;
-
-                if(keystrokeText==null){
-                    textToShow = getKeyTextForInputType();
-                } else if(textToShow.isBlank()){
-                    textToShow = getKeyTextForInputType();
-                }
-                if (!textToShow.isEmpty()) {
-                    TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
-                    double offsetY = (double) (drawHeight - textRenderer.fontHeight) / 2;
-                    int centerX = (int) Math.round(drawX + (float) drawWidth / 2);
-                    int centerY = drawY + (int) Math.round(offsetY);
-                    context.drawCenteredTextWithShadow(textRenderer, Text.literal(textToShow), centerX, centerY, textColorToUse);
-                }
+            String textToShow = keystrokeText;
+            if (keystrokeText == null) {
+                textToShow = getKeyTextForInputType();
+            } else if (textToShow.isBlank()) {
+                textToShow = getKeyTextForInputType();
+            }
+            if (!textToShow.isEmpty() && alpha>3) {
+                TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
+                double offsetY = (double) (drawHeight - textRenderer.fontHeight) / 2;
+                int centerX = (int) Math.round(drawX + (float) drawWidth / 2);
+                int centerY = drawY + (int) Math.round(offsetY);
+                context.drawCenteredTextWithShadow(textRenderer, Text.literal(textToShow), centerX, centerY, textColorToUse);
             }
 
             super.render(context, mouseX, mouseY, delta);
@@ -212,8 +209,6 @@ public class Strokes extends ClickableWidget {
     public void setSelected(boolean selected) {isSelected = selected;}
     public boolean getOutlineStatus() {return outlineStatus;}
     public void setOutlineStatus(boolean outlineStatus) {this.outlineStatus = outlineStatus;}
-    public boolean isShowKeybindText() { return showKeybindText; }
-    public void setShowKeybindText(boolean showKeybindText) { this.showKeybindText = showKeybindText; }
     public int getTextColor() { return textColor; }
     public void setTextColor(int textColor) { this.textColor = textColor; }
     public int getPressedTextColor(){return pressedTextColor;}
