@@ -85,8 +85,8 @@ public class StrokeEditScreen extends Screen {
     private ButtonWidget inputTypeCycleButton;
     private SliderWidget roundnessSlider;
     private ButtonWidget outlinesButton;
-    private ButtonWidget textButton;
     private TextFieldWidget displayTextInput;
+    private TextFieldWidget pressedDisplayTextInput;
 
     // Done Button
     private ButtonWidget doneButton;
@@ -621,11 +621,18 @@ public class StrokeEditScreen extends Screen {
         this.addDrawableChild(roundnessSlider);
         currentY += fieldHeight + 5;
 
-        displayTextInput = new TextFieldWidget(textRenderer, elementStartX, currentY, fieldWidth, fieldHeight, Text.literal("Stroke Button"));
+        displayTextInput = new TextFieldWidget(textRenderer, elementStartX, currentY, fieldWidth, fieldHeight, Text.literal("Stroke Text Button"));
         displayTextInput.setText(targetStroke.getKeystrokeText());
+        displayTextInput.setPlaceholder(Text.literal("Edit Unpressed Text"));
         displayTextInput.setChangedListener(targetStroke::setKeystrokeText);
         this.addDrawableChild(displayTextInput);
         currentY += fieldHeight + 5;
+
+        pressedDisplayTextInput = new TextFieldWidget(textRenderer, elementStartX, currentY, fieldWidth, fieldHeight, Text.literal("Stroke Text Button"));
+        pressedDisplayTextInput.setText(targetStroke.getPressedKeystrokeText());
+        pressedDisplayTextInput.setPlaceholder(Text.literal("Edit Pressed Text"));
+        pressedDisplayTextInput.setChangedListener(targetStroke::setPressedKeystrokeText);
+        this.addDrawableChild(pressedDisplayTextInput);
     }
 
     private void removeGeneralSettings(){
@@ -634,7 +641,6 @@ public class StrokeEditScreen extends Screen {
         this.remove(inputTypeCycleButton);
         this.remove(outlinesButton);
         this.remove(roundnessSlider);
-        this.remove(textButton);
         this.remove(displayTextInput);
     }
 
@@ -757,7 +763,6 @@ public class StrokeEditScreen extends Screen {
         String textToShow = targetStroke.getKeystrokeText();
         int alpha = (targetStroke.getTextColor() >> 24) & 0xFF;
 
-
         if (textToShow == null) {
             textToShow = targetStroke.getKeyTextForInputType();
         } else if (textToShow.isBlank()) {
@@ -774,7 +779,7 @@ public class StrokeEditScreen extends Screen {
         FancyStrokesRenderer.drawRoundedRect(context, drawX+40, drawY, drawWidth, drawHeight, targetStroke.getRoundness(), targetStroke.getPressedColor());
         FancyStrokesRenderer.drawRoundedOutline(context, drawX+40, drawY, drawWidth, drawHeight, targetStroke.getRoundness(), targetStroke.getPressedOutlineColor());
 
-        textToShow = targetStroke.getKeystrokeText();
+        textToShow = targetStroke.getPressedKeystrokeText();
         alpha = (targetStroke.getPressedTextColor() >> 24) & 0xFF;
 
         if (textToShow == null) {

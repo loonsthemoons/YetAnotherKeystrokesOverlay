@@ -28,8 +28,8 @@ public class Strokes extends ClickableWidget {
     private boolean isSelected = false;
     private boolean isPressed = false;
     private boolean previousPress=false;
-    private boolean showKeybindText = true;
     private String keystrokeText=null;
+    private String pressedKeystrokeText=null;
     private boolean letteringOption=false;
     private boolean keypressSound=false;
     private String soundProfile="linear";
@@ -125,6 +125,7 @@ public class Strokes extends ClickableWidget {
             int fillColorToUse = isPressed ? this.pressedColor : this.color;
             int outlineColorToUse = isPressed ? this.pressedOutlineColor : this.outlineColor;
             int textColorToUse = isPressed ? this.pressedTextColor : this.textColor;
+            String textToUse = isPressed ? this.pressedKeystrokeText : this.keystrokeText;
             int alpha = (textColorToUse >> 24) & 0xFF;
 
             FancyStrokesRenderer.drawRoundedRect(context, drawX, drawY, drawWidth, drawHeight, this.roundness, fillColorToUse);
@@ -136,8 +137,8 @@ public class Strokes extends ClickableWidget {
                 FancyStrokesRenderer.drawRoundedOutline(context, drawX - 1, drawY - 1, drawWidth + 2, drawHeight + 2, this.roundness + 1, 0xFFFFFFFF);
             }
 
-            String textToShow = keystrokeText;
-            if (keystrokeText == null) {
+            String textToShow = textToUse;
+            if (textToUse == null) {
                 textToShow = getKeyTextForInputType();
             } else if (textToShow.isBlank()) {
                 textToShow = getKeyTextForInputType();
@@ -215,6 +216,8 @@ public class Strokes extends ClickableWidget {
     public void setPressedTextColor(int pressedTextColor){this.pressedTextColor=pressedTextColor;}
     public String getKeystrokeText() {return keystrokeText;}
     public void setKeystrokeText(String keystrokeText) {this.keystrokeText = keystrokeText;}
+    public String getPressedKeystrokeText(){return pressedKeystrokeText;}
+    public void setPressedKeystrokeText(String pressedKeystrokeText) {this.pressedKeystrokeText = pressedKeystrokeText;}
     public void setKeypressSound(boolean keypressSound){this.keypressSound=keypressSound;}
     public String getSoundProfile(){return soundProfile;}
     public void setSoundProfile(String soundProfile){this.soundProfile=soundProfile;}
