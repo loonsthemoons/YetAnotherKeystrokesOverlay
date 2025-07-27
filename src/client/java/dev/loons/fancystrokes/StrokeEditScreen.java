@@ -686,19 +686,27 @@ public class StrokeEditScreen extends Screen {
         // Top 3 Statistic
 
         List<Map.Entry<Strokes.InputType, Long>> top3 = structure.getProfileStatistics().getTop3LifetimePresses();
+        String place1 = "Place 1: N/A";
+        String place2 = "Place 2: N/A";
+        String place3 = "Place 3: N/A";
+
+        if(!top3.isEmpty()) place1 = "Place 1: " + top3.get(0).getKey() + " >> " + top3.get(0).getValue();
+        if(top3.size()>1) place2 = "Place 2: " + top3.get(1).getKey() + " >> " + top3.get(1).getValue();
+        if(top3.size()>2) place3 = "Place 3: " + top3.get(2).getKey() + " >> " + top3.get(2).getValue();
+
         seperatorLine2 = new TextLabelWidget(elementStartX, currentY, fieldWidth, Text.literal("––––––––––––––––––––"));
         this.addDrawableChild(seperatorLine2);
         currentY += (int) (fieldHeight*0.6);
         top3Text = new TextLabelWidget(elementStartX, currentY, fieldWidth, Text.literal("Top 3"));
         this.addDrawableChild(top3Text);
         currentY += fieldHeight;
-        place1Text = new TextLabelWidget(elementStartX, currentY, fieldWidth, Text.literal("Place 1: " + top3.get(0).getKey() + " >> " + top3.get(0).getValue()));
+        place1Text = new TextLabelWidget(elementStartX, currentY, fieldWidth, Text.literal(place1));
         this.addDrawableChild(place1Text);
         currentY += fieldHeight;
-        place2Text = new TextLabelWidget(elementStartX, currentY, fieldWidth, Text.literal("Place 2: " + top3.get(1).getKey() + " >> " + top3.get(1).getValue()));
+        place2Text = new TextLabelWidget(elementStartX, currentY, fieldWidth, Text.literal(place2));
         this.addDrawableChild(place2Text);
         currentY += fieldHeight;
-        place3Text = new TextLabelWidget(elementStartX, currentY, fieldWidth, Text.literal("Place 3: " + top3.get(2).getKey() + " >> " + top3.get(2).getValue()));
+        place3Text = new TextLabelWidget(elementStartX, currentY, fieldWidth, Text.literal(place3));
         this.addDrawableChild(place3Text);
         currentY += (int) (fieldHeight*0.6);
 
