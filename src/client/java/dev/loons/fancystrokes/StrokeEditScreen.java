@@ -622,14 +622,12 @@ public class StrokeEditScreen extends Screen {
         currentY += fieldHeight + 5;
 
         displayTextInput = new TextFieldWidget(textRenderer, elementStartX, currentY, fieldWidth, fieldHeight, Text.literal("Stroke Text Button"));
-        displayTextInput.setText(targetStroke.getKeystrokeText());
         displayTextInput.setPlaceholder(Text.literal("Edit Unpressed Text"));
         displayTextInput.setChangedListener(targetStroke::setKeystrokeText);
         this.addDrawableChild(displayTextInput);
         currentY += fieldHeight + 5;
 
         pressedDisplayTextInput = new TextFieldWidget(textRenderer, elementStartX, currentY, fieldWidth, fieldHeight, Text.literal("Stroke Text Button"));
-        pressedDisplayTextInput.setText(targetStroke.getPressedKeystrokeText());
         pressedDisplayTextInput.setPlaceholder(Text.literal("Edit Pressed Text"));
         pressedDisplayTextInput.setChangedListener(targetStroke::setPressedKeystrokeText);
         this.addDrawableChild(pressedDisplayTextInput);
@@ -642,6 +640,7 @@ public class StrokeEditScreen extends Screen {
         this.remove(outlinesButton);
         this.remove(roundnessSlider);
         this.remove(displayTextInput);
+        this.remove(pressedDisplayTextInput);
     }
 
 
