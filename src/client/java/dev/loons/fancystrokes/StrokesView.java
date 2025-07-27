@@ -8,8 +8,8 @@ import java.util.ArrayList;
  * It registers a callback to render all visible strokes maintained by the {@link StrokesStructure}.
  */
 public class StrokesView {
-    private final StrokesStructure structure;
-    private final ArrayList<StrokesStructure> profiles;
+    private StrokesStructure structure;
+    private ArrayList<StrokesStructure> profiles;
 
     /**
      * Constructs a new StrokesView with the given {@link StrokesStructure}.
@@ -44,4 +44,7 @@ public class StrokesView {
         }
         return null;
     }
+
+    public void setStrokesStructure(StrokesStructure strokesStructure) {this.structure=strokesStructure;}
+    public void setProfiles(ArrayList<StrokesStructure> profiles) {this.profiles=profiles;}
 }

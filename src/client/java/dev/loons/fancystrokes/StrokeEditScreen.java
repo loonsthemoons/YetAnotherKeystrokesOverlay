@@ -684,7 +684,6 @@ public class StrokeEditScreen extends Screen {
         currentY += (int) (fieldHeight*0.6);
 
         // Top 3 Statistic
-
         List<Map.Entry<Strokes.InputType, Long>> top3 = structure.getProfileStatistics().getTop3LifetimePresses();
         String place1 = "Place 1: N/A";
         String place2 = "Place 2: N/A";

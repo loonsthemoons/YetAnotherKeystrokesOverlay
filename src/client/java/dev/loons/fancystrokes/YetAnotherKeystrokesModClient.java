@@ -80,7 +80,7 @@ public class YetAnotherKeystrokesModClient implements ClientModInitializer {
 			}
 			if (!foundActive && !PROFILES.isEmpty()) {
 				PROFILES.get(0).setActive();
-				STROKES_STRUCTURE = PROFILES.get(0); // Ensure STROKES_STRUCTURE points to an active one
+				STROKES_STRUCTURE = PROFILES.get(0);
 				System.out.println("No active profile found in config, setting first profile '" + STROKES_STRUCTURE.getProfileName() + "' as active.");
 			} else if (PROFILES.isEmpty()) {
 				System.err.println("PROFILES list is empty after loading, creating a new default profile.");
@@ -88,11 +88,29 @@ public class YetAnotherKeystrokesModClient implements ClientModInitializer {
 			}
 		}
 
-		menuScreen = new StrokeOptions(Text.literal("FancyStrokes Options"), STROKES_STRUCTURE, PROFILES);
+		menuScreen = new StrokeOptions(Text.literal("YAKO - Yet Another Keystrokes Overlay"), STROKES_STRUCTURE, PROFILES);
 		strokesView = new StrokesView(STROKES_STRUCTURE, PROFILES);
 		strokesController = new StrokesController(strokesView, STROKES_STRUCTURE, menuScreen, PROFILES, OPEN_SETTINGS_KEYBINDING, DISABLE_KEYSTROKES_KEYBINDING);
 
 		strokesView.renderOverlay();
+	}
+
+	public static void updateUI() {
+		if (strokesController != null) {
+			strokesController.setStrokesStructure(STROKES_STRUCTURE);
+			strokesController.setProfiles(PROFILES);
+			strokesController.setMenuScreen(menuScreen);
+			strokesController.setKeyBinding(OPEN_SETTINGS_KEYBINDING);
+			strokesController.setDisableKeystrokes(DISABLE_KEYSTROKES_KEYBINDING);
+		}
+		if (strokesView != null) {
+			strokesView.setStrokesStructure(STROKES_STRUCTURE);
+			strokesView.setProfiles(PROFILES);
+		}
+		if (menuScreen != null) {
+			menuScreen = new StrokeOptions(Text.literal("YAKO - Yet Another Keystrokes Overlay"), STROKES_STRUCTURE, PROFILES);
+			menuScreen.setKeyBinding(OPEN_SETTINGS_KEYBINDING);
+		}
 	}
 
 	/**
@@ -113,6 +131,7 @@ public class YetAnotherKeystrokesModClient implements ClientModInitializer {
 		default3.soundProfile("tactile");
 		default3.keypressSound(true);
 		default1.setActive();
+		STROKES_STRUCTURE = default1;
 		PROFILES.add(default1);
 		PROFILES.add(default2);
 		PROFILES.add(default3);
@@ -135,6 +154,9 @@ public class YetAnotherKeystrokesModClient implements ClientModInitializer {
 	public static void resetAllProfiles(){
 		CONFIG.getSavedProfiles().clear();
 		CONFIG.save();
-		initializeUI();
+		PROFILES.clear();
+		initializeDefaultStrokes();
+		STROKES_STRUCTURE.setControlKey(OPEN_SETTINGS_KEYBINDING);
+		updateUI();
 	}
 }

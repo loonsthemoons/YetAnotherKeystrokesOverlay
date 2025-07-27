@@ -127,6 +127,8 @@ public class StrokeOptions extends Screen {
         );
     }
 
+    public void setKeyBinding(KeyBinding keyBinding) {this.controlKey=keyBinding;}
+
     /**
      * Initializes the screen elements. This method is called when the screen is opened.
      * It clears existing children and adds all strokes from the structure as drawable children.
@@ -165,7 +167,7 @@ public class StrokeOptions extends Screen {
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
-        context.drawText(this.textRenderer, "YAKO - Yet Another Keystrokes Mod", 40, 40 - this.textRenderer.fontHeight - 10, 0xFFFFFFFF, true);
+        context.drawText(this.textRenderer, "YAKO - Yet Another Keystrokes Overlay", 40, 40 - this.textRenderer.fontHeight - 10, 0xFFFFFFFF, true);
 
         if(!structure.isDidPopupShow()){
             // Calculate panel dimensions and positions

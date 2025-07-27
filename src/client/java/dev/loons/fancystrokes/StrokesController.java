@@ -296,4 +296,10 @@ public class StrokesController {
             }
         }
     }
+
+    public void setStrokesStructure(StrokesStructure strokesStructure) {this.structure=strokesStructure;}
+    public void setProfiles(ArrayList<StrokesStructure> profiles) {this.profiles=profiles;}
+    public void setMenuScreen(StrokeOptions menuScreen) {this.menuScreen=menuScreen;}
+    public void setKeyBinding(KeyBinding keyBinding) {this.keyBinding=keyBinding;}
+    public void setDisableKeystrokes(KeyBinding keyBinding) {this.disableKeystrokes=keyBinding;}
 }
