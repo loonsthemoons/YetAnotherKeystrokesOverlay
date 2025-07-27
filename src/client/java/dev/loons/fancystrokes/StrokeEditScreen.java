@@ -11,6 +11,8 @@ import net.minecraft.client.toast.SystemToast;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.ColorHelper;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -682,19 +684,21 @@ public class StrokeEditScreen extends Screen {
         currentY += (int) (fieldHeight*0.6);
 
         // Top 3 Statistic
+
+        List<Map.Entry<Strokes.InputType, Long>> top3 = structure.getProfileStatistics().getTop3LifetimePresses();
         seperatorLine2 = new TextLabelWidget(elementStartX, currentY, fieldWidth, Text.literal("––––––––––––––––––––"));
         this.addDrawableChild(seperatorLine2);
         currentY += (int) (fieldHeight*0.6);
         top3Text = new TextLabelWidget(elementStartX, currentY, fieldWidth, Text.literal("Top 3"));
         this.addDrawableChild(top3Text);
         currentY += fieldHeight;
-        place1Text = new TextLabelWidget(elementStartX, currentY, fieldWidth, Text.literal("Place 1: W"));
+        place1Text = new TextLabelWidget(elementStartX, currentY, fieldWidth, Text.literal("Place 1: " + top3.get(0).getKey() + " >> " + top3.get(0).getValue()));
         this.addDrawableChild(place1Text);
         currentY += fieldHeight;
-        place2Text = new TextLabelWidget(elementStartX, currentY, fieldWidth, Text.literal("Place 2: S"));
+        place2Text = new TextLabelWidget(elementStartX, currentY, fieldWidth, Text.literal("Place 2: " + top3.get(1).getKey() + " >> " + top3.get(1).getValue()));
         this.addDrawableChild(place2Text);
         currentY += fieldHeight;
-        place3Text = new TextLabelWidget(elementStartX, currentY, fieldWidth, Text.literal("Place 3: LMB"));
+        place3Text = new TextLabelWidget(elementStartX, currentY, fieldWidth, Text.literal("Place 3: " + top3.get(2).getKey() + " >> " + top3.get(2).getValue()));
         this.addDrawableChild(place3Text);
         currentY += (int) (fieldHeight*0.6);
 
