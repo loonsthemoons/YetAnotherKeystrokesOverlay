@@ -226,16 +226,21 @@ public class StrokesController {
                         context.getSource().sendFeedback(Text.literal("Default lettering switched"));
                         return 1;
                     })).then(ClientCommandManager.literal("sounds").executes(context -> {
-                        //strokesView.findActiveStructure(profiles).setKeypressSound();
                         strokesView.findActiveStructure(profiles).keypressSound(!strokesView.findActiveStructure(profiles).getKeypressSound());
-                        if(strokesView.findActiveStructure(profiles).getKeypressSound()){
-                            context.getSource().sendFeedback(Text.literal("Keystroke sounds activated"));
-                            return 1;
-                        } else {
-                            context.getSource().sendFeedback(Text.literal("Keystroke sounds deactivated"));
-                            return 1;
-                        }
-                    }).then(ClientCommandManager.literal("linear").executes(context -> {
+                        context.getSource().sendFeedback(Text.literal( "Currently active sound profile: " + strokesView.findActiveStructure(profiles).getSoundProfile() + "\nVolume for this profile now is: " + strokesView.findActiveStructure(profiles).getVolume()));
+                        context.getSource().sendFeedback(Text.literal("Keystroke sounds deactivated"));
+                        return 1;
+                    }).then(ClientCommandManager.literal("toggle").executes(context -> {
+                                strokesView.findActiveStructure(profiles).keypressSound(!strokesView.findActiveStructure(profiles).getKeypressSound());
+                                if(strokesView.findActiveStructure(profiles).getKeypressSound()){
+                                    context.getSource().sendFeedback(Text.literal("Keystroke sounds activated"));
+                                    return 1;
+                                } else {
+                                    context.getSource().sendFeedback(Text.literal("Keystroke sounds deactivated"));
+                                    return 1;
+                                }
+                            })).
+                    then(ClientCommandManager.literal("linear").executes(context -> {
                         strokesView.findActiveStructure(profiles).soundProfile("linear");
                         context.getSource().sendFeedback(Text.literal("Keystroke sounds set to linear"));
                         return 1;
