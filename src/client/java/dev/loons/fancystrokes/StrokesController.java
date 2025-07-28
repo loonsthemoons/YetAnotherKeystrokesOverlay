@@ -136,7 +136,12 @@ public class StrokesController {
                 context.getSource().sendFeedback(Text.literal("new profile created: " + profileName));
                 return 1;
             }))).then(ClientCommandManager.literal("remove")
-                    .then(ClientCommandManager.argument("profile", StringArgumentType.word())
+                    .then(ClientCommandManager.argument("profile", StringArgumentType.word()).suggests((context, builder) -> {
+                                for(StrokesStructure s : profiles){
+                                    builder.suggest(s.getProfileName());
+                                }
+                                return builder.buildFuture();
+                                    })
                             .executes(context ->{
                                 if(profiles.size()==1){
                                     context.getSource().sendFeedback(Text.literal("failed to remove profile, due to only one profile existing"));
@@ -272,7 +277,12 @@ public class StrokesController {
                                     context.getSource().sendFeedback(Text.literal("Failed to set volume"));
                                     return 1;
                                 }
-                    }))).then(ClientCommandManager.literal("rename").then(ClientCommandManager.argument("profile", StringArgumentType.word()).then(ClientCommandManager.argument("name", StringArgumentType.word()).executes(context -> {
+                    }))).then(ClientCommandManager.literal("rename").then(ClientCommandManager.argument("profile", StringArgumentType.word()).suggests((context, builder) -> {
+                        for(StrokesStructure s : profiles){
+                            builder.suggest(s.getProfileName());
+                        }
+                        return builder.buildFuture();
+                    }).then(ClientCommandManager.argument("name", StringArgumentType.word()).executes(context -> {
                         String profile = StringArgumentType.getString(context, "profile");
                         String name = StringArgumentType.getString(context, "name");
                          boolean nameExists = profiles.stream().anyMatch(s -> s.getProfileName().equalsIgnoreCase(name));
