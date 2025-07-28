@@ -214,7 +214,7 @@ public class StrokesController {
                                         return 1;
                                     })
                             ).then(ClientCommandManager.literal("sounds").executes(context -> {
-                                        context.getSource().sendFeedback(Text.literal("/yako sounds \n activates or deactivates Keystrokes sound effects on key press \n can put 'linear', 'tactile' or 'clicky' after to change the profile \n Default sound profile is linear"));
+                                        context.getSource().sendFeedback(Text.literal("/yako sounds \n /yako sounds toggle activates or deactivates Keystrokes sound effects on key press \n /yako sounds <linear>, <tactile> or <clicky> to change the profile \n Default sound profile is linear"));
                                         return 1;
                                     })
                             ).then(ClientCommandManager.literal("volume").executes(context -> {
