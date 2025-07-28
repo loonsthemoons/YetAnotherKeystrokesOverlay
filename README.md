@@ -27,6 +27,10 @@ From rounded and transparent strokes to sound profiles and profile switching, YA
 - **Command-Based Customization**  
   Use the `/yako` command to manage layouts, toggle features, switch lettering and adjust sound settings.
 
+- **Keypress Counter**  
+  Ever wonder how many times you pressed a specific button? With this feature you would have an answer!
+
+
 ---
 
 ## Controls
@@ -90,9 +94,6 @@ Use `/yako help` for command hints in-game. Here's what you can do:
 
 - **Custom Input Types**  
   Instead of being limited to the existing Input types, add your own to track new keys!
-
-- **Keypress Counter**  
-  Ever wonder how many times you pressed a specific button? With this feature you would have an answer!
 
 ---
 
