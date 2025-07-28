@@ -89,6 +89,7 @@ public class StrokeEditScreen extends Screen {
     private ButtonWidget applyGlobalButton;
     private ButtonWidget resetButton;
     private ButtonWidget inputTypeCycleButton;
+    private boolean inputTypeCycleButtonVisible;
     private SliderWidget roundnessSlider;
     private TextFieldWidget displayTextInput;
     private TextFieldWidget pressedDisplayTextInput;
@@ -231,6 +232,7 @@ public class StrokeEditScreen extends Screen {
         calculateDynamicDimensions();
         addGeneralSettings(generalPanelX, generalPanelY, generalPanelWidth, generalPanelHeight);
         addStatistic(statisticPanelX, statisticPanelY, statisticPanelWidth, statisticPanelHeight);
+        inputTypeCycleButtonVisible=true;
 
         // Page Switch Button
         rightPageButton = ButtonWidget.builder(Text.literal(">"), (button -> {
@@ -251,6 +253,7 @@ public class StrokeEditScreen extends Screen {
         addFillColorSettings(fillColorPanelX, fillColorPanelY, fillColorPanelWidth, fillColorPanelHeight);
         addOutlineColorSettings(outlinePanelX, outlinePanelY, outlinePanelWidth, outlinePanelHeight);
         addTextColorSettings(textPanelX, textPanelY, textPanelWidth, textPanelHeight);
+        inputTypeCycleButtonVisible=false;
 
         // Page Switch Button
         leftPageButton = ButtonWidget.builder(Text.literal("<"), (button -> {
@@ -975,7 +978,7 @@ public class StrokeEditScreen extends Screen {
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         // Handle clicks on inputTypeCycleButton
-        if (inputTypeCycleButton.isMouseOver(mouseX, mouseY)) {
+        if (inputTypeCycleButton.isMouseOver(mouseX, mouseY) && inputTypeCycleButtonVisible) {
             if (button == 0) { // Left click
                 cycleInputType(1); // Cycle forward
                 return true;
