@@ -158,7 +158,12 @@ public class StrokesController {
                                 }
                                 return 1;
                             })
-                    )).then(ClientCommandManager.literal("set").then(ClientCommandManager.argument("profile", StringArgumentType.word())
+                    )).then(ClientCommandManager.literal("set").then(ClientCommandManager.argument("profile", StringArgumentType.word()).suggests((context, builder) -> {
+                        for(StrokesStructure s : profiles){
+                            builder.suggest(s.getProfileName());
+                        }
+                        return builder.buildFuture();
+                            })
                             .executes(context ->{
                                 String profile = StringArgumentType.getString(context, "profile");
                                 StrokesStructure targetStructure = null;
