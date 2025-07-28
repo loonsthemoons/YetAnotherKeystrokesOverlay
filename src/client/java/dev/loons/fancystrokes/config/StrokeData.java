@@ -3,6 +3,7 @@ package dev.loons.fancystrokes.config;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import dev.loons.fancystrokes.Strokes;
+import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.Vec3d;
 
 /**
@@ -29,7 +30,23 @@ public class StrokeData {
      * Default constructor for creating an empty StrokeData object.
      * Useful for deserialization purposes.
      */
-    public StrokeData() {}
+    public StrokeData() {
+        this.inputType = Strokes.InputType.NULL;
+        this.posX = 0;
+        this.posY = 0;
+        this.posZ = 0;
+        this.color = ColorHelper.Argb.getArgb(255, 60, 60, 60); // Dark Gray
+        this.pressedColor = ColorHelper.Argb.getArgb(255, 150, 200, 255); // Light Blue
+        this.outlineColor = ColorHelper.Argb.getArgb(255, 100, 100, 100); // Medium Gray
+        this.pressedOutlineColor = ColorHelper.Argb.getArgb(255, 100, 150, 200); // Slightly darker blue
+        this.textColor = ColorHelper.Argb.getArgb(255, 230, 230, 230); // Off-White
+        this.pressedTextColor = ColorHelper.Argb.getArgb(255, 255, 255, 255); // Pure White
+        this.width = 30;
+        this.height = 30;
+        this.roundness = 4;
+        this.keystrokeText = "";
+        this.pressedKeystrokeText = "";
+    }
 
     /**
      * Constructs a StrokeData object from an existing {@link Strokes} instance.
@@ -120,21 +137,34 @@ public class StrokeData {
      * @throws NullPointerException if a required JSON property is missing.
      */
     public void load(JsonElement jsonElement) {
+        if(jsonElement.isJsonNull() || !jsonElement.isJsonObject()){
+            System.err.println("Invalid JsonElement for StrokeData load. Initializing with default values.");
+            return;
+        }
+
         JsonObject json = jsonElement.getAsJsonObject();
+
+        try {
+            this.inputType = json.has("inputType") ? Strokes.InputType.valueOf(json.get("inputType").getAsString()) : Strokes.InputType.NULL;
+        } catch (IllegalArgumentException e) {
+            System.err.println("Unknown InputType in saved data: " + json.get("inputType").getAsString() + ". Setting to NULL. Error: " + e.getMessage());
+            this.inputType = Strokes.InputType.NULL;
+        }
+
         this.inputType = Strokes.InputType.valueOf(json.get("inputType").getAsString());
-        this.posX = json.get("posX").getAsDouble();
-        this.posY = json.get("posY").getAsDouble();
-        this.posZ = json.get("posZ").getAsDouble();
-        this.color = json.get("color").getAsInt();
-        this.pressedColor = json.get("pressedColor").getAsInt();
-        this.outlineColor = json.get("outlineColor").getAsInt();
-        this.pressedOutlineColor = json.get("pressedOutlineColor").getAsInt();
-        this.textColor = json.get("textColor").getAsInt();
-        this.pressedTextColor = json.get("pressedTextColor").getAsInt();
-        this.width = json.get("width").getAsInt();
-        this.height = json.get("height").getAsInt();
-        this.roundness = json.get("roundness").getAsInt();
-        this.keystrokeText = json.get("keystrokeText").getAsString();
-        this.pressedKeystrokeText = json.get("pressedKeystrokeText").getAsString();
+        this.posX = json.has("posX") ? json.get("posX").getAsDouble() : this.posX;
+        this.posY = json.has("posY") ? json.get("posY").getAsDouble() : this.posY;
+        this.posZ = json.has("posZ") ? json.get("posZ").getAsDouble() : this.posZ;
+        this.color = json.has("color") ? json.get("color").getAsInt() : this.color;
+        this.pressedColor = json.has("pressedColor") ? json.get("pressedColor").getAsInt() : this.pressedColor;
+        this.outlineColor = json.has("outlineColor") ? json.get("outlineColor").getAsInt() : this.outlineColor;
+        this.pressedOutlineColor = json.has("pressedOutlineColor") ? json.get("pressedOutlineColor").getAsInt() : this.pressedOutlineColor;
+        this.textColor = json.has("textColor") ? json.get("textColor").getAsInt() : this.textColor;
+        this.pressedTextColor = json.has("pressedTextColor") ? json.get("pressedTextColor").getAsInt() : this.pressedTextColor;
+        this.width = json.has("width") ? json.get("width").getAsInt() : this.width;
+        this.height = json.has("height") ? json.get("height").getAsInt() : this.height;
+        this.roundness = json.has("roundness") ? json.get("roundness").getAsInt() : this.roundness;
+        this.keystrokeText = json.has("keystrokeText") ? json.get("keystrokeText").getAsString() : this.keystrokeText;
+        this.pressedKeystrokeText = json.has("pressedKeystrokeText") ? json.get("pressedKeystrokeText").getAsString() : this.pressedKeystrokeText;
     }
 }
