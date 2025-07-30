@@ -118,6 +118,5 @@ Feedback and suggestions are always welcome!
 <img width="477" height="592" alt="yako_personal" src="https://github.com/user-attachments/assets/5050498f-ef7c-4f53-9295-7cca4bdb7f96" />
 
 **Settings Menu**
-<img width="1908" height="1028" alt="2025-07-25_19 46 53" src="https://github.com/user-attachments/assets/44ba0e7c-6e1a-46b8-a9b0-b3a4876671f7" />
-<img width="1908" height="1028" alt="2025-07-25_19 47 02" src="https://github.com/user-attachments/assets/e712b9b3-3212-49a7-8d5d-8be2a443e131" />
-
+<img width="1908" height="1028" alt="2025-07-31_00 44 33" src="https://github.com/user-attachments/assets/996f2c43-07cb-4a1d-ae6c-2558dded6423" />
+<img width="1908" height="1028" alt="2025-07-31_00 44 35" src="https://github.com/user-attachments/assets/fa3394af-081f-43d1-94e0-6403d82f42b9" />
