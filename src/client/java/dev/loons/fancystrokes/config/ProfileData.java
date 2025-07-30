@@ -52,7 +52,7 @@ public class ProfileData {
         this.letteringOption = structure.getLetteringOption();
         this.strokes = new ArrayList<>();
         if(structure.getProfileStatistics() != null){
-            this.keypressCount = structure.getProfileStatistics().getKeypressCounter();
+            this.keypressCount = structure.getProfileStatistics().getCombinedCounter();
             this.totalKeypressCount = structure.getProfileStatistics().getLifetimePresses();
         } else {
             this.keypressCount = new HashMap<>();

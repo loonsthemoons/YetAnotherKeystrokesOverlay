@@ -1,5 +1,7 @@
 package dev.loons.fancystrokes;
 
+import net.minecraft.client.input.Input;
+
 import static dev.loons.fancystrokes.Strokes.InputType;
 
 import java.util.Comparator;
@@ -29,17 +31,8 @@ public class StrokesStatistics {
     public long getOldTotalPresses() {return oldTotalPresses;}
     public long getLifetimePresses(){return totalPressCounter+oldTotalPresses;}
     public long getSpecificLifetimePresses(InputType inputType){
-        long currentCount = 0L;
-        if (this.keypressCounter != null) {
-            currentCount = this.keypressCounter.getOrDefault(inputType, 0L);
-        }
-
-        long oldCount = 0L;
-        if (this.oldKeypressCounter != null) {
-            oldCount = this.oldKeypressCounter.getOrDefault(inputType, 0L);
-        }
-
-        return currentCount + oldCount;
+        Map<InputType, Long> combinedCounter = getCombinedCounter();
+        return combinedCounter.getOrDefault(inputType, 0L);
     }
     public long getSpecificInstancePresses(InputType inputType){
         long currentCount = 0L;
@@ -57,15 +50,19 @@ public class StrokesStatistics {
         return keypressCounter;
     }
 
-    public List<Map.Entry<InputType, Long>> getTop3LifetimePresses() {
-        Map<InputType, Long> allLifetimePresses = new HashMap<>();
-
-        for (InputType type : InputType.values()) {
-            if (type == InputType.NULL) {
-                continue;
-            }
-            allLifetimePresses.put(type, getSpecificLifetimePresses(type));
+    public Map<InputType, Long> getCombinedCounter(){
+        Map<InputType, Long> combinedCounter = new HashMap<>(this.oldKeypressCounter);
+        for(Map.Entry<InputType, Long> entry : this.keypressCounter.entrySet()){
+            InputType type = entry.getKey();
+            Long currentInstanceCount = entry.getValue();
+            Long oldLifetimeCount = combinedCounter.getOrDefault(type, 0L);
+            combinedCounter.put(type, oldLifetimeCount + currentInstanceCount);
         }
+        return combinedCounter;
+    }
+
+    public List<Map.Entry<InputType, Long>> getTop3LifetimePresses() {
+        Map<InputType, Long> allLifetimePresses = getCombinedCounter();
 
         return allLifetimePresses.entrySet().stream()
                 .filter(entry -> entry.getValue() > 0)
